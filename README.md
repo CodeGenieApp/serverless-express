@@ -33,7 +33,7 @@ In addition to a basic Lambda function and API Gateway API, the `example` direct
 
 ### Creating a new Node.js project based on the example
 
-To use this example as a base for a new Node.js project, simply copy the files in the `example` directory into a new project directory. After making updates to `express-server.js`, simply run `npm run package-upload-update-function`. This will compress `lambda.js`, `express-server.js`, and your `node_modules` directory into `lambda-function.zip`, upload that zip to S3, and update your Lambda function.
+To use this example as a base for a new Node.js project, simply copy the files in the `example` directory into a new project directory. After making updates to `express-server.js`, simply run `npm run package-upload-update-function`. This will compress `lambda.js`, `express-server.js`, `index.html`, and your `node_modules` directory into `lambda-function.zip`, upload that zip to S3, and update your Lambda function.
 
 ## Migrating an existing Node.js project
 
