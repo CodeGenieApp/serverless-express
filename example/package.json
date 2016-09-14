@@ -19,7 +19,6 @@
     "package-upload-update-function": "npm run package-upload-function && npm run update-function",
     "setup": "npm install && npm run create-bucket && npm run package-upload-function && npm run upload-api-gateway-swagger && npm run create-stack"
   },
-  "author": "",
   "license": "Apache-2.0",
   "dependencies": {
     "aws-serverless-express": "^1.0.0",

@@ -24,9 +24,9 @@ In addition to a basic Lambda function and API Gateway API, the `example` direct
 
 ### Steps for running the example
 
-0. `cd example`
+0. From your preferred project directory: `git clone https://github.com/awslabs/aws-serverless-express.git && cd aws-serverless-express/example`
 1. Replace "YOUR_ACCOUNT_ID" in `simple-proxy-api.yaml`: use your preferred text editor, or from Linux|OSX run `sed -i '' 's/YOUR_ACCOUNT_ID/xxxxxxxxxxxx/g' simple-proxy-api.yaml`
-2. Replace all instances of "YOUR_UNIQUE_BUCKET_NAME" in the `package.json` `scripts` with a unique bucket name: use your preferred text editor, or from Linux|OSX run `sed -i '' 's/YOUR_UNIQUE_BUCKET_NAME/xxxxxxxxxxxx/g' package.json`. If the bucket does not yet exist, the next step will create it for you.
+2. Replace all instances of "YOUR_UNIQUE_BUCKET_NAME" in the `package.json` `scripts` with a unique S3 bucket name: use your preferred text editor, or from Linux|OSX run `sed -i '' 's/YOUR_UNIQUE_BUCKET_NAME/xxxxxxxxxxxx/g' package.json`. If the bucket does not yet exist, the next step will create it for you.
 3. Run `npm run setup` - this installs the node dependencies; creates the S3 bucket (if it does not already exist); packages and uploads your serverless Express application assets to S3; uploads the API Swagger file to S3; and finally spins up a CloudFormation stack, creating your API Gateway API and Lambda Function.
 4. After the setup command completes, your browser will be opened to the CloudFormation console (sign in if necessary). Select the `AwsServerlessExpressStack`, and click the `ApiUrl` value under __Outputs__. This should open a new page with your running API. The API index lists the routes available in the example Express server (`express-server.js`).
 5. See the sections below for details on how to migrate an existing (or create a new) Node.js project based on this example. If you would prefer to delete AWS assets that were just created, simply run `npm run delete-stack` to delete the CloudFormation Stack, including the API and Lambda Function. For safety, this does not delete the S3 bucket, but after verifying the contents of the S3 bucket pointed at by the `delete-bucket` command, you can run `npm run delete-bucket`.
