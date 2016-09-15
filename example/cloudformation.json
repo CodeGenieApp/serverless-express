@@ -93,7 +93,7 @@
                         "Ref": "AWS::AccountId"
                     }, ":", {
                         "Ref": "ApiGatewayApi"
-                    }, "/*/*/"]]
+                    }, "/*/*"]]
                 }
             }
         },

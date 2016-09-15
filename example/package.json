@@ -20,7 +20,7 @@
     "update-function": "aws lambda update-function-code --function-name AwsServerlessExpressFunction --zip-file fileb://lambda-function.zip",
     "package-upload-function": "npm run package-function && npm run upload-lambda-function-package",
     "package-upload-update-function": "npm run package-upload-function && npm run update-function",
-    "setup": "npm install && npm run create-bucket && npm run package-upload-function && npm run upload-api-gateway-swagger && npm run create-stack"
+    "setup": "npm install && aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName || npm run create-bucket && npm run package-upload-function && npm run upload-api-gateway-swagger && npm run create-stack"
   },
   "license": "Apache-2.0",
   "dependencies": {

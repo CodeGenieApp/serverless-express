@@ -1,6 +1,6 @@
 {
     "httpMethod": "POST",
-    "body": "{\"userName\": \"Jake\"}",
+    "body": "{\"name\": \"Jake\"}",
     "path": "/users",
     "resource": "/{proxy+}",
     "queryStringParameters": {},

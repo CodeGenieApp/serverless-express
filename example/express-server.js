@@ -26,8 +26,8 @@ app.get('/users/:userId', (req, res) => {
 
 app.post('/users', (req, res) => {
     const user = {
-        userId: ++userIdCounter,
-        userName: req.body.userName
+        id: ++userIdCounter,
+        name: req.body.name
     }
     users.push(user)
     res.status(201).json(user)
@@ -38,7 +38,7 @@ app.put('/users/:userId', (req, res) => {
 
     if (!user) return res.status(404).json({})
 
-    user.userName = req.body.userName
+    user.name = req.body.name
     res.json(user)
 })
 
@@ -51,16 +51,16 @@ app.delete('/users/:userId', (req, res) => {
     res.json(users)
 })
 
-const getUser = (userId) => users.find(u => u.userId === parseInt(userId))
-const getUserIndex = (userId) => users.findIndex(u => u.userId === parseInt(userId))
+const getUser = (userId) => users.find(u => u.id === parseInt(userId))
+const getUserIndex = (userId) => users.findIndex(u => u.id === parseInt(userId))
 
 // Ephemeral in-memory data store
 const users = [{
-    userId: 1,
-    userName: 'Joe'
+    id: 1,
+    name: 'Joe'
 }, {
-    userId: 2,
-    userName: 'Jane'
+    id: 2,
+    name: 'Jane'
 }]
 let userIdCounter = users.length
 
