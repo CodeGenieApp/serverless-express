@@ -24,6 +24,7 @@
         "ApiGatewayApi": {
             "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
+                "Description": "AWS Serverless Express API",
                 "BodyS3Location": {
                     "Bucket": {
                         "Ref": "AwsServerlessExpressS3Bucket"
@@ -115,7 +116,7 @@
                     "Fn::GetAtt": ["LambdaExecutionRole", "Arn"]
                 },
                 "Runtime": "nodejs4.3",
-                "Timeout": 3
+                "Timeout": 30
             }
         }
     },

@@ -1,7 +1,7 @@
 {
-    "httpMethod": "DELETE",
-    "body": "{\"userName\": \"Jill\"}",
-    "path": "/users/1",
+    "httpMethod": "POST",
+    "body": "{\"userName\": \"Jake\"}",
+    "path": "/users",
     "resource": "/{proxy+}",
     "queryStringParameters": {},
     "pathParameters": {
