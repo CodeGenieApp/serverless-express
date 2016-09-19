@@ -8,6 +8,7 @@
       "cloudFormationStackName": "AwsServerlessExpressStack"
   },
   "scripts": {
+    "config": "node configure.js",
     "local": "node -e \"require('./lambda.js').handler(require('./api-gateway-event.json'), {succeed: v => console.log(v)}, (e, v) => console.log(v))\"",
     "invoke-lambda": "aws lambda invoke --function-name AwsServerlessExpressFunction --payload file://api-gateway-event.json lambda-invoke-response.json && cat lambda-invoke-response.json",
     "create-bucket": "aws s3 mb s3://$npm_package_config_s3BucketName",
