@@ -21,19 +21,8 @@ if (!/.*-.*-[0-9]*/.test(region)) {
     console.warn('The supplied region does not match the expected pattern, eg. us-east-1')
 }
 
-modifyCloudFormationFile()
 modifySimpleProxyFile()
 modifyPackageFile()
-
-function modifyCloudFormationFile() {
-    const cloudFormationPath = './cloudformation.json'
-    const cloudFormation = fs.readFileSync(cloudFormationPath, 'utf8')
-    const cloudFormationModified = cloudFormation
-        .replace(/YOUR_ACCOUNT_ID/g, accountId)
-        .replace(/YOUR_AWS_REGION/g, region)
-
-    fs.writeFileSync(cloudFormationPath, cloudFormationModified, 'utf8')
-}
 
 function modifySimpleProxyFile() {
     const simpleProxyApiPath = './simple-proxy-api.yaml'
