@@ -87,9 +87,7 @@
                 },
                 "Principal": "apigateway.amazonaws.com",
                 "SourceArn": {
-                    "Fn::Join": ["", ["arn:aws:execute-api:", {
-                        "Ref": "AWS::Region"
-                    }, ":", {
+                    "Fn::Join": ["", ["arn:aws:execute-api:YOUR_AWS_REGION:", {
                         "Ref": "AWS::AccountId"
                     }, ":", {
                         "Ref": "ApiGatewayApi"
@@ -125,11 +123,7 @@
         "LambdaFunctionConsoleUrl": {
             "Description": "Console URL for the Lambda Function.",
             "Value": {
-                "Fn::Join": ["", ["https://", {
-                    "Ref": "AWS::Region"
-                }, ".console.aws.amazon.com/lambda/home?region=", {
-                    "Ref": "AWS::Region"
-                }, "#/functions/", {
+                "Fn::Join": ["", ["https://console.aws.amazon.com/lambda/home?region=YOUR_AWS_REGION#/functions/", {
                     "Ref": "LambdaFunction"
                 }]]
             }
@@ -137,11 +131,7 @@
         "ApiGatewayApiConsoleUrl": {
             "Description": "Console URL for the API Gateway API's Stage.",
             "Value": {
-                "Fn::Join": ["", ["https://", {
-                    "Ref": "AWS::Region"
-                }, ".console.aws.amazon.com/apigateway/home?region=", {
-                    "Ref": "AWS::Region"
-                }, "#/apis/", {
+                "Fn::Join": ["", ["https://console.aws.amazon.com/apigateway/home?region=YOUR_AWS_REGION#/apis/", {
                     "Ref": "ApiGatewayApi"
                 }, "/stages/prod"]]
             }
@@ -151,9 +141,7 @@
             "Value": {
                 "Fn::Join": ["", ["https://", {
                     "Ref": "ApiGatewayApi"
-                }, ".execute-api.", {
-                    "Ref": "AWS::Region"
-                }, ".amazonaws.com/prod"]]
+                }, ".execute-api.YOUR_AWS_REGION.amazonaws.com/prod"]]
             }
         }
     }
