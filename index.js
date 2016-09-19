@@ -30,7 +30,11 @@ function mapApiGatewayEventToHttpRequest(event, socketPath) {
         method: event.httpMethod,
         path: getPathWithQueryStringParams(event),
         headers: event.headers,
-        socketPath: socketPath
+        socketPath: socketPath,
+        // protocol: `${event.headers['X-Forwarded-Proto']}:`,
+        // host: event.headers.Host,
+        // hostname: event.headers.Host, // Alias for host
+        // port: event.headers['X-Forwarded-Port']
     }
 }
 
@@ -42,6 +46,11 @@ function forwardResponseToApiGateway(server, response, context) {
     .on('end', () => {
         const statusCode = response.statusCode
         const headers = response.headers
+
+        Object.keys(headers)
+        .forEach(h => {
+            if(Array.isArray(h)) headers[h] = headers[h].join(',')
+        })
         const successResponse = {statusCode, body, headers}
 
         context.succeed(successResponse)
@@ -50,6 +59,7 @@ function forwardResponseToApiGateway(server, response, context) {
 }
 
 function forwardConnectionErrorResponseToApiGateway(server, error, context) {
+    // if debug: console.log(error)
     const errorResponse = {
         statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
         body: '',
@@ -80,8 +90,8 @@ function getSocketPath(socketPathSuffix) {
     return `/tmp/server${socketPathSuffix}.sock`
 }
 
-exports.createServer = (requestListner, serverListenCallback) => {
-    const server = http.createServer(requestListner)
+exports.createServer = (requestListener, serverListenCallback) => {
+    const server = http.createServer(requestListener)
 
     server._socketPathSuffix = 0
     server.on('listening', () => {

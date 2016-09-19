@@ -4,7 +4,8 @@
   "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
   "main": "lambda.js",
   "config": {
-      "s3BucketName" : "YOUR_UNIQUE_BUCKET_NAME"
+      "s3BucketName" : "YOUR_UNIQUE_BUCKET_NAME",
+      "cloudFormationStackName": "AwsServerlessExpressStack"
   },
   "scripts": {
     "local": "node -e \"require('./lambda.js').handler(require('./api-gateway-event.json'), {succeed: v => console.log(v)}, (e, v) => console.log(v))\"",
@@ -14,9 +15,9 @@
     "package-function": "zip -q -r lambda-function.zip lambda.js express-server.js index.html node_modules",
     "upload-lambda-function-package": "aws s3 cp ./lambda-function.zip s3://$npm_package_config_s3BucketName",
     "upload-api-gateway-swagger": "aws s3 cp ./simple-proxy-api.yaml s3://$npm_package_config_s3BucketName",
-    "create-stack": "aws cloudformation create-stack --stack-name AwsServerlessExpressStack --template-body file://./cloudformation.json --capabilities CAPABILITY_IAM --parameters ParameterKey=AwsServerlessExpressS3Bucket,ParameterValue=$npm_package_config_s3BucketName && open https://console.aws.amazon.com/cloudformation/home#/stacks?filter=active",
-    "update-stack": "aws cloudformation update-stack --stack-name AwsServerlessExpressStack --template-body file://./cloudformation.json --capabilities CAPABILITY_IAM --parameters ParameterKey=AwsServerlessExpressS3Bucket,ParameterValue=$npm_package_config_s3BucketName",
-    "delete-stack": "aws cloudformation delete-stack --stack-name AwsServerlessExpressStack",
+    "create-stack": "aws cloudformation create-stack --stack-name $npm_package_config_cloudFormationStackName --template-body file://./cloudformation.json --capabilities CAPABILITY_IAM --parameters ParameterKey=AwsServerlessExpressS3Bucket,ParameterValue=$npm_package_config_s3BucketName && open https://console.aws.amazon.com/cloudformation/home#/stacks?filter=active",
+    "update-stack": "aws cloudformation update-stack --stack-name $npm_package_config_cloudFormationStackName --template-body file://./cloudformation.json --capabilities CAPABILITY_IAM --parameters ParameterKey=AwsServerlessExpressS3Bucket,ParameterValue=$npm_package_config_s3BucketName",
+    "delete-stack": "aws cloudformation delete-stack --stack-name $npm_package_config_cloudFormationStackName",
     "update-function": "aws lambda update-function-code --function-name AwsServerlessExpressFunction --zip-file fileb://lambda-function.zip",
     "package-upload-function": "npm run package-function && npm run upload-lambda-function-package",
     "package-upload-update-function": "npm run package-upload-function && npm run update-function",
