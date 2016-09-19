@@ -30,7 +30,7 @@ exec('aws configure get region', (err, stdout, stderr) => {
     const region = stdout.match(/.*-.*-[0-9]*/)[0]// Command output has a newline
 
     modifySimpleProxyFile(region)
-    modifyPackageFile(bucketName)
+    modifyPackageFile(region)
 })
 
 function modifySimpleProxyFile(region) {
@@ -43,7 +43,7 @@ function modifySimpleProxyFile(region) {
     fs.writeFileSync(simpleProxyApiPath, simpleProxyApiModified, 'utf8')
 }
 
-function modifyPackageFile() {
+function modifyPackageFile(region) {
     const packageJsonPath = './package.json'
     const packageJson = fs.readFileSync(packageJsonPath, 'utf8')
     const packageJsonModified = packageJson.replace(/YOUR_UNIQUE_BUCKET_NAME/g, bucketName)

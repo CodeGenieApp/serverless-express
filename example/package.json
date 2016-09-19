@@ -16,7 +16,7 @@
     "package-function": "zip -q -r lambda-function.zip lambda.js express-server.js index.html node_modules",
     "upload-lambda-function-package": "aws s3 cp ./lambda-function.zip s3://$npm_package_config_s3BucketName",
     "upload-api-gateway-swagger": "aws s3 cp ./simple-proxy-api.yaml s3://$npm_package_config_s3BucketName",
-    "create-stack": "aws cloudformation create-stack --stack-name $npm_package_config_cloudFormationStackName --template-body file://./cloudformation.json --capabilities CAPABILITY_IAM --parameters ParameterKey=AwsServerlessExpressS3Bucket,ParameterValue=$npm_package_config_s3BucketName && open https://console.aws.amazon.com/cloudformation/home#/stacks?filter=active",
+    "create-stack": "aws cloudformation create-stack --stack-name $npm_package_config_cloudFormationStackName --template-body file://./cloudformation.json --capabilities CAPABILITY_IAM --parameters ParameterKey=AwsServerlessExpressS3Bucket,ParameterValue=$npm_package_config_s3BucketName && open https://console.aws.amazon.com/cloudformation/home?region=YOUR_AWS_REGION#/stacks?filter=active",
     "update-stack": "aws cloudformation update-stack --stack-name $npm_package_config_cloudFormationStackName --template-body file://./cloudformation.json --capabilities CAPABILITY_IAM --parameters ParameterKey=AwsServerlessExpressS3Bucket,ParameterValue=$npm_package_config_s3BucketName",
     "delete-stack": "aws cloudformation delete-stack --stack-name $npm_package_config_cloudFormationStackName",
     "update-function": "aws lambda update-function-code --function-name AwsServerlessExpressFunction --zip-file fileb://lambda-function.zip",
