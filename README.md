@@ -73,3 +73,4 @@ If you need to make modifications to your API Gateway API, modify `simple-proxy-
  - Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
  - Stateless only
  - Multiple headers with same name not supported
+ - Currently no support for binary data
