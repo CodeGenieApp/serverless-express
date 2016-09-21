@@ -54,7 +54,6 @@ function forwardResponseToApiGateway(server, response, context) {
         const successResponse = {statusCode, body, headers}
 
         context.succeed(successResponse)
-        // server.close()
     })
 }
 
@@ -67,7 +66,6 @@ function forwardConnectionErrorResponseToApiGateway(server, error, context) {
     }
 
     context.succeed(errorResponse)
-    // server.close()
 }
 
 function forwardRequestToNodeServer(server, event, context) {

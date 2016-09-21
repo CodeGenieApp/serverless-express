@@ -50,3 +50,26 @@ To migrate an existing Node server:
 To perform a basic, local simulation of API Gateway and Lambda with your Node server, update `api-gateway-event.json` with some values that are valid for your server (`httpMethod`, `path`, `body` etc.) and run `npm run local`. AWS Lambda uses NodeJS 4.3 LTS, and it is recommended to use the same version for testing purposes.
 
 If you need to make modifications to your API Gateway API, modify `simple-proxy-api.yaml` and run `npm run upload-api-gateway-swagger && npm run update stack`. If your API requires CORS, be sure to modify the two `options` methods defined in the Swagger file, otherwise you can safely remove them. Note: there is currently an issue with updating CloudFormation when it's not obvious that one of its resources has been modified; eg. the Swagger file is an external file hosted on S3. To work around this, simply update one of the resource's properties, such as the `Description` on the `ApiGatewayApi` resource. To modify your other AWS assets, make your changes to `cloudformation.json` and run `npm run update-stack`. Alternatively, you can manage these assets via the AWS console.
+
+### Is AWS serverless right for my app?
+
+#### Pros
+
+ - Pay for what you use
+ - No infrastructure to manage
+ - Auto-scaling with no configuration needed
+ - [Usage Plans](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html)
+ - [Caching](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html)
+ - [Authorization](http://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html)
+ - [Staging](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-deploy-api.html)
+ - [SDK Generation](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-generate-sdk.html)
+ - [API Monitoring](http://docs.aws.amazon.com/apigateway/latest/developerguide/monitoring-cloudwatch.html)
+
+#### Cons
+
+ - Currently limited to Node.js 4.3 (LTS)
+ - For apps that may not see traffic for several minutes at a time, you could see [cold starts](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)
+ - May be more expensive for high-traffic apps
+ - Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
+ - Stateless only
+ - Multiple headers with same name not supported
