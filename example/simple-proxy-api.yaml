@@ -1,7 +1,6 @@
 ---
 swagger: 2.0
 info:
-  version: 2016-09-02T22:37:24Z
   title: AwsServerlessExpressApi
 basePath: /prod
 schemes:
