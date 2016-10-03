@@ -70,6 +70,8 @@ function forwardConnectionErrorResponseToApiGateway(server, error, context) {
 
 function forwardRequestToNodeServer(server, event, context) {
     const requestOptions = mapApiGatewayEventToHttpRequest(event, getSocketPath(server._socketPathSuffix))
+    requestOptions.headers['x-apigateway-event'] = JSON.stringify(event)
+    requestOptions.headers['x-apigateway-context'] = JSON.stringify(context)
     const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, context))
 
     if (event.body) {

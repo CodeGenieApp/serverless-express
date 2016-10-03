@@ -7,6 +7,17 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use((req, res, next) => {
+    req.apiGateway = {
+        event: JSON.parse(req.headers['x-apigateway-event']),
+        context: JSON.parse(req.headers['x-apigateway-context'])
+    }
+
+    delete req.headers['x-apigateway-event']
+    delete req.headers['x-apigateway-context']
+
+    next()
+})
 
 app.get('/', (req, res) => {
     res.sendFile(`${__dirname}/index.html`)
