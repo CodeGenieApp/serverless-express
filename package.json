@@ -8,7 +8,7 @@
         "url": "https://github.com/awslabs/aws-serverless-express/issues"
     },
     "license": "Apache-2.0",
-    "files": ["index.js"],
+    "files": ["index.js", "middleware.js"],
     "main": "index.js",
     "repository": {
         "type": "git",

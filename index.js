@@ -25,7 +25,9 @@ function getPathWithQueryStringParams(event) {
     return `${event.path}?${queryStringParams}`
 }
 
-function mapApiGatewayEventToHttpRequest(event, socketPath) {
+function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
+    event.headers['x-apigateway-event'] = JSON.stringify(event)
+    event.headers['x-apigateway-context'] = JSON.stringify(context)
     return {
         method: event.httpMethod,
         path: getPathWithQueryStringParams(event),
@@ -69,9 +71,7 @@ function forwardConnectionErrorResponseToApiGateway(server, error, context) {
 }
 
 function forwardRequestToNodeServer(server, event, context) {
-    const requestOptions = mapApiGatewayEventToHttpRequest(event, getSocketPath(server._socketPathSuffix))
-    requestOptions.headers['x-apigateway-event'] = JSON.stringify(event)
-    requestOptions.headers['x-apigateway-context'] = JSON.stringify(context)
+    const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
     const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, context))
 
     if (event.body) {
