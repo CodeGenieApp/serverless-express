@@ -1,12 +1,12 @@
 {
   "name": "aws-serverless-express-example",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
   "main": "lambda.js",
   "config": {
-      "s3BucketName" : "YOUR_UNIQUE_BUCKET_NAME",
-      "cloudFormationStackName": "AwsServerlessExpressStack",
-      "region": "YOUR_AWS_REGION"
+    "s3BucketName": "YOUR_UNIQUE_BUCKET_NAME",
+    "cloudFormationStackName": "AwsServerlessExpressStack",
+    "region": "YOUR_AWS_REGION"
   },
   "scripts": {
     "config": "node configure.js",
