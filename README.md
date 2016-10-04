@@ -51,6 +51,14 @@ To perform a basic, local simulation of API Gateway and Lambda with your Node se
 
 If you need to make modifications to your API Gateway API, modify `simple-proxy-api.yaml` and run `npm run upload-api-gateway-swagger && npm run update stack`. If your API requires CORS, be sure to modify the two `options` methods defined in the Swagger file, otherwise you can safely remove them. Note: there is currently an issue with updating CloudFormation when it's not obvious that one of its resources has been modified; eg. the Swagger file is an external file hosted on S3. To work around this, simply update one of the resource's properties, such as the `Description` on the `ApiGatewayApi` resource. To modify your other AWS assets, make your changes to `cloudformation.json` and run `npm run update-stack`. Alternatively, you can manage these assets via the AWS console.
 
+### Getting the API Gateway event object
+This package includes middleware to easily get the event object Lambda receives from API Gateway
+
+```js
+const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+app.use(awsServerlessExpressMiddleware.eventContext())
+```
+
 ### Is AWS serverless right for my app?
 
 #### Pros
