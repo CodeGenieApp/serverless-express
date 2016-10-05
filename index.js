@@ -51,7 +51,7 @@ function forwardResponseToApiGateway(server, response, context) {
 
         Object.keys(headers)
         .forEach(h => {
-            if(Array.isArray(h)) headers[h] = headers[h].join(',')
+            if(Array.isArray(headers[h])) headers[h] = headers[h].join(',')
         })
         const successResponse = {statusCode, body, headers}
 
