@@ -82,3 +82,4 @@ app.use(awsServerlessExpressMiddleware.eventContext())
  - Stateless only
  - Multiple headers with same name not supported
  - Currently no support for binary data
+ - Maximum execution time for a request is 300 seconds (5 minutes). Not suitable for long running jobs. 
