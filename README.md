@@ -23,7 +23,7 @@ exports.handler = (event, context) => awsServerlessExpress.proxy(server, event, 
 In addition to a basic Lambda function and Express server, the `example` directory includes a [Swagger file](http://swagger.io/specification/), [CloudFormation template](https://aws.amazon.com/cloudformation/aws-cloudformation-templates/), and helper scripts to help you set up and manage your AWS assets.
 
 ### Windows support
-Windows users must have 7-Zip CLI installed http://www.7-zip.org/download.html to run the commands. Commands that are Windows/7z specific are prefixed with `win-`. These commands are: `win-package-function`, `win-package-upload-function`, `win-package-upload-update-function`, and `win-setup`. If you do not want to install 7-Zip, you can instead zip the necessary files using the Windows UI and modify the commands accordingly.
+Windows users must have 7-Zip CLI installed http://www.7-zip.org/download.html and added to their path (`setx path "%path%;C:\Program Files\7-Zip"`) to run the commands. You must also use the `win-` prefixed commands, eg. `npm run win-setup`. If you do not want to install 7-Zip, you can instead zip the necessary files using the Windows UI and modify the commands accordingly.
 
 ### Steps for running the example
 This guide assumes you have already [set up an AWS account](http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/AboutAWSAccounts.html) and have the [AWS CLI](https://aws.amazon.com/cli/) installed.
