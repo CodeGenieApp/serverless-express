@@ -24,7 +24,7 @@
     "package-upload-function": "npm run package-function && npm run upload-function",
     "upload-update-function": "npm run upload-function && npm run update-function",
     "package-upload-update-function": "npm run package-upload-function && npm run update-function",
-    "setup": "npm install && aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket && npm run package-upload-function && npm run upload-api-gateway-swagger && npm run create-stack",
+    "setup": "npm install && (aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket) && npm run package-upload-function && npm run upload-api-gateway-swagger && npm run create-stack",
 
     "win-config": "node configure.js",
     "win-local": "node -e \"require('./lambda.js').handler(require('./api-gateway-event.json'), {succeed: v => console.log(v)}, (e, v) => console.log(v))\"",
@@ -41,7 +41,7 @@
     "win-package-upload-function": "npm run win-package-function && npm run win-upload-function",
     "win-upload-update-function": "npm run win-upload-function && npm run win-update-function",
     "win-package-upload-update-function": "npm run win-package-upload-function && npm run win-update-function",
-    "win-setup": "npm install && aws s3api get-bucket-location --bucket %npm_package_config_s3BucketName% --region %npm_package_config_region% || npm run win-create-bucket && npm run win-package-upload-function && npm run win-upload-api-gateway-swagger && npm run win-create-stack"
+    "win-setup": "npm install && (aws s3api get-bucket-location --bucket %npm_package_config_s3BucketName% --region %npm_package_config_region% || npm run win-create-bucket) && npm run win-package-upload-function && npm run win-upload-api-gateway-swagger && npm run win-create-stack"
   },
   "license": "Apache-2.0",
   "dependencies": {
