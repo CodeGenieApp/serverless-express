@@ -10,7 +10,7 @@
   },
   "scripts": {
     "config": "node configure.js",
-    "local": "node -e \"require('./lambda.js').handler(require('./api-gateway-event.json'), {succeed: v => console.log(v)}, (e, v) => console.log(v))\"",
+    "local": "node -e \"require('./lambda.js').handler(require('./api-gateway-event.json'), {succeed: v => { console.log(v); process.exit(0); }}, (e, v) => { console.log(v); process.exit(1); })\"",
     "invoke-lambda": "aws lambda invoke --function-name AwsServerlessExpressFunction --region $npm_package_config_region --payload file://api-gateway-event.json lambda-invoke-response.json && cat lambda-invoke-response.json",
     "create-bucket": "aws s3 mb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
     "delete-bucket": "aws s3 rm s3://$npm_package_config_s3BucketName/lambda-function.zip --region $npm_package_config_region; aws s3 rm s3://$npm_package_config_s3BucketName/simple-proxy-api.yaml --region $npm_package_config_region; aws s3 rb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
@@ -27,7 +27,7 @@
     "setup": "npm install && (aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket) && npm run package-upload-function && npm run upload-api-gateway-swagger && npm run create-stack",
 
     "win-config": "node configure.js",
-    "win-local": "node -e \"require('./lambda.js').handler(require('./api-gateway-event.json'), {succeed: v => console.log(v)}, (e, v) => console.log(v))\"",
+    "win-local": "node -e \"require('./lambda.js').handler(require('./api-gateway-event.json'), {succeed: v => { console.log(v); process.exit(0); }}, (e, v) => { console.log(v); process.exit(1); })\"",
     "win-invoke-lambda": "aws lambda invoke --function-name AwsServerlessExpressFunction --region %npm_package_config_region% --payload file://api-gateway-event.json lambda-invoke-response.json && cat lambda-invoke-response.json",
     "win-create-bucket": "aws s3 mb s3://%npm_package_config_s3BucketName% --region %npm_package_config_region%",
     "win-delete-bucket": "aws s3 rm s3://%npm_package_config_s3BucketName%/lambda-function.zip --region %npm_package_config_region%; aws s3 rm s3://%npm_package_config_s3BucketName%/simple-proxy-api.yaml --region %npm_package_config_region%; aws s3 rb s3://%npm_package_config_s3BucketName% --region %npm_package_config_region%",
