@@ -28,7 +28,7 @@ This guide assumes you have already [set up an AWS account](http://docs.aws.amaz
 1. From your preferred project directory: `git clone https://github.com/awslabs/aws-serverless-express.git && cd aws-serverless-express/example`.
 2. Run `npm run config <accountId> <bucketName> [region]` to configure the example, eg. `npm run config 123456789012 my-bucket us-west-2`. This modifies `package.json` and  `simple-proxy-api.yaml` with your account ID, bucket, and region (region defaults to `us-east-1`). If the bucket you specify does not yet exist, the next step will create it for you. This step modifies the existing files in-place; if you wish to make changes to these settings, you will need to modify `package.json` and `simple-proxy-api.yaml` manually.
 3. Run `npm run setup` - this installs the node dependencies, creates the S3 bucket (if it does not already exist), packages and uploads your serverless Express application assets to S3, uploads the API Swagger file to S3, and finally spins up a CloudFormation stack, which creates your API Gateway API and Lambda Function.
-4. After the setup command completes, your browser will open to the CloudFormation console (sign in if necessary). Select the `AwsServerlessExpressStack` stack, and wait several minutes for the status to change to `CREATE_COMPLETE`, then click the `ApiUrl` value under the __Outputs__ section - this will open a new page with your running API. The API index lists the resources available in the example Express server (`app.js`), along with example `curl` commands.
+4. After the setup command completes, open the AWS CloudFormation console https://console.aws.amazon.com/cloudformation/home and switch to the region you specified. Select the `AwsServerlessExpressStack` stack, and wait several minutes for the status to change to `CREATE_COMPLETE`, then click the `ApiUrl` value under the __Outputs__ section - this will open a new page with your running API. The API index lists the resources available in the example Express server (`app.js`), along with example `curl` commands.
 
 See the sections below for details on how to migrate an existing (or create a new) Node.js project based on this example. If you would prefer to delete AWS assets that were just created, simply run `npm run delete-stack` to delete the CloudFormation Stack, including the API and Lambda Function. If you specified a new bucket in the `config` command for step 1 and want to delete that bucket, run `npm run delete-bucket`.
 
@@ -82,4 +82,4 @@ app.use(awsServerlessExpressMiddleware.eventContext())
  - Stateless only
  - Multiple headers with same name not supported
  - Currently no support for binary data
- - Maximum execution time for a request is 300 seconds (5 minutes). Not suitable for long running jobs. 
+ - Maximum execution time for a request is 300 seconds (5 minutes). Not suitable for long running jobs.
