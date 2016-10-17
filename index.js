@@ -26,6 +26,12 @@ function getPathWithQueryStringParams(event) {
 }
 
 function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
+    if (!event.headers) {
+        // When calling the function from test invoke in the API Gateway console the headers
+        // map is null
+        event.headers = {}
+    }
+
     event.headers['x-apigateway-event'] = JSON.stringify(event)
     event.headers['x-apigateway-context'] = JSON.stringify(context)
     return {
