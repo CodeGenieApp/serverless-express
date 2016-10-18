@@ -26,5 +26,8 @@
   },
   "engines": {
     "node": ">=4"
+  },
+  "scripts":{
+    "config": "node example/configure.js"
   }
 }
