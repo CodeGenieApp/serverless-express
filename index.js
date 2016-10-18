@@ -26,23 +26,20 @@ function getPathWithQueryStringParams(event) {
 }
 
 function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
-    if (!event.headers) {
-        // When calling the function from test invoke in the API Gateway console the headers
-        // map is null
-        event.headers = {}
-    }
+    const headers = event.headers || {}
 
-    event.headers['x-apigateway-event'] = JSON.stringify(event)
-    event.headers['x-apigateway-context'] = JSON.stringify(context)
+    headers['x-apigateway-event'] = JSON.stringify(event)
+    headers['x-apigateway-context'] = JSON.stringify(context)
+
     return {
         method: event.httpMethod,
         path: getPathWithQueryStringParams(event),
-        headers: event.headers,
-        socketPath: socketPath,
-        // protocol: `${event.headers['X-Forwarded-Proto']}:`,
-        // host: event.headers.Host,
-        // hostname: event.headers.Host, // Alias for host
-        // port: event.headers['X-Forwarded-Port']
+        headers,
+        socketPath
+        // protocol: `${headers['X-Forwarded-Proto']}:`,
+        // host: headers.Host,
+        // hostname: headers.Host, // Alias for host
+        // port: headers['X-Forwarded-Port']
     }
 }
 
@@ -66,9 +63,20 @@ function forwardResponseToApiGateway(server, response, context) {
 }
 
 function forwardConnectionErrorResponseToApiGateway(server, error, context) {
-    // if debug: console.log(error)
+    console.error(error)
     const errorResponse = {
         statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
+        body: '',
+        headers: {}
+    }
+
+    context.succeed(errorResponse)
+}
+
+function forwardLibraryErrorResponseToApiGateway(server, error, context) {
+    console.error(error)
+    const errorResponse = {
+        statusCode: 500,
         body: '',
         headers: {}
     }
@@ -120,10 +128,20 @@ exports.createServer = (requestListener, serverListenCallback) => {
 }
 
 exports.proxy = (server, event, context) => {
-    if (server._isListening) {
-        forwardRequestToNodeServer(server, event, context)
-    } else {
-        startServer(server)
-        .on('listening', () => forwardRequestToNodeServer(server, event, context))
+    try {
+        if (server._isListening) {
+            forwardRequestToNodeServer(server, event, context)
+        } else {
+            startServer(server)
+            .on('listening', () => {
+                try {
+                    forwardRequestToNodeServer(server, event, context)
+                } catch(error) {
+                    forwardLibraryErrorResponseToApiGateway(server, error, context)
+                }
+            })
+        }
+    } catch (error) {
+        forwardLibraryErrorResponseToApiGateway(server, error, context)
     }
 }
