@@ -85,4 +85,4 @@ app.use(awsServerlessExpressMiddleware.eventContext())
  - Stateless only
  - Multiple headers with same name not supported
  - Currently no support for binary data
- - Maximum execution time for a request is 300 seconds (5 minutes). Not suitable for long running jobs.
+ - API Gateway has a timeout of 30 seconds, and Lambda has a maximum execution time of 5 minutes.
