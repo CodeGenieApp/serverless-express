@@ -28,7 +28,10 @@ function getPathWithQueryStringParams(event) {
 function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
     const headers = event.headers || {}
 
-    headers['x-apigateway-event'] = JSON.stringify(event)
+    const eventWithoutBody = Object.assign({}, event)
+    delete eventWithoutBody['body']
+
+    headers['x-apigateway-event'] = JSON.stringify(eventWithoutBody)
     headers['x-apigateway-context'] = JSON.stringify(context)
 
     return {
