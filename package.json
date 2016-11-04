@@ -26,5 +26,11 @@
   },
   "engines": {
     "node": ">=4"
-  }
+  },
+  "devDependencies": {
+    "jest": "^16.0.2"
+    },
+    "scripts": {
+        "test": "jest"
+    }
 }
