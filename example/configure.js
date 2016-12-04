@@ -71,6 +71,6 @@ function modifyFiles(files, replacements) {
             fileContentModified = fileContentModified.replace(v.regexp, v.replacement)
         })
 
-        fs.writeFileSync(file, fileContentModified)
+        fs.writeFileSync(file, fileContentModified, 'utf8')
     })
 }
