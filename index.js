@@ -20,7 +20,7 @@ function getPathWithQueryStringParams(event) {
 
     if (queryStringKeys.length === 0) return event.path
 
-    const queryStringParams = queryStringKeys.map(queryStringKey => `${queryStringKey}=${event.queryStringParameters[queryStringKey]}`).join('&')
+    const queryStringParams = queryStringKeys.map(queryStringKey => `${queryStringKey}=${encodeURIComponent(event.queryStringParameters[queryStringKey])}`).join('&')
 
     return `${event.path}?${queryStringParams}`
 }
