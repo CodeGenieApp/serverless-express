@@ -1,19 +1,46 @@
 #!/usr/bin/env node
 'use strict'
+
 const fs = require('fs')
-const args = process.argv.slice(2)
-const accountId = args[0]
-const bucketName = args[1]
-const region = args[2] || 'us-east-1'
+const exec = require('child_process').execSync
+
+let minimistHasBeenInstalled = false
+
+if (!fs.existsSync('./node_modules/minimist')) {
+    exec('npm install minimist --silent')
+    minimistHasBeenInstalled = true
+}
+
+const args = require('minimist')(process.argv.slice(2), {
+    string: [
+        'account-id',
+        'bucket-name',
+        'function-name',
+        'region'
+    ],
+    default: {
+        region: 'us-east-1',
+        'function-name': 'AwsServerlessExpressFunction'
+    }
+})
+
+if (minimistHasBeenInstalled) {
+    exec('npm uninstall minimist --silent')
+}
+
+const accountId = args['account-id']
+const bucketName = args['bucket-name']
+const functionName = args['function-name']
+const region = args.region
 const availableRegions = ['us-east-1', 'us-west-2', 'eu-west-1', 'eu-central-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2']
 
 if (!accountId || accountId.length !== 12) {
-    console.error('You must supply a 12 digit account id as the first argument')
+    console.error('You must supply a 12 digit account id as --account-id="<accountId>"')
     return
 }
 
 if (!bucketName) {
-    console.error('You must supply a bucket name as the second argument')
+    console.error('You must supply a bucket name as --bucket-name="<bucketName>"')
     return
 }
 
@@ -22,25 +49,28 @@ if (availableRegions.indexOf(region) === -1) {
     return
 }
 
-modifySimpleProxyFile()
-modifyPackageFile()
+modifyFiles(['./simple-proxy-api.yaml', './package.json', './cloudformation.json'], [{
+    regexp: /YOUR_ACCOUNT_ID/g,
+    replacement: accountId
+}, {
+    regexp: /YOUR_AWS_REGION/g,
+    replacement: region
+}, {
+    regexp: /YOUR_UNIQUE_BUCKET_NAME/g, 
+    replacement: bucketName
+}, {
+    regexp: /AwsServerlessExpressFunction/g,
+    replacement: functionName
+}])
 
-function modifySimpleProxyFile() {
-    const simpleProxyApiPath = './simple-proxy-api.yaml'
-    const simpleProxyApi = fs.readFileSync(simpleProxyApiPath, 'utf8')
-    const simpleProxyApiModified = simpleProxyApi
-        .replace(/YOUR_ACCOUNT_ID/g, accountId)
-        .replace(/YOUR_AWS_REGION/g, region)
+function modifyFiles(files, replacements) {
+    files.forEach((file) => {
+        let fileContentModified = fs.readFileSync(file, 'utf8')
 
-    fs.writeFileSync(simpleProxyApiPath, simpleProxyApiModified, 'utf8')
-}
+        replacements.forEach((v) => {
+            fileContentModified = fileContentModified.replace(v.regexp, v.replacement)
+        })
 
-function modifyPackageFile() {
-    const packageJsonPath = './package.json'
-    const packageJson = fs.readFileSync(packageJsonPath, 'utf8')
-    const packageJsonModified = packageJson
-        .replace(/YOUR_UNIQUE_BUCKET_NAME/g, bucketName)
-        .replace(/YOUR_AWS_REGION/g, region)
-
-    fs.writeFileSync(packageJsonPath, packageJsonModified, 'utf8')
+        fs.writeFileSync(file, fileContentModified, 'utf8')
+    })
 }
