@@ -106,10 +106,14 @@ function getSocketPath(socketPathSuffix) {
     return `/tmp/server${socketPathSuffix}.sock`
 }
 
+function socketTimestamp () {
+    return (new Date()).valueOf(); //unix epoch ms
+}
+
 exports.createServer = (requestListener, serverListenCallback) => {
     const server = http.createServer(requestListener)
 
-    server._socketPathSuffix = 0
+    server._socketPathSuffix = socketTimestamp()
     server.on('listening', () => {
         server._isListening = true
 
@@ -121,7 +125,7 @@ exports.createServer = (requestListener, serverListenCallback) => {
     .on('error', (err) => {
         if (err.code === 'EADDRINUSE') {
             console.warn(`EADDRINUSE ${getSocketPath(server._socketPathSuffix)} incrementing socketPathSuffix.`)
-            ++server._socketPathSuffix
+            server._socketPathSuffix = socketTimestamp()
             server.close(() => startServer(server))
         }
     })
