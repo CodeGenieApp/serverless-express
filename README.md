@@ -84,5 +84,4 @@ app.use(awsServerlessExpressMiddleware.eventContext())
  - Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
  - Stateless only
  - Multiple headers with same name not supported
- - Currently no support for binary data
  - API Gateway has a timeout of 30 seconds, and Lambda has a maximum execution time of 5 minutes.

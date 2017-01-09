@@ -46,22 +46,35 @@ function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
 }
 
 function forwardResponseToApiGateway(server, response, context) {
-    let body = ''
+    let buf = []
 
-    response.setEncoding('utf8')
-    .on('data', (chunk) => body += chunk.toString('utf8'))
-    .on('end', () => {
-        const statusCode = response.statusCode
-        const headers = response.headers
+    response
+        .on('data', (chunk) => buf.push(chunk))
+        .on('end', () => {
+            let body = Buffer.concat(buf)
+            const statusCode = response.statusCode
+            const headers = response.headers
 
-        Object.keys(headers)
-        .forEach(h => {
-            if(Array.isArray(headers[h])) headers[h] = headers[h].join(',')
+            Object.keys(headers)
+                .forEach(h => {
+                    if(Array.isArray(headers[h])) headers[h] = headers[h].join(',')
+                })
+
+            const contentType = headers['content-type']
+            let isBase64Encoded
+
+            if (server._binaryTypes.indexOf(contentType) !== -1) {
+                body = body.toString('base64')
+                isBase64Encoded = true
+            } else {
+                body = body.toString('utf8')
+                isBase64Encoded = false
+            }
+
+            const successResponse = {statusCode, body, headers, isBase64Encoded}
+
+            context.succeed(successResponse)
         })
-        const successResponse = {statusCode, body, headers}
-
-        context.succeed(successResponse)
-    })
 }
 
 function forwardConnectionErrorResponseToApiGateway(server, error, context) {
@@ -106,10 +119,11 @@ function getSocketPath(socketPathSuffix) {
     return `/tmp/server${socketPathSuffix}.sock`
 }
 
-exports.createServer = (requestListener, serverListenCallback) => {
+exports.createServer = (requestListener, serverListenCallback, binaryTypes) => {
     const server = http.createServer(requestListener)
 
     server._socketPathSuffix = 0
+    server._binaryTypes = binaryTypes ? binaryTypes.slice() : []
     server.on('listening', () => {
         server._isListening = true
 

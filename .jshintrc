@@ -1,0 +1,11 @@
+{
+  "esversion": 6,
+  "node": true,
+  "asi": true,
+  "globals": {
+    /* jest */
+    "test": false,
+    "expect": false,
+    "describe": false
+  }
+}
