@@ -3,6 +3,7 @@
 
 const fs = require('fs')
 const exec = require('child_process').execSync
+const modifyFiles = require('./utils').modifyFiles
 
 let minimistHasBeenInstalled = false
 
@@ -49,28 +50,16 @@ if (availableRegions.indexOf(region) === -1) {
     return
 }
 
-modifyFiles(['./simple-proxy-api.yaml', './package.json', './cloudformation.json'], [{
+modifyFiles(['./simple-proxy-api.yaml', './package.json', './cloudformation.yaml'], [{
     regexp: /YOUR_ACCOUNT_ID/g,
     replacement: accountId
 }, {
     regexp: /YOUR_AWS_REGION/g,
     replacement: region
 }, {
-    regexp: /YOUR_UNIQUE_BUCKET_NAME/g, 
+    regexp: /YOUR_UNIQUE_BUCKET_NAME/g,
     replacement: bucketName
 }, {
-    regexp: /AwsServerlessExpressFunction/g,
+    regexp: /YOUR_SERVERLESS_EXPRESS_LAMBDA_FUNCTION_NAME/g,
     replacement: functionName
 }])
-
-function modifyFiles(files, replacements) {
-    files.forEach((file) => {
-        let fileContentModified = fs.readFileSync(file, 'utf8')
-
-        replacements.forEach((v) => {
-            fileContentModified = fileContentModified.replace(v.regexp, v.replacement)
-        })
-
-        fs.writeFileSync(file, fileContentModified, 'utf8')
-    })
-}
