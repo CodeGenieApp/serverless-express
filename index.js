@@ -14,6 +14,7 @@
  */
 'use strict'
 const http = require('http')
+const binarycase = require('binary-case');
 
 function getPathWithQueryStringParams(event) {
     const queryStringKeys = Object.keys(event.queryStringParameters || {})
@@ -57,7 +58,12 @@ function forwardResponseToApiGateway(server, response, context) {
 
             Object.keys(headers)
                 .forEach(h => {
-                    if(Array.isArray(headers[h])) headers[h] = headers[h].join(',')
+                    if(Array.isArray(headers[h])) {
+                      headers[h].forEach((value, i) => {
+                        headers[binarycase(h, i + 1)] = value;
+                      });
+                      delete headers[h];
+                    }
                 })
 
             const contentType = headers['content-type']

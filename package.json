@@ -32,5 +32,8 @@
   },
   "scripts": {
     "test": "jest"
+  },
+  "dependencies": {
+    "binary-case": "^1.0.0"
   }
 }
