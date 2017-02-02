@@ -20,6 +20,17 @@ test('getPathWithQueryStringParams: 1 param', () => {
     expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz')
 })
 
+test('getPathWithQueryStringParams: to be url-encoded param', () => {
+    const event = {
+        path: '/foo/bar',
+        queryStringParameters: {
+            'redirect_uri': 'http://lvh.me:3000/cb'
+        }
+    }
+    const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams(event)
+    expect(pathWithQueryStringParams).toEqual('/foo/bar?redirect_uri=http%3A%2F%2Flvh.me%3A3000%2Fcb')
+})
+
 test('getPathWithQueryStringParams: 2 params', () => {
     const event = {
         path: '/foo/bar',
