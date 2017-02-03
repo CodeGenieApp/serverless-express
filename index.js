@@ -14,16 +14,11 @@
  */
 'use strict'
 const http = require('http')
+const url = require('url')
 const binarycase = require('binary-case')
 
 function getPathWithQueryStringParams(event) {
-    const queryStringKeys = Object.keys(event.queryStringParameters || {})
-
-    if (queryStringKeys.length === 0) return event.path
-
-    const queryStringParams = queryStringKeys.map(queryStringKey => `${queryStringKey}=${encodeURIComponent(event.queryStringParameters[queryStringKey])}`).join('&')
-
-    return `${event.path}?${queryStringParams}`
+  return url.format({ pathname: event.path, query: event.queryStringParameters })
 }
 
 function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
