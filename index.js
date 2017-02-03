@@ -15,6 +15,7 @@
 'use strict'
 const http = require('http')
 const url = require('url')
+const binarycase = require('binary-case')
 
 function getPathWithQueryStringParams(event) {
   return url.format({ pathname: event.path, query: event.queryStringParameters })
@@ -50,9 +51,16 @@ function forwardResponseToApiGateway(server, response, context) {
             const statusCode = response.statusCode
             const headers = response.headers
 
+            // HACK: modifies header casing to get around API Gateway's limitation of not allowing multiple
+            // headers with the same name, as discussed on the AWS Forum https://forums.aws.amazon.com/message.jspa?messageID=725953#725953
             Object.keys(headers)
                 .forEach(h => {
-                    if(Array.isArray(headers[h])) headers[h] = headers[h].join(',')
+                    if(Array.isArray(headers[h])) {
+                      headers[h].forEach((value, i) => {
+                        headers[binarycase(h, i + 1)] = value
+                      })
+                      delete headers[h]
+                    }
                 })
 
             const contentType = headers['content-type']
