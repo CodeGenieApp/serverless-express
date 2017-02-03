@@ -1,6 +1,6 @@
 {
   "name": "aws-serverless-express",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "This library enables you to utilize AWS Lambda and Amazon API Gateway to respond to web and API requests using your existing Node.js application framework.",
   "keywords": [
     "aws",
