@@ -1,6 +1,6 @@
 {
   "name": "aws-serverless-express-example",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
   "main": "lambda.js",
   "config": {
@@ -22,7 +22,6 @@
     "package-deploy": "npm run package && npm run deploy",
     "delete-stack": "aws cloudformation delete-stack --stack-name $npm_package_config_cloudFormationStackName --region $npm_package_config_region",
     "setup": "npm install && (aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket) && npm run package-deploy",
-
     "win-config": "npm run config",
     "win-deconfig": "npm run deconfig",
     "win-local": "npm run local",
