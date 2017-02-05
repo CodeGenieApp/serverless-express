@@ -125,7 +125,7 @@ class MockContext {
 describe('forwardResponseToApiGateway: header handling', () => {
   test('multiple headers with the same name get transformed', () => {
       const server = new MockServer()
-      const headers = {'foo': ['bar', 'baz']}
+      const headers = {'foo': ['bar', 'baz'], 'Set-Cookie': ['bar', 'baz']}
       const body = 'hello world'
       const response = new MockResponse(200, headers, body)
       return new Promise(
@@ -137,7 +137,7 @@ describe('forwardResponseToApiGateway: header handling', () => {
       ).then(successResponse => expect(successResponse).toEqual({
           statusCode: 200,
           body: body,
-          headers: { Foo: 'bar', fOo: 'baz' },
+          headers: { foo: 'bar,baz', 'SEt-Cookie': 'baz', 'set-Cookie': 'bar' },
           isBase64Encoded: false
       }))
   })
