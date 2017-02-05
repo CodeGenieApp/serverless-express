@@ -56,10 +56,14 @@ function forwardResponseToApiGateway(server, response, context) {
             Object.keys(headers)
                 .forEach(h => {
                     if(Array.isArray(headers[h])) {
-                      headers[h].forEach((value, i) => {
-                        headers[binarycase(h, i + 1)] = value
-                      })
-                      delete headers[h]
+                      if (h.toLowerCase() === 'set-cookie') {
+                        headers[h].forEach((value, i) => {
+                          headers[binarycase(h, i + 1)] = value
+                        })
+                        delete headers[h]
+                      } else {
+                        headers[h] = headers[h].join(',')
+                      }
                     }
                 })
 
