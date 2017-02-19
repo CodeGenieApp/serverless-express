@@ -137,7 +137,7 @@ describe('forwardResponseToApiGateway: header handling', () => {
       ).then(successResponse => expect(successResponse).toEqual({
           statusCode: 200,
           body: body,
-          headers: { foo: 'bar,baz', 'SEt-Cookie': 'baz', 'set-Cookie': 'bar' },
+          headers: { foo: 'bar,baz', 'Set-cookie': 'baz', 'set-cookie': 'bar' },
           isBase64Encoded: false
       }))
   })

@@ -15,7 +15,7 @@
 'use strict'
 const http = require('http')
 const url = require('url')
-const binarycase = require('binary-case')
+const setCookie = require('./setCookie');
 
 function getPathWithQueryStringParams(event) {
   return url.format({ pathname: event.path, query: event.queryStringParameters })
@@ -58,7 +58,7 @@ function forwardResponseToApiGateway(server, response, context) {
                     if(Array.isArray(headers[h])) {
                       if (h.toLowerCase() === 'set-cookie') {
                         headers[h].forEach((value, i) => {
-                          headers[binarycase(h, i + 1)] = value
+                          headers[setCookie[i]] = value
                         })
                         delete headers[h]
                       } else {
