@@ -51,6 +51,9 @@ function forwardResponseToApiGateway(server, response, context) {
             const statusCode = response.statusCode
             const headers = response.headers
 
+            // chunked transfer not currently supported by API Gateway
+            if (headers['transfer-encoding'] === 'chunked') delete headers['transfer-encoding']
+
             // HACK: modifies header casing to get around API Gateway's limitation of not allowing multiple
             // headers with the same name, as discussed on the AWS Forum https://forums.aws.amazon.com/message.jspa?messageID=725953#725953
             Object.keys(headers)
@@ -67,7 +70,8 @@ function forwardResponseToApiGateway(server, response, context) {
                     }
                 })
 
-            const contentType = headers['content-type']
+            // only compare mime type; ignore encoding part
+            const contentType = headers['content-type'] ? headers['content-type'].split(';')[0] : ''
             let isBase64Encoded
 
             if (server._binaryTypes.indexOf(contentType) !== -1) {
