@@ -1,11 +1,11 @@
 {
     "httpMethod": "GET",
     "//body": "{\"name\": \"Jake\"}",
-    "path": "/",
+    "path": "/users",
     "resource": "/{proxy+}",
     "queryStringParameters": {},
     "pathParameters": {
-        "proxy": "users/1"
+        "proxy": "users"
     },
     "headers": {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
