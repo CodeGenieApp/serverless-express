@@ -115,7 +115,11 @@ function forwardRequestToNodeServer(server, event, context) {
     const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, context))
 
     if (event.body) {
-        req.write(event.body)
+        if (event.isBase64Encoded) {
+            req.write(new Buffer(event.body, 'base64'))
+        } else {
+            req.write(event.body)
+        }
     }
 
     req.on('error', (error) => forwardConnectionErrorResponseToApiGateway(server, error, context))
