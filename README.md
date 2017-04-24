@@ -75,7 +75,7 @@ app.use(awsServerlessExpressMiddleware.eventContext())
 
 #### Cons
 
- - Currently limited to Node.js 4.3 (LTS)
+ - Currently limited to Node.js 6.10 (LTS)
  - For apps that may not see traffic for several minutes at a time, you could see [cold starts](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)
  - May be more expensive for high-traffic apps
  - Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
