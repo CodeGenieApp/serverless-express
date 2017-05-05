@@ -89,6 +89,7 @@ function forwardResponseToApiGateway(server, response, context) {
 }
 
 function forwardConnectionErrorResponseToApiGateway(server, error, context) {
+    console.log('ERROR: aws-serverless-express connection error')
     console.error(error)
     const errorResponse = {
         statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
@@ -100,6 +101,7 @@ function forwardConnectionErrorResponseToApiGateway(server, error, context) {
 }
 
 function forwardLibraryErrorResponseToApiGateway(server, error, context) {
+    console.log('ERROR: aws-serverless-express error')
     console.error(error)
     const errorResponse = {
         statusCode: 500,
@@ -111,21 +113,26 @@ function forwardLibraryErrorResponseToApiGateway(server, error, context) {
 }
 
 function forwardRequestToNodeServer(server, event, context) {
-    const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
-    const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, context))
+    try {
+        const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
+        const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, context))
 
-    if (event.body) {
-        const contentType = getContentType({ contentTypeHeader: event.headers['content-type'] })
+        if (event.body) {
+            const contentType = getContentType({ contentTypeHeader: event.headers['content-type'] })
 
-        if (isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes})) {
-            event.body = new Buffer(event.body, 'base64').toString('utf8')
+            if (isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes})) {
+                event.body = new Buffer(event.body, 'base64').toString('utf8')
+            }
+
+            req.write(event.body)
         }
 
-        req.write(event.body)
-    }
-
-    req.on('error', (error) => forwardConnectionErrorResponseToApiGateway(server, error, context))
-    .end()
+        req.on('error', (error) => forwardConnectionErrorResponseToApiGateway(server, error, context))
+        .end()
+    } catch (error) {
+       forwardLibraryErrorResponseToApiGateway(server, error, context)
+       return server
+   }
 }
 
 function startServer(server) {
@@ -136,7 +143,7 @@ function getSocketPath(socketPathSuffix) {
     return `/tmp/server${socketPathSuffix}.sock`
 }
 
-exports.createServer = (requestListener, serverListenCallback, binaryTypes) => {
+function createServer (requestListener, serverListenCallback, binaryTypes) {
     const server = http.createServer(requestListener)
 
     server._socketPathSuffix = 0
@@ -153,31 +160,28 @@ exports.createServer = (requestListener, serverListenCallback, binaryTypes) => {
         if (err.code === 'EADDRINUSE') {
             console.warn(`EADDRINUSE ${getSocketPath(server._socketPathSuffix)} incrementing socketPathSuffix.`)
             ++server._socketPathSuffix
-            server.close(() => startServer(server))
+            return server.close(() => startServer(server))
         }
+
+        console.log('ERROR: server error')
+        console.error(error)
     })
 
     return server
 }
 
-exports.proxy = (server, event, context) => {
-    try {
-        if (server._isListening) {
-            forwardRequestToNodeServer(server, event, context)
-        } else {
-            startServer(server)
-            .on('listening', () => {
-                try {
-                    forwardRequestToNodeServer(server, event, context)
-                } catch(error) {
-                    forwardLibraryErrorResponseToApiGateway(server, error, context)
-                }
-            })
-        }
-    } catch (error) {
-        forwardLibraryErrorResponseToApiGateway(server, error, context)
+function proxy(server, event, context) {
+    if (server._isListening) {
+      forwardRequestToNodeServer(server, event, context)
+      return server
+    } else {
+        return startServer(server)
+        .on('listening', () => proxy(server, event, context))
     }
 }
+
+exports.createServer = createServer
+exports.proxy = proxy
 
 if (process.env.NODE_ENV === 'test') {
     exports.getPathWithQueryStringParams = getPathWithQueryStringParams
