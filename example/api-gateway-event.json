@@ -1,6 +1,6 @@
 {
     "httpMethod": "GET",
-    "//body": "{\"name\": \"Jake\"}",
+    "//body": "{\"name\": \"Sam\"}",
     "path": "/users",
     "resource": "/{proxy+}",
     "queryStringParameters": {},

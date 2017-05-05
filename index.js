@@ -35,8 +35,8 @@ function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
     const eventWithoutBody = Object.assign({}, event)
     delete eventWithoutBody.body
 
-    headers['x-apigateway-event'] = JSON.stringify(eventWithoutBody)
-    headers['x-apigateway-context'] = JSON.stringify(context)
+    headers['x-apigateway-event'] = encodeURIComponent(JSON.stringify(eventWithoutBody))
+    headers['x-apigateway-context'] = encodeURIComponent(JSON.stringify(context))
 
     return {
         method: event.httpMethod,
@@ -115,7 +115,7 @@ function forwardLibraryErrorResponseToApiGateway(server, error, context) {
 function forwardRequestToNodeServer(server, event, context) {
     try {
         const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
-        const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, context))
+        const req = http.request(requestOptions, (err, response, body) => forwardResponseToApiGateway(server, response, context))
 
         if (event.body) {
             const contentType = getContentType({ contentTypeHeader: event.headers['content-type'] })
