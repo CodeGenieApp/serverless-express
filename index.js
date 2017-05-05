@@ -21,6 +21,15 @@ function getPathWithQueryStringParams(event) {
   return url.format({ pathname: event.path, query: event.queryStringParameters })
 }
 
+function getContentType(params) {
+  // only compare mime type; ignore encoding part
+  return params.contentTypeHeader ? params.contentTypeHeader.split(';')[0] : ''
+}
+
+function isContentTypeBinaryMimeType(params) {
+  return params.binaryMimeTypes.indexOf(params.contentType) !== -1
+}
+
 function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
     const headers = event.headers || {} // NOTE: Mutating event.headers; prefer deep clone of event.headers
     const eventWithoutBody = Object.assign({}, event)
@@ -47,7 +56,7 @@ function forwardResponseToApiGateway(server, response, context) {
     response
         .on('data', (chunk) => buf.push(chunk))
         .on('end', () => {
-            let body = Buffer.concat(buf)
+            const bodyBuffer = Buffer.concat(buf)
             const statusCode = response.statusCode
             const headers = response.headers
 
@@ -70,18 +79,9 @@ function forwardResponseToApiGateway(server, response, context) {
                     }
                 })
 
-            // only compare mime type; ignore encoding part
-            const contentType = headers['content-type'] ? headers['content-type'].split(';')[0] : ''
-            let isBase64Encoded
-
-            if (server._binaryTypes.indexOf(contentType) !== -1) {
-                body = body.toString('base64')
-                isBase64Encoded = true
-            } else {
-                body = body.toString('utf8')
-                isBase64Encoded = false
-            }
-
+            const contentType = getContentType({ contentTypeHeader: headers['content-type'] })
+            const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes })
+            const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
             const successResponse = {statusCode, body, headers, isBase64Encoded}
 
             context.succeed(successResponse)
@@ -115,6 +115,12 @@ function forwardRequestToNodeServer(server, event, context) {
     const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, context))
 
     if (event.body) {
+        const contentType = getContentType({ contentTypeHeader: event.headers['content-type'] })
+
+        if (isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes})) {
+            event.body = new Buffer(event.body, 'base64').toString('utf8')
+        }
+
         req.write(event.body)
     }
 
