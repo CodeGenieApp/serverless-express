@@ -5,8 +5,13 @@ const mockNext = () => true
 const generateMockReq = () => {
     return {
         headers: {
-            'x-apigateway-event': '{"path": "/foo/bar"}',
-            'x-apigateway-context': '{"foo": "bar"}'
+            'x-apigateway-event': encodeURIComponent(JSON.stringify({
+              path: '/foo/bar',
+              queryStringParameters: {
+                  foo: '💩'
+              }
+            })),
+            'x-apigateway-context': encodeURIComponent(JSON.stringify({foo: 'bar'}))
         }
     }
 }
@@ -18,8 +23,8 @@ test('defaults', () => {
 
     eventContextMiddleware({})(req, mockRes, mockNext)
 
-    expect(req.apiGateway.event).toEqual(JSON.parse(originalHeaders['x-apigateway-event']))
-    expect(req.apiGateway.context).toEqual(JSON.parse(originalHeaders['x-apigateway-context']))
+    expect(req.apiGateway.event).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-event'])))
+    expect(req.apiGateway.context).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-context'])))
     expect(req.headers['x-apigateway-event']).toBe(undefined)
     expect(req.headers['x-apigateway-context']).toBe(undefined)
 })
@@ -30,8 +35,8 @@ test('options.reqPropKey', () => {
 
     eventContextMiddleware({ reqPropKey: '_apiGateway'})(req, mockRes, mockNext)
 
-    expect(req._apiGateway.event).toEqual(JSON.parse(originalHeaders['x-apigateway-event']))
-    expect(req._apiGateway.context).toEqual(JSON.parse(originalHeaders['x-apigateway-context']))
+    expect(req._apiGateway.event).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-event'])))
+    expect(req._apiGateway.context).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-context'])))
     expect(req.headers['x-apigateway-event']).toBe(undefined)
     expect(req.headers['x-apigateway-context']).toBe(undefined)
 })
@@ -43,8 +48,8 @@ test('options.deleteHeaders = false', () => {
 
     eventContextMiddleware({ deleteHeaders: false})(req, mockRes, mockNext)
 
-    expect(req.apiGateway.event).toEqual(JSON.parse(originalHeaders['x-apigateway-event']))
-    expect(req.apiGateway.context).toEqual(JSON.parse(originalHeaders['x-apigateway-context']))
+    expect(req.apiGateway.event).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-event'])))
+    expect(req.apiGateway.context).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-context'])))
     expect(req.headers['x-apigateway-event']).toEqual(originalHeaders['x-apigateway-event'])
     expect(req.headers['x-apigateway-context']).toEqual(originalHeaders['x-apigateway-context'])
 })

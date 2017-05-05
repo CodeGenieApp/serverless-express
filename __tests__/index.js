@@ -69,8 +69,8 @@ test('mapApiGatewayEventToHttpRequest: with headers', () => {
         path: '/foo',
         headers: {
             'x-foo': 'foo',
-            'x-apigateway-event': JSON.stringify(r.eventClone),
-            'x-apigateway-context': JSON.stringify(r.context)
+            'x-apigateway-event': encodeURIComponent(JSON.stringify(r.eventClone)),
+            'x-apigateway-context': encodeURIComponent(JSON.stringify(r.context))
         },
         socketPath: '/tmp/server0.sock'
     })
@@ -83,8 +83,8 @@ test('mapApiGatewayEventToHttpRequest: without headers', () => {
         method: 'GET',
         path: '/foo',
         headers: {
-            'x-apigateway-event': JSON.stringify(r.eventClone),
-            'x-apigateway-context': JSON.stringify(r.context)
+            'x-apigateway-event': encodeURIComponent(JSON.stringify(r.eventClone)),
+            'x-apigateway-context': encodeURIComponent(JSON.stringify(r.context))
         },
         socketPath: '/tmp/server0.sock'
     })
