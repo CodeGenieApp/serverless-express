@@ -8,7 +8,8 @@ const generateMockReq = () => {
             'x-apigateway-event': encodeURIComponent(JSON.stringify({
               path: '/foo/bar',
               queryStringParameters: {
-                  foo: '💩'
+                  foo: '🖖',
+                  bar: '~!@#$%^&*()_+`-=;\':",./<>?`'
               }
             })),
             'x-apigateway-context': encodeURIComponent(JSON.stringify({foo: 'bar'}))
