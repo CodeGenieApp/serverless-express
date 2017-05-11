@@ -115,13 +115,10 @@ function forwardLibraryErrorResponseToApiGateway(server, error, context) {
 function forwardRequestToNodeServer(server, event, context) {
     try {
         const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
-        const req = http.request(requestOptions, (err, response, body) => forwardResponseToApiGateway(server, response, context))
-
+        const req = http.request(requestOptions, (response, body) => forwardResponseToApiGateway(server, response, context))
         if (event.body) {
-            const contentType = getContentType({ contentTypeHeader: event.headers['content-type'] })
-
-            if (isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes})) {
-                event.body = new Buffer(event.body, 'base64').toString('utf8')
+            if (event.isBase64Encoded) {
+                event.body = new Buffer(event.body, 'base64')
             }
 
             req.write(event.body)
