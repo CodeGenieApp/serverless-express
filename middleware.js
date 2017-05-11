@@ -10,8 +10,8 @@ module.exports.eventContext = options => (req, res, next) => {
     }
 
     req[reqPropKey] = {
-        event: JSON.parse(req.headers['x-apigateway-event']),
-        context: JSON.parse(req.headers['x-apigateway-context'])
+        event: JSON.parse(decodeURIComponent(req.headers['x-apigateway-event'])),
+        context: JSON.parse(decodeURIComponent(req.headers['x-apigateway-context']))
     }
 
     if (deleteHeaders) {
