@@ -153,8 +153,8 @@ function createServer (requestListener, serverListenCallback, binaryTypes) {
     server.on('close', () => {
         server._isListening = false
     })
-    .on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
+    .on('error', (error) => {
+        if (error.code === 'EADDRINUSE') {
             console.warn(`EADDRINUSE ${getSocketPath(server._socketPathSuffix)} incrementing socketPathSuffix.`)
             ++server._socketPathSuffix
             return server.close(() => startServer(server))
