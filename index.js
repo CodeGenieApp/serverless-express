@@ -51,9 +51,21 @@ function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
 }
 
 function forwardResponseToApiGateway(server, response, context) {
+    const gunzip = require('zlib').createGunzip()
     let buf = []
 
-    response
+    let parsedResponse = null
+    
+    if (response.headers['content-encoding'] == "gzip") {
+        response.pipe(gunzip)
+        parsedResponse = gunzip
+        response.headers['content-encoding'] = undefined
+        response.headers['transfer-encoding'] = undefined
+    } else {
+        parsedResponse = response
+    }
+    
+    parsedResponse
         .on('data', (chunk) => buf.push(chunk))
         .on('end', () => {
             const bodyBuffer = Buffer.concat(buf)
