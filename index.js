@@ -155,7 +155,7 @@ function createServer (requestListener, serverListenCallback, binaryTypes) {
     })
     .on('error', (error) => {
         if (error.code === 'EADDRINUSE') {
-            console.warn(`EADDRINUSE ${getSocketPath(server._socketPathSuffix)} incrementing socketPathSuffix.`)
+            console.warn(`WARNING: Attempting to listen on socket ${getSocketPath(server._socketPathSuffix)}, but it is already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause, and consider increasing the timeout and/or cpu/memory allocation if this is purely as a result of a timeout. aws-serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
             ++server._socketPathSuffix
             return server.close(() => startServer(server))
         }

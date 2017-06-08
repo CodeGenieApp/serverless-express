@@ -24,4 +24,5 @@ function exitHandler(options, err) {
 
 process.on('exit', exitHandler.bind(null, { cleanup: true }))
 process.on('SIGINT', exitHandler.bind(null, { exit: true })) // ctrl+c event
+process.on('SIGTSTP', exitHandler.bind(null, { exit: true })) // ctrl+v event
 process.on('uncaughtException', exitHandler.bind(null, { exit: true }))
