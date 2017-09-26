@@ -23,7 +23,7 @@ function getPathWithQueryStringParams(event) {
   let path = event.path;
   const stripBasePath = options && options.stripBasePath;
   if (stripBasePath) {
-    let { pathParameters: { proxy: proxyPath } = {} } = event;
+    const proxyPath = event.pathParameters && event.pathParameters.proxy;
     if (proxyPath) {
       path = `/${proxyPath}`;
     }
