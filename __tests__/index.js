@@ -1,5 +1,5 @@
 'use strict'
-const awsServerlessExpress = require('../index')
+const awsServerlessExpress = require('../index')()
 
 test('getPathWithQueryStringParams: no params', () => {
     const event = {
@@ -41,6 +41,42 @@ test('getPathWithQueryStringParams: 2 params', () => {
     }
     const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams(event)
     expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&buzz=bozz')
+})
+
+test('getPathWithQueryStringParams: stripBasePath: true', () => {
+    const event = {
+        path: '/super/foo/bar',
+        queryStringParameters: {
+            'bizz': 'bazz',
+            'buzz': 'bozz'
+        },
+        pathParameters: {
+            proxy: 'foo/bar',
+        },
+    }
+    const awsServerlessExpress = require('../index')({
+        stripBasePath: true,
+    })
+    const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams(event)
+    expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&buzz=bozz')
+})
+
+test('getPathWithQueryStringParams: stripBasePath: false', () => {
+    const event = {
+        path: '/super/foo/bar',
+        queryStringParameters: {
+            'bizz': 'bazz',
+            'buzz': 'bozz'
+        },
+        pathParameters: {
+            proxy: 'foo/bar',
+        },
+    }
+    const awsServerlessExpress = require('../index')({
+        stripBasePath: false,
+    })
+    const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams(event)
+    expect(pathWithQueryStringParams).toEqual('/super/foo/bar?bizz=bazz&buzz=bozz')
 })
 
 function mapApiGatewayEventToHttpRequest(headers) {

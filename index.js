@@ -17,8 +17,18 @@ const http = require('http')
 const url = require('url')
 const binarycase = require('binary-case')
 
+module.exports = options => {
+
 function getPathWithQueryStringParams(event) {
-  return url.format({ pathname: event.path, query: event.queryStringParameters })
+  let path = event.path;
+  const stripBasePath = options && options.stripBasePath;
+  if (stripBasePath) {
+    let { pathParameters: { proxy: proxyPath } = {} } = event;
+    if (proxyPath) {
+      path = `/${proxyPath}`;
+    }
+  }
+  return url.format({ pathname: path, query: event.queryStringParameters })
 }
 
 function getContentType(params) {
@@ -177,6 +187,8 @@ function proxy(server, event, context) {
     }
 }
 
+const exports = {};
+
 exports.createServer = createServer
 exports.proxy = proxy
 
@@ -189,4 +201,7 @@ if (process.env.NODE_ENV === 'test') {
     exports.forwardRequestToNodeServer = forwardRequestToNodeServer
     exports.startServer = startServer
     exports.getSocketPath = getSocketPath
+}
+return exports;
+
 }
