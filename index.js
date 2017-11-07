@@ -16,6 +16,7 @@
 const http = require('http')
 const url = require('url')
 const binarycase = require('binary-case')
+const binaryTypeContentEncoding = ['gzip', 'compress', 'deflate', 'br'];
 
 module.exports = options => {
 
@@ -38,6 +39,17 @@ function getContentType(params) {
 
 function isContentTypeBinaryMimeType(params) {
   return params.binaryMimeTypes.indexOf(params.contentType) !== -1
+}
+
+function isContentEncodingBinaryMimeType(contentEncoding) {
+  if (contentEncoding == undefined) {
+    return false;
+  }
+  return binaryTypeContentEncoding.some((c) => {
+    if (contentEncoding.indexOf(c) >= 0) {
+        return true;
+    }
+  });
 }
 
 function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
@@ -90,7 +102,7 @@ function forwardResponseToApiGateway(server, response, context) {
                 })
 
             const contentType = getContentType({ contentTypeHeader: headers['content-type'] })
-            const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes })
+            const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes }) || isContentEncodingBinaryMimeType(headers['content-encoding'])
             const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
             const successResponse = {statusCode, body, headers, isBase64Encoded}
 
