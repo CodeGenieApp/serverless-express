@@ -38,7 +38,11 @@ function getContentType(params) {
 }
 
 function isContentTypeBinaryMimeType(params) {
-  return params.binaryMimeTypes.indexOf(params.contentType) !== -1
+  return params.binaryMimeTypes.some((c) => {
+    if (params.contentType.indexOf(c) == 0) {
+        return true;
+    }
+  });
 }
 
 function isContentEncodingBinaryMimeType(contentEncoding) {
@@ -102,7 +106,7 @@ function forwardResponseToApiGateway(server, response, context) {
                 })
 
             const contentType = getContentType({ contentTypeHeader: headers['content-type'] })
-            const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes }) || isContentEncodingBinaryMimeType(headers['content-encoding'])
+            const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes })
             const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
             const successResponse = {statusCode, body, headers, isBase64Encoded}
 
