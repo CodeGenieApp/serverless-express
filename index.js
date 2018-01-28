@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 'use strict'
-const http = require('http')
+const mock = require('mock-http')
 const url = require('url')
 const binarycase = require('binary-case')
 
@@ -30,7 +30,7 @@ function isContentTypeBinaryMimeType(params) {
   return params.binaryMimeTypes.indexOf(params.contentType) !== -1
 }
 
-function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
+function mapApiGatewayEventToHttpRequest(event, context) {
     const headers = event.headers || {} // NOTE: Mutating event.headers; prefer deep clone of event.headers
     const eventWithoutBody = Object.assign({}, event)
     delete eventWithoutBody.body
@@ -40,9 +40,8 @@ function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
 
     return {
         method: event.httpMethod,
-        path: getPathWithQueryStringParams(event),
-        headers,
-        socketPath
+        url: getPathWithQueryStringParams(event),
+        headers
         // protocol: `${headers['X-Forwarded-Proto']}:`,
         // host: headers.Host,
         // hostname: headers.Host, // Alias for host
@@ -50,57 +49,36 @@ function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
     }
 }
 
-function forwardResponseToApiGateway(server, response, context) {
-    let buf = []
+function makeContextResponse(bodyBuffer, response, binaryMimeTypes) {
+    const statusCode = response.statusCode
+    const headers = response._internal ? response._internal.headers : response.headers
 
-    response
-        .on('data', (chunk) => buf.push(chunk))
-        .on('end', () => {
-            const bodyBuffer = Buffer.concat(buf)
-            const statusCode = response.statusCode
-            const headers = response.headers
+    // chunked transfer not currently supported by API Gateway
+    if (headers['transfer-encoding'] === 'chunked') delete headers['transfer-encoding']
 
-            // chunked transfer not currently supported by API Gateway
-            if (headers['transfer-encoding'] === 'chunked') delete headers['transfer-encoding']
-
-            // HACK: modifies header casing to get around API Gateway's limitation of not allowing multiple
-            // headers with the same name, as discussed on the AWS Forum https://forums.aws.amazon.com/message.jspa?messageID=725953#725953
-            Object.keys(headers)
-                .forEach(h => {
-                    if(Array.isArray(headers[h])) {
-                      if (h.toLowerCase() === 'set-cookie') {
-                        headers[h].forEach((value, i) => {
-                          headers[binarycase(h, i + 1)] = value
-                        })
-                        delete headers[h]
-                      } else {
-                        headers[h] = headers[h].join(',')
-                      }
-                    }
+    // HACK: modifies header casing to get around API Gateway's limitation of not allowing multiple
+    // headers with the same name, as discussed on the AWS Forum https://forums.aws.amazon.com/message.jspa?messageID=725953#725953
+    Object.keys(headers)
+        .forEach(h => {
+            if(Array.isArray(headers[h])) {
+              if (h.toLowerCase() === 'set-cookie') {
+                headers[h].forEach((value, i) => {
+                  headers[binarycase(h, i + 1)] = value
                 })
-
-            const contentType = getContentType({ contentTypeHeader: headers['content-type'] })
-            const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes })
-            const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
-            const successResponse = {statusCode, body, headers, isBase64Encoded}
-
-            context.succeed(successResponse)
+                delete headers[h]
+              } else {
+                headers[h] = headers[h].join(',')
+              }
+            }
         })
+
+    const contentType = getContentType({ contentTypeHeader: headers['content-type'] })
+    const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes })
+    const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
+    return {statusCode, body, headers, isBase64Encoded}
 }
 
-function forwardConnectionErrorResponseToApiGateway(server, error, context) {
-    console.log('ERROR: aws-serverless-express connection error')
-    console.error(error)
-    const errorResponse = {
-        statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
-        body: '',
-        headers: {}
-    }
-
-    context.succeed(errorResponse)
-}
-
-function forwardLibraryErrorResponseToApiGateway(server, error, context) {
+function forwardLibraryErrorResponseToApiGateway(error, context) {
     console.log('ERROR: aws-serverless-express error')
     console.error(error)
     const errorResponse = {
@@ -112,68 +90,42 @@ function forwardLibraryErrorResponseToApiGateway(server, error, context) {
     context.succeed(errorResponse)
 }
 
-function forwardRequestToNodeServer(server, event, context) {
-    try {
-        const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
-        const req = http.request(requestOptions, (response, body) => forwardResponseToApiGateway(server, response, context))
-        if (event.body) {
-            if (event.isBase64Encoded) {
-                event.body = new Buffer(event.body, 'base64')
-            }
-
-            req.write(event.body)
-        }
-
-        req.on('error', (error) => forwardConnectionErrorResponseToApiGateway(server, error, context))
-        .end()
-    } catch (error) {
-       forwardLibraryErrorResponseToApiGateway(server, error, context)
-       return server
-   }
-}
-
-function startServer(server) {
-    return server.listen(getSocketPath(server._socketPathSuffix))
-}
-
-function getSocketPath(socketPathSuffix) {
-    return `/tmp/server${socketPathSuffix}.sock`
-}
-
 function createServer (requestListener, serverListenCallback, binaryTypes) {
-    const server = http.createServer(requestListener)
+    requestListener._binaryTypes = binaryTypes ? binaryTypes.slice() : []
 
-    server._socketPathSuffix = 0
-    server._binaryTypes = binaryTypes ? binaryTypes.slice() : []
-    server.on('listening', () => {
-        server._isListening = true
+    // To retain backward compatibility, invoke the serverListenCallback
+    // to signal that we are ready to receive incoming requests
+    if (typeof serverListenCallback === 'function') {
+        serverListenCallback()
+    }
 
-        if (serverListenCallback) serverListenCallback()
-    })
-    server.on('close', () => {
-        server._isListening = false
-    })
-    .on('error', (error) => {
-        if (error.code === 'EADDRINUSE') {
-            console.warn(`WARNING: Attempting to listen on socket ${getSocketPath(server._socketPathSuffix)}, but it is already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause, and consider increasing the timeout and/or cpu/memory allocation if this is purely as a result of a timeout. aws-serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
-            ++server._socketPathSuffix
-            return server.close(() => startServer(server))
-        }
-
-        console.log('ERROR: server error')
-        console.error(error)
-    })
-
-    return server
+    return requestListener
 }
 
-function proxy(server, event, context) {
-    if (server._isListening) {
-      forwardRequestToNodeServer(server, event, context)
-      return server
-    } else {
-        return startServer(server)
-        .on('listening', () => proxy(server, event, context))
+function forwardResponseToContext (context, binaryTypes) {
+    const response = new mock.Response({
+        onEnd: () => context.succeed(makeContextResponse(response._internal.buffer, response, binaryTypes))
+    })
+    return response
+}
+
+function proxy(requestListener, event, context, binaryTypes) {
+    try {
+        const binaryMimeTypes = binaryTypes || requestListener._binaryTypes
+        const requestOptions = mapApiGatewayEventToHttpRequest(event, context)
+        if (event.body) {
+          requestOptions.buffer = new Buffer(event.isBase64Encoded
+            ? new Buffer(event.body, 'base64')
+            : new Buffer(event.body)
+          )
+        }
+        const request = new mock.Request(requestOptions)
+        const response = forwardResponseToContext(context, binaryMimeTypes)
+        requestListener(request, response)
+        return requestListener
+    } catch (error) {
+        forwardLibraryErrorResponseToApiGateway(error, context)
+        return requestListener
     }
 }
 
@@ -183,10 +135,7 @@ exports.proxy = proxy
 if (process.env.NODE_ENV === 'test') {
     exports.getPathWithQueryStringParams = getPathWithQueryStringParams
     exports.mapApiGatewayEventToHttpRequest = mapApiGatewayEventToHttpRequest
-    exports.forwardResponseToApiGateway = forwardResponseToApiGateway
-    exports.forwardConnectionErrorResponseToApiGateway = forwardConnectionErrorResponseToApiGateway
     exports.forwardLibraryErrorResponseToApiGateway = forwardLibraryErrorResponseToApiGateway
-    exports.forwardRequestToNodeServer = forwardRequestToNodeServer
-    exports.startServer = startServer
-    exports.getSocketPath = getSocketPath
+    exports.forwardResponseToContext = forwardResponseToContext
+    exports.makeContextResponse = makeContextResponse
 }
