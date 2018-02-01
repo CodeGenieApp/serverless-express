@@ -57,6 +57,7 @@ app.get('/', (req, res) => {
 
 #### Cons
 
+ - Gzip compression is not supported by AWS's api-gateway ( encoding a response with Gzip causes error 330 ERR_CONTENT_DECODING_FAILED )
  - For apps that may not see traffic for several minutes at a time, you could see [cold starts](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)
  - Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
  - Stateless only
