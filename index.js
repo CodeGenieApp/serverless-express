@@ -137,7 +137,13 @@ function startServer(server) {
 }
 
 function getSocketPath(socketPathSuffix) {
+  if (/^win/.test(process.platform)) {
+    const path = require('path')
+    return path.join('\\\\?\\pipe', process.cwd(), `server${socketPathSuffix}`)
+  }
+  else {
     return `/tmp/server${socketPathSuffix}.sock`
+  }
 }
 
 function createServer (requestListener, serverListenCallback, binaryTypes) {
