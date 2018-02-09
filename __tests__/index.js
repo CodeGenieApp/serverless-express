@@ -91,8 +91,8 @@ test('mapApiGatewayEventToHttpRequest: without headers', () => {
 })
 
 test('getSocketPath', () => {
-    const socketPath = awsServerlessExpress.getSocketPath(0)
-    expect(socketPath).toEqual('/tmp/server0.sock')
+    const socketPath = awsServerlessExpress.getSocketPath('12345abcdef')
+    expect(socketPath).toEqual('/tmp/server-12345abcdef.sock')
 })
 
 const PassThrough = require('stream').PassThrough

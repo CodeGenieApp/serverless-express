@@ -139,17 +139,21 @@ function startServer(server) {
 function getSocketPath(socketPathSuffix) {
   if (/^win/.test(process.platform)) {
     const path = require('path')
-    return path.join('\\\\?\\pipe', process.cwd(), `server${socketPathSuffix}`)
+    return path.join('\\\\?\\pipe', process.cwd(), `server-${socketPathSuffix}`)
   }
   else {
-    return `/tmp/server${socketPathSuffix}.sock`
+    return `/tmp/server-${socketPathSuffix}.sock`
   }
+}
+
+function getRandomString() {
+    return Math.random().toString(36).substring(2, 15)
 }
 
 function createServer (requestListener, serverListenCallback, binaryTypes) {
     const server = http.createServer(requestListener)
 
-    server._socketPathSuffix = 0
+    server._socketPathSuffix = getRandomString()
     server._binaryTypes = binaryTypes ? binaryTypes.slice() : []
     server.on('listening', () => {
         server._isListening = true
@@ -162,7 +166,7 @@ function createServer (requestListener, serverListenCallback, binaryTypes) {
     .on('error', (error) => {
         if (error.code === 'EADDRINUSE') {
             console.warn(`WARNING: Attempting to listen on socket ${getSocketPath(server._socketPathSuffix)}, but it is already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause, and consider increasing the timeout and/or cpu/memory allocation if this is purely as a result of a timeout. aws-serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
-            ++server._socketPathSuffix
+            server._socketPathSuffix = getRandomString()
             return server.close(() => startServer(server))
         }
 
