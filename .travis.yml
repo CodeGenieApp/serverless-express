@@ -17,6 +17,8 @@ jobs:
       # NOTE: Pull Request builds do not run deploy
       deploy:
         provider: script
+        on:
+          branch: master
         skip_cleanup: true
         script:
           - npm run release
