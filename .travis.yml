@@ -3,3 +3,21 @@ node_js:
   - "4"
   - "5"
   - "node"
+
+script:
+  - npm test
+
+cache:
+  directories:
+    - node_modules
+
+notifications:
+  email:
+    on_failure: change
+
+# Pull Request builds do not run deploy
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+    - npm run release
