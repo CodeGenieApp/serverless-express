@@ -1,11 +1,23 @@
 language: node_js
 node_js:
   - "4"
-  - "5"
+  - "6"
+  - "8"
   - "node"
 
-script:
-  - npm test
+jobs:
+  include:
+    - stage: test
+      script:
+        - npm test
+    - stage: deploy
+      script: skip
+      # NOTE: Pull Request builds do not run deploy
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script:
+          - npm run release
 
 cache:
   directories:
@@ -14,10 +26,3 @@ cache:
 notifications:
   email:
     on_failure: change
-
-# Pull Request builds do not run deploy
-deploy:
-  provider: script
-  skip_cleanup: true
-  script:
-    - npm run release

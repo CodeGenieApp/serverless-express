@@ -81,7 +81,7 @@
     "test": "jest",
     "cz": "git-cz",
     "release": "semantic-release",
-    "release-local": "semantic-release --no-ci --dry-run"
+    "release-local": "node -r dotenv/config node_modules/semantic-release/bin/semantic-release --no-ci --dry-run"
   },
   "dependencies": {
     "binary-case": "^1.0.0"
