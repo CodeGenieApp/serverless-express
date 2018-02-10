@@ -75,7 +75,7 @@
     "commitlint": "^6.1.0",
     "cz-conventional-changelog": "^2.1.0",
     "husky": "^0.15.0-rc.4",
-    "jest": "^16.0.2",
+    "jest": "^22.2.2",
     "nsp": "^3.1.0",
     "semantic-release": "^13.1.3"
   },
