@@ -10,7 +10,7 @@ jobs:
   include:
     - stage: test
       script:
-        - npm security-scan
+        - npm run security-scan
         - npm test
     - stage: deploy
       script: skip
