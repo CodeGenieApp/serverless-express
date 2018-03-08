@@ -83,8 +83,8 @@ function forwardResponseToApiGateway(server, response, context) {
             const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes })
             const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
             
-            // Set the proper body length
-            if(typeof headers['content-length'] !== "undefined") {
+            // Set the proper body length for base64 encoded responses
+            if(isBase64Encoded && typeof headers['content-length'] !== "undefined") {
                 headers['content-length'] = body.length.toString()
             }
 
