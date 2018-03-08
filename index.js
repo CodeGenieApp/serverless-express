@@ -84,7 +84,9 @@ function forwardResponseToApiGateway(server, response, context) {
             const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
             
             // Set the proper body length
-            headers['content-length'] = body.length.toString()
+            if(typeof headers['content-length'] !== "undefined") {
+                headers['content-length'] = body.length.toString()
+            }
 
             const successResponse = {statusCode, body, headers, isBase64Encoded}
 
