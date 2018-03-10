@@ -90,7 +90,10 @@ function forwardResponseToApiGateway(server, response, context) {
 
             const successResponse = {statusCode, body, headers, isBase64Encoded}
 
-            context.succeed(successResponse)
+            context.succeed(successResponse);
+            if (context.local && server && server.close) {
+                server.close();
+            }
         })
 }
 
@@ -104,6 +107,9 @@ function forwardConnectionErrorResponseToApiGateway(server, error, context) {
     }
 
     context.succeed(errorResponse)
+    if (context.local && server && server.close) {
+        server.close();
+    }
 }
 
 function forwardLibraryErrorResponseToApiGateway(server, error, context) {
@@ -116,6 +122,9 @@ function forwardLibraryErrorResponseToApiGateway(server, error, context) {
     }
 
     context.succeed(errorResponse)
+    if (context.local && server && server.close) {
+        server.close();
+    }
 }
 
 function forwardRequestToNodeServer(server, event, context) {
