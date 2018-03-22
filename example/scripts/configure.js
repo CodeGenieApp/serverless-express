@@ -33,7 +33,7 @@ const accountId = args['account-id']
 const bucketName = args['bucket-name']
 const functionName = args['function-name']
 const region = args.region
-const availableRegions = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'eu-west-1', 'eu-west-2', 'eu-central-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ca-central-1', 'ca-central-2']
+const availableRegions = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'eu-west-1', 'eu-west-2', 'eu-central-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ca-central-1']
 
 if (!accountId || accountId.length !== 12) {
     console.error('You must supply a 12 digit account id as --account-id="<accountId>"')
@@ -46,7 +46,7 @@ if (!bucketName) {
 }
 
 if (availableRegions.indexOf(region) === -1) {
-    console.error(`Amazon API Gateway and Lambda are not available in the ${region} region. Available regions: us-east-1, us-west-2, eu-west-1, eu-central-1, ap-northeast-1, ap-northeast-2, ap-southeast-1, ap-southeast-2, ca-central-1, ca-central-2`)
+    console.error(`Amazon API Gateway and Lambda are not available in the ${region} region. Available regions: us-east-1, us-west-2, eu-west-1, eu-central-1, ap-northeast-1, ap-northeast-2, ap-southeast-1, ap-southeast-2, ca-central-1`)
     return
 }
 
