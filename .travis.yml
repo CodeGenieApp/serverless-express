@@ -11,6 +11,9 @@ jobs:
     - stage: test
       script:
         - npm test
+    - stage: lint
+      script:
+        - commitlint-travis
     - stage: deploy
       script: skip
       node_js: 8 # semantic-release requires Node >= 8.3
