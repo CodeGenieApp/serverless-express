@@ -1,0 +1,25 @@
+############################################################################
+## SCOPE.txt - version 1.0                                                ##
+## Created by Brett Andrews - andrbret@amazon.com                         ##
+## ---------------------------------------------------------------------- ##
+## Version history:                                                       ##
+## ---------------------------------------------------------------------- ##
+## v1.0 - 02/09/18 - Initial scope document                               ##
+############################################################################
+
+# Objective
+
+The goal of this library is to provide developers with a way to run Node.js
+HTTP applications and REST APIs (including but not limited to the usage of
+frameworks such as Express) on AWS Lambda. This repository includes an example
+directory which allows developers to quickly deploy a running application using SAM.
+
+This repository should contain:
+
+- The aws-serverless-express library.
+- Documentation on using aws-serverless-express
+- Examples of using the aws-serverless-express library.
+
+This repository does not contain:
+
+- Code that comprises a complete application.
