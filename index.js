@@ -152,7 +152,10 @@ function getRandomString() {
 }
 
 function createServer (requestListener, serverListenCallback, binaryTypes) {
-    const server = http.createServer(requestListener)
+    let server = requestListener
+    if (typeof(requestListener) === 'function') {
+        server = http.createServer(requestListener)
+    }
 
     server._socketPathSuffix = getRandomString()
     server._binaryTypes = binaryTypes ? binaryTypes.slice() : []
