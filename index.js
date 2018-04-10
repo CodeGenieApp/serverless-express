@@ -16,6 +16,7 @@
 const http = require('http')
 const url = require('url')
 const binarycase = require('binary-case')
+const isType = require('type-is')
 
 function getPathWithQueryStringParams(event) {
   return url.format({ pathname: event.path, query: event.queryStringParameters })
@@ -27,7 +28,7 @@ function getContentType(params) {
 }
 
 function isContentTypeBinaryMimeType(params) {
-  return params.binaryMimeTypes.indexOf(params.contentType) !== -1
+  return params.binaryMimeTypes.length > 0 && !!isType.is(params.contentType, params.binaryMimeTypes)
 }
 
 function mapApiGatewayEventToHttpRequest(event, context, socketPath) {

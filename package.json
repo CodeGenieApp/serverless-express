@@ -89,7 +89,8 @@
     "security-scan": "nsp check"
   },
   "dependencies": {
-    "binary-case": "^1.0.0"
+    "binary-case": "^1.0.0",
+    "type-is": "^1.6.16"
   },
   "config": {
     "commitizen": {

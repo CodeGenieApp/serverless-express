@@ -200,4 +200,42 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
             isBase64Encoded: false
         }))
     })
+
+    test('wildcards in binary types array', () => {
+        const server = new MockServer(['image/*'])
+        const headers = {'content-type': 'image/jpeg'}
+        const body = 'hello world'
+        const response = new MockResponse(200, headers, body)
+        return new Promise(
+            (resolve, reject) => {
+                const context = new MockContext(resolve)
+                awsServerlessExpress.forwardResponseToApiGateway(
+                    server, response, context)
+            }
+        ).then(successResponse => expect(successResponse).toEqual({
+            statusCode: 200,
+            body: new Buffer(body).toString('base64'),
+            headers: headers,
+            isBase64Encoded: true
+        }))
+    })
+
+    test('extensions in binary types array', () => {
+        const server = new MockServer(['.png'])
+        const headers = {'content-type': 'image/png'}
+        const body = 'hello world'
+        const response = new MockResponse(200, headers, body)
+        return new Promise(
+            (resolve, reject) => {
+                const context = new MockContext(resolve)
+                awsServerlessExpress.forwardResponseToApiGateway(
+                    server, response, context)
+            }
+        ).then(successResponse => expect(successResponse).toEqual({
+            statusCode: 200,
+            body: new Buffer(body).toString('base64'),
+            headers: headers,
+            isBase64Encoded: true
+        }))
+    })
 })
