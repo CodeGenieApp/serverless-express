@@ -28,7 +28,7 @@ function getContentType(params) {
 }
 
 function isContentTypeBinaryMimeType(params) {
-  return params.binaryMimeTypes.length > 0 && !!isType.is(params.contentType, params.binaryMimeTypes);
+  return params.binaryMimeTypes.length > 0 && !!isType.is(params.contentType, params.binaryMimeTypes)
 }
 
 function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
