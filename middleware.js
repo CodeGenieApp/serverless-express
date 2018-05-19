@@ -1,4 +1,4 @@
-module.exports.eventContext = options => (req, res, next) => {
+module.exports.eventContext = options => function apiGatewayEventParser (req, res, next) {
     options = options || {} // defaults: {reqPropKey: 'apiGateway', deleteHeaders: true}
     const reqPropKey = options.reqPropKey || 'apiGateway'
     const deleteHeaders = options.deleteHeaders === undefined ? true : options.deleteHeaders
