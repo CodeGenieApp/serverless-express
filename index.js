@@ -35,7 +35,8 @@ function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
     const headers = event.headers || {} // NOTE: Mutating event.headers; prefer deep clone of event.headers
     const eventWithoutBody = Object.assign({}, event)
     delete eventWithoutBody.body
-
+  
+    headers['Content-Length'] = Buffer.byteLength(event.body)
     headers['x-apigateway-event'] = encodeURIComponent(JSON.stringify(eventWithoutBody))
     headers['x-apigateway-context'] = encodeURIComponent(JSON.stringify(context))
 
@@ -60,7 +61,7 @@ function forwardResponseToApiGateway(server, response, context) {
             const bodyBuffer = Buffer.concat(buf)
             const statusCode = response.statusCode
             const headers = response.headers
-
+            
             // chunked transfer not currently supported by API Gateway
             if (headers['transfer-encoding'] === 'chunked') delete headers['transfer-encoding']
 
