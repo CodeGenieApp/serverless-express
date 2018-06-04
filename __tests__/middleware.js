@@ -22,7 +22,7 @@ test('defaults', () => {
     const req = generateMockReq()
     const originalHeaders = Object.assign({}, req.headers)
 
-    eventContextMiddleware({})(req, mockRes, mockNext)
+    eventContextMiddleware()(req, mockRes, mockNext)
 
     expect(req.apiGateway.event).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-event'])))
     expect(req.apiGateway.context).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-context'])))

@@ -4,7 +4,12 @@ node_js:
   - 4
   - 6
   - 8
-  - node # Latest
+  # - node # Latest; NOTE: latest does not work due to Buffer deprecation
+
+before_install:
+  - echo 'Installing example dependencies...'
+  - cd example && npm install && cd ..
+  - echo 'Example dependencies installed!'
 
 jobs:
   include:
@@ -30,6 +35,7 @@ jobs:
 cache:
   directories:
     - node_modules
+    - example/node_modules
 
 notifications:
   email:

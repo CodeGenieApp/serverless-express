@@ -66,6 +66,9 @@
       "@commitlint/config-conventional"
     ]
   },
+  "jest": {
+    "collectCoverageFrom": ["index.js", "middleware.js"]
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^6.1.0",
     "@commitlint/travis-cli": "^6.1.3",
@@ -82,6 +85,8 @@
   },
   "scripts": {
     "test": "jest",
+    "test-watch": "jest --watch",
+    "coverage": "jest --coverage",
     "cz": "git-cz",
     "release": "semantic-release",
     "release-local": "node -r dotenv/config node_modules/semantic-release/bin/semantic-release --no-ci --dry-run",
