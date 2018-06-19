@@ -36,7 +36,9 @@ function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
     const eventWithoutBody = Object.assign({}, event)
     delete eventWithoutBody.body
   
-    headers['Content-Length'] = Buffer.byteLength(event.body)
+    if (event.body && !headers['Content-Length']) {
+      headers['Content-Length'] = Buffer.byteLength(event.body)
+    }
     headers['x-apigateway-event'] = encodeURIComponent(JSON.stringify(eventWithoutBody))
     headers['x-apigateway-context'] = encodeURIComponent(JSON.stringify(context))
 
