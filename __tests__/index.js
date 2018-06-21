@@ -51,6 +51,8 @@ function mapApiGatewayEventToHttpRequest(headers) {
         headers
     }
     const eventClone = JSON.parse(JSON.stringify(event))
+    // NOTE: mapApiGatewayEventToHttpRequest will specify Content-Length if not specified
+    eventClone.headers = Object.assign(eventClone.headers || {}, {'Content-Length': Buffer.byteLength(eventClone.body)})
     delete eventClone.body
     const context = {
         'foo': 'bar'
@@ -68,6 +70,7 @@ test('mapApiGatewayEventToHttpRequest: with headers', () => {
         method: 'GET',
         path: '/foo',
         headers: {
+            'Content-Length': Buffer.byteLength('Hello serverless!'),
             'x-foo': 'foo',
             'x-apigateway-event': encodeURIComponent(JSON.stringify(r.eventClone)),
             'x-apigateway-context': encodeURIComponent(JSON.stringify(r.context))
@@ -83,6 +86,7 @@ test('mapApiGatewayEventToHttpRequest: without headers', () => {
         method: 'GET',
         path: '/foo',
         headers: {
+            'Content-Length': Buffer.byteLength('Hello serverless!'),
             'x-apigateway-event': encodeURIComponent(JSON.stringify(r.eventClone)),
             'x-apigateway-context': encodeURIComponent(JSON.stringify(r.context))
         },

@@ -35,7 +35,8 @@ function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
     const headers = event.headers || {} // NOTE: Mutating event.headers; prefer deep clone of event.headers
     const eventWithoutBody = Object.assign({}, event)
     delete eventWithoutBody.body
-  
+
+    // NOTE: API Gateway is not setting Content-Length header on any requests even when they have a body  
     if (event.body && !headers['Content-Length']) {
       headers['Content-Length'] = Buffer.byteLength(event.body)
     }
