@@ -33,13 +33,16 @@ function isContentTypeBinaryMimeType(params) {
 
 function mapApiGatewayEventToHttpRequest(event, context, socketPath) {
     const headers = event.headers || {} // NOTE: Mutating event.headers; prefer deep clone of event.headers
+    // NOTE: API Gateway is not setting Content-Length header on any requests even when they have a body  
+    if (event.body && !headers['Content-Length']) {
+        // set header on event directly so x-apigateway-event is set correctly later
+        if (!event.headers) event.headers = {}
+        event.headers['Content-Length'] = Buffer.byteLength(event.body)
+        headers['Content-Length'] = Buffer.byteLength(event.body)
+    }
     const eventWithoutBody = Object.assign({}, event)
     delete eventWithoutBody.body
 
-    // NOTE: API Gateway is not setting Content-Length header on any requests even when they have a body  
-    if (event.body && !headers['Content-Length']) {
-      headers['Content-Length'] = Buffer.byteLength(event.body)
-    }
     headers['x-apigateway-event'] = encodeURIComponent(JSON.stringify(eventWithoutBody))
     headers['x-apigateway-context'] = encodeURIComponent(JSON.stringify(context))
 
