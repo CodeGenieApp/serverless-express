@@ -67,7 +67,7 @@ function forwardResponseToApiGateway(server, response, context) {
             const bodyBuffer = Buffer.concat(buf)
             const statusCode = response.statusCode
             const headers = response.headers
-            
+
             // chunked transfer not currently supported by API Gateway
             if (headers['transfer-encoding'] === 'chunked') delete headers['transfer-encoding']
 
