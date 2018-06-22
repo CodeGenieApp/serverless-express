@@ -62,7 +62,10 @@ function forwardResponseToApiGateway(server, response, context) {
             const headers = response.headers
 
             // chunked transfer not currently supported by API Gateway
-            if (headers['transfer-encoding'] === 'chunked') delete headers['transfer-encoding']
+            /* istanbul ignore else */
+            if (headers['transfer-encoding'] === 'chunked') {
+                delete headers['transfer-encoding']
+            }
 
             // HACK: modifies header casing to get around API Gateway's limitation of not allowing multiple
             // headers with the same name, as discussed on the AWS Forum https://forums.aws.amazon.com/message.jspa?messageID=725953#725953
@@ -138,11 +141,11 @@ function startServer(server) {
 }
 
 function getSocketPath(socketPathSuffix) {
+  /* istanbul ignore if */ /* only running tests on Linux; Window support is for local dev only */
   if (/^win/.test(process.platform)) {
     const path = require('path')
     return path.join('\\\\?\\pipe', process.cwd(), `server-${socketPathSuffix}`)
-  }
-  else {
+  } else {
     return `/tmp/server-${socketPathSuffix}.sock`
   }
 }
@@ -165,14 +168,15 @@ function createServer (requestListener, serverListenCallback, binaryTypes) {
         server._isListening = false
     })
     .on('error', (error) => {
+        /* istanbul ignore else */
         if (error.code === 'EADDRINUSE') {
             console.warn(`WARNING: Attempting to listen on socket ${getSocketPath(server._socketPathSuffix)}, but it is already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause, and consider increasing the timeout and/or cpu/memory allocation if this is purely as a result of a timeout. aws-serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
             server._socketPathSuffix = getRandomString()
             return server.close(() => startServer(server))
+        } else {
+            console.log('ERROR: server error')
+            console.error(error)
         }
-
-        console.log('ERROR: server error')
-        console.error(error)
     })
 
     return server
@@ -191,6 +195,7 @@ function proxy(server, event, context) {
 exports.createServer = createServer
 exports.proxy = proxy
 
+/* istanbul ignore else */
 if (process.env.NODE_ENV === 'test') {
     exports.getPathWithQueryStringParams = getPathWithQueryStringParams
     exports.mapApiGatewayEventToHttpRequest = mapApiGatewayEventToHttpRequest
