@@ -86,9 +86,18 @@ function forwardResponseToApiGateway(server, response, context) {
             const contentType = getContentType({ contentTypeHeader: headers['content-type'] })
             const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes })
             const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
+            
+            // Set the proper body length for base64 encoded responses
+            if(isBase64Encoded && typeof headers['content-length'] !== "undefined") {
+                headers['content-length'] = body.length.toString()
+            }
+
             const successResponse = {statusCode, body, headers, isBase64Encoded}
 
-            context.succeed(successResponse)
+            context.succeed(successResponse);
+            if (context.local && server && server.close) {
+                server.close();
+            }
         })
 }
 
@@ -102,6 +111,9 @@ function forwardConnectionErrorResponseToApiGateway(server, error, context) {
     }
 
     context.succeed(errorResponse)
+    if (context.local && server && server.close) {
+        server.close();
+    }
 }
 
 function forwardLibraryErrorResponseToApiGateway(server, error, context) {
@@ -114,6 +126,9 @@ function forwardLibraryErrorResponseToApiGateway(server, error, context) {
     }
 
     context.succeed(errorResponse)
+    if (context.local && server && server.close) {
+        server.close();
+    }
 }
 
 function forwardRequestToNodeServer(server, event, context) {
