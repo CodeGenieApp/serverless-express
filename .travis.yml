@@ -4,7 +4,7 @@ node_js:
   - 4
   - 6
   - 8
-  # - node # Latest; NOTE: latest does not work due to Buffer deprecation
+  - node # runs tests against latest version of Node.js for future-proofing
 
 before_install:
   - echo 'Installing example dependencies...'

@@ -3,7 +3,7 @@
 
 const fs = require('fs')
 
-module.exports.modifyFiles = function modifyFiles(files, replacements) {
+module.exports.modifyFiles = function modifyFiles (files, replacements) {
   files.forEach((file) => {
     let fileContentModified = fs.readFileSync(file, 'utf8')
 
