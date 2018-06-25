@@ -4,11 +4,11 @@ node_js:
   - 4
   - 6
   - 8
-  # - node # Latest; NOTE: latest does not work due to Buffer deprecation
+  # - node # runs tests against latest version of Node.js for future-proofing
 
 before_install:
   - echo 'Installing example dependencies...'
-  - cd example && npm install && cd ..
+  - npm run install-example-dependencies
   - echo 'Example dependencies installed!'
 
 jobs:
@@ -19,6 +19,7 @@ jobs:
     - stage: lint
       script:
         - commitlint-travis
+        - npm run lint
     - stage: deploy
       script: skip
       node_js: 8 # semantic-release requires Node >= 8.3

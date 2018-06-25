@@ -41,6 +41,7 @@ paths:
             Access-Control-Allow-Headers:
               type: string
       x-amazon-apigateway-integration:
+        contentHandling: CONVERT_TO_TEXT
         responses:
           default:
             statusCode: 200

@@ -1,19 +1,19 @@
 const path = require('path')
 const fs = require('fs')
-const awsServerlessExpress = require('../index')
-const apiGatewayEvent = require('../example/api-gateway-event.json')
-const app = require('../example/app')
+const awsServerlessExpress = require('../src/index')
+const apiGatewayEvent = require('../examples/basic-starter/api-gateway-event.json')
+const app = require('../examples/basic-starter/app')
 
 const server = awsServerlessExpress.createServer(app)
 const lambdaFunction = {
   handler: (event, context) => awsServerlessExpress.proxy(server, event, context)
 }
 
-function clone(json) {
+function clone (json) {
   return JSON.parse(JSON.stringify(json))
 }
 
-function makeEvent(eventOverrides) {
+function makeEvent (eventOverrides) {
   const baseEvent = clone(apiGatewayEvent)
   const headers = Object.assign({}, baseEvent.headers, eventOverrides.headers)
   const root = Object.assign({}, baseEvent, eventOverrides)
@@ -21,27 +21,27 @@ function makeEvent(eventOverrides) {
   return root
 }
 
-function expectedRootResponse() {
+function expectedRootResponse () {
   return makeResponse({
-    "headers": {
-      "content-length": "3747",
-      "content-type": "text/html; charset=utf-8",
-      "etag": "W/\"ea3-WawLnWdlaCO/ODv9DBVcX0ZTchw\""
+    'headers': {
+      'content-length': '3747',
+      'content-type': 'text/html; charset=utf-8',
+      'etag': 'W/"ea3-WawLnWdlaCO/ODv9DBVcX0ZTchw"'
     }
   })
 }
 
-function makeResponse(response) {
+function makeResponse (response) {
   const baseResponse = {
-    "body": "",
-    "isBase64Encoded": false,
-    "statusCode": 200
+    'body': '',
+    'isBase64Encoded': false,
+    'statusCode': 200
   }
   const baseHeaders = {
-    "access-control-allow-origin": "*",
-    "connection": "close",
-    "content-type": "application/json; charset=utf-8",
-    "x-powered-by": "Express"
+    'access-control-allow-origin': '*',
+    'connection': 'close',
+    'content-type': 'application/json; charset=utf-8',
+    'x-powered-by': 'Express'
   }
   const headers = Object.assign({}, baseHeaders, response.headers)
   const finalResponse = Object.assign({}, baseResponse, response)
@@ -67,13 +67,13 @@ describe('integration tests', () => {
 
   test('GET HTML (subsequent request)', (done) => {
     const succeed = response => {
-        delete response.headers.date
-        expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
-        const expectedResponse = expectedRootResponse()
-        delete response.body
-        delete expectedResponse.body
-        expect(response).toEqual(expectedResponse)
-        done()
+      delete response.headers.date
+      expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
+      const expectedResponse = expectedRootResponse()
+      delete response.body
+      delete expectedResponse.body
+      expect(response).toEqual(expectedResponse)
+      done()
     }
     lambdaFunction.handler(makeEvent({
       path: '/',
@@ -87,10 +87,10 @@ describe('integration tests', () => {
     const succeed = response => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
-        "body": '[{"id":1,"name":"Joe"},{"id":2,"name":"Jane"}]',
-        "headers": {
-          "content-length": "46",
-          "etag": "W/\"2e-Lu6qxFOQSPFulDAGUFiiK6QgREo\"",
+        'body': '[{"id":1,"name":"Joe"},{"id":2,"name":"Jane"}]',
+        'headers': {
+          'content-length': '46',
+          'etag': 'W/"2e-Lu6qxFOQSPFulDAGUFiiK6QgREo"'
         }
       }))
       done()
@@ -108,11 +108,11 @@ describe('integration tests', () => {
       delete response.headers.date
       expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
       const expectedResponse = makeResponse({
-        "headers": {
-          "content-length": "151",
-          "content-security-policy": "default-src \'self\'",
-          "content-type": "text/html; charset=utf-8",
-          "x-content-type-options": "nosniff",
+        'headers': {
+          'content-length': '151',
+          'content-security-policy': "default-src 'self'",
+          'content-type': 'text/html; charset=utf-8',
+          'x-content-type-options': 'nosniff'
         },
         statusCode: 404
       })
@@ -133,10 +133,10 @@ describe('integration tests', () => {
     const succeed = response => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
-        "body": '{"id":1,"name":"Joe"}',
-        "headers": {
-          "content-length": "21",
-          "etag": "W/\"15-rRboW+j/yFKqYqV6yklp53+fANQ\"",
+        'body': '{"id":1,"name":"Joe"}',
+        'headers': {
+          'content-length': '21',
+          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
         }
       }))
       done()
@@ -153,10 +153,10 @@ describe('integration tests', () => {
     const succeed = response => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
-        "body": "{}",
-        "headers": {
-          "content-length": "2",
-          "etag": "W/\"2-vyGp6PvFo4RvsFtPoIWeCReyIC8\"",
+        'body': '{}',
+        'headers': {
+          'content-length': '2',
+          'etag': 'W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"'
         },
         statusCode: 404
       }))
@@ -176,41 +176,41 @@ describe('integration tests', () => {
       delete response.headers.etag
       delete response.headers['last-modified']
 
-      const samLogoPath = path.resolve(path.join(__dirname, '../example/sam-logo.png'))
+      const samLogoPath = path.resolve(path.join(__dirname, '../examples/basic-starter/sam-logo.png'))
       const samLogoImage = fs.readFileSync(samLogoPath)
-      const samLogoBase64 = new Buffer(samLogoImage).toString('base64')
+      const samLogoBase64 = Buffer.from(samLogoImage).toString('base64')
 
       expect(response).toEqual(makeResponse({
-        "body": samLogoBase64,
-        "headers": {
-          "accept-ranges": "bytes",
-          "cache-control": "public, max-age=0",
-          "content-length": "15933",
-          "content-type": "image/png"
+        'body': samLogoBase64,
+        'headers': {
+          'accept-ranges': 'bytes',
+          'cache-control': 'public, max-age=0',
+          'content-length': '15933',
+          'content-type': 'image/png'
         },
-        "isBase64Encoded": true
+        'isBase64Encoded': true
       }))
       serverWithBinaryTypes.close()
       done()
     }
     const serverWithBinaryTypes = awsServerlessExpress.createServer(app, null, ['image/*'])
     awsServerlessExpress.proxy(serverWithBinaryTypes, makeEvent({
-        path: '/sam',
-        httpMethod: 'GET'
-      }), {
+      path: '/sam',
+      httpMethod: 'GET'
+    }), {
       succeed
     })
   })
   const newName = 'Sandy Samantha Salamander'
-  
+
   test('POST JSON', (done) => {
     const succeed = response => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
-        "body": `{"id":3,"name":"${newName}"}`,
-        "headers": {
-          "content-length": "43",
-          "etag": "W/\"2b-ksYHypm1DmDdjEzhtyiv73Bluqk\"",
+        'body': `{"id":3,"name":"${newName}"}`,
+        'headers': {
+          'content-length': '43',
+          'etag': 'W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"'
         },
         statusCode: 201
       }))
@@ -229,10 +229,10 @@ describe('integration tests', () => {
     const succeed = response => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
-        "body": `{"id":3,"name":"${newName}"}`,
-        "headers": {
-          "content-length": "43",
-          "etag": "W/\"2b-ksYHypm1DmDdjEzhtyiv73Bluqk\"",
+        'body': `{"id":3,"name":"${newName}"}`,
+        'headers': {
+          'content-length': '43',
+          'etag': 'W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"'
         },
         statusCode: 200
       }))
@@ -250,10 +250,10 @@ describe('integration tests', () => {
     const succeed = response => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
-        "body": `[{"id":2,"name":"Jane"},{"id":3,"name":"${newName}"}]`,
-        "headers": {
-          "content-length": "68",
-          "etag": "W/\"44-AtuxlvrIBL8NXP4gvEQTI77suNg\"",
+        'body': `[{"id":2,"name":"Jane"},{"id":3,"name":"${newName}"}]`,
+        'headers': {
+          'content-length': '68',
+          'etag': 'W/"44-AtuxlvrIBL8NXP4gvEQTI77suNg"'
         },
         statusCode: 200
       }))
@@ -271,10 +271,10 @@ describe('integration tests', () => {
     const succeed = response => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
-        "body": '{"id":2,"name":"Samuel"}',
-        "headers": {
-          "content-length": "24",
-          "etag": "W/\"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q\"",
+        'body': '{"id":2,"name":"Samuel"}',
+        'headers': {
+          'content-length': '24',
+          'etag': 'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"'
         },
         statusCode: 200
       }))
@@ -293,10 +293,10 @@ describe('integration tests', () => {
     const succeed = response => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
-        "body": '{"id":2,"name":"Samuel"}',
-        "headers": {
-          "content-length": "24",
-          "etag": "W/\"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q\"",
+        'body': '{"id":2,"name":"Samuel"}',
+        'headers': {
+          'content-length': '24',
+          'etag': 'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"'
         },
         statusCode: 200
       }))
@@ -305,7 +305,7 @@ describe('integration tests', () => {
     lambdaFunction.handler(makeEvent({
       path: '/users/2',
       httpMethod: 'PUT',
-      body: btoa('{"name": "Samuel"}'),
+      body: global.btoa('{"name": "Samuel"}'),
       isBase64Encoded: true
     }), {
       succeed
@@ -316,8 +316,8 @@ describe('integration tests', () => {
     const succeed = response => {
       delete response.headers.date
       expect(response).toEqual({
-        "body": "",
-        "headers": {},
+        'body': '',
+        'headers': {},
         statusCode: 502
       })
       done()
@@ -325,7 +325,7 @@ describe('integration tests', () => {
     lambdaFunction.handler(makeEvent({
       path: '/',
       httpMethod: 'GET',
-      body: "{\"name\": \"Sam502\"}",
+      body: '{"name": "Sam502"}',
       headers: {
         'Content-Length': '-1'
       }
@@ -333,7 +333,7 @@ describe('integration tests', () => {
       succeed
     })
   })
-  
+
   const mockApp = function (req, res) {
     res.end('')
   }
