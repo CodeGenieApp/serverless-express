@@ -104,7 +104,7 @@
   },
   "scripts": {
     "test": "jest",
-    "test-watch": "jest --watch",
+    "test:watch": "jest --watch",
     "coverage": "jest --coverage",
     "cz": "git-cz",
     "release": "semantic-release",
