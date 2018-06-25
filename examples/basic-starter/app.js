@@ -69,7 +69,7 @@ router.put('/users/:userId', (req, res) => {
 router.delete('/users/:userId', (req, res) => {
   const userIndex = getUserIndex(req.params.userId)
 
-  if(userIndex === -1) return res.status(404).json({})
+  if (userIndex === -1) return res.status(404).json({})
 
   users.splice(userIndex, 1)
   res.json(users)

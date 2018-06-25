@@ -25,7 +25,7 @@ exports.handler = (event, context) => awsServerlessExpress.proxy(server, event, 
 
 ## Quick Start/Example
 
-Want to get up and running quickly? [Check out our example](example) which includes:
+Want to get up and running quickly? [Check out our basic starter example](examples/basic-starter) which includes:
 
  - Lambda function
  - Express server

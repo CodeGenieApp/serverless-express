@@ -57,17 +57,26 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm test",
+      "pre-commit": "lint-staged && npm run install-example-dependencies && npm test",
       "commit-msg": "commitlint -e $GIT_PARAMS"
     }
+  },
+  "lint-staged": {
+    "*.js": ["eslint --fix", "git add"]
   },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
     ]
   },
+  "eslintIgnore": [
+    "examples/*/node_modules"
+  ],
   "jest": {
-    "collectCoverageFrom": ["index.js", "middleware.js"]
+    "collectCoverageFrom": [
+      "index.js",
+      "middleware.js"
+    ]
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^6.1.0",
@@ -78,8 +87,15 @@
     "commitizen": "^2.9.6",
     "commitlint": "^6.1.0",
     "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
     "husky": "^0.15.0-rc.4",
     "jest": "^16.0.2",
+    "lint-staged": "^7.2.0",
     "nsp": "^3.1.0",
     "semantic-release": "^13.1.3"
   },
@@ -91,6 +107,8 @@
     "release": "semantic-release",
     "release-local": "node -r dotenv/config node_modules/semantic-release/bin/semantic-release --no-ci --dry-run",
     "check-dependencies": "npx npm-check --skip-unused --update",
+    "lint": "eslint src examples",
+    "install-example-dependencies": "cd examples && npm install --prefix basic-starter basic-starter && cd ..",
     "security-scan": "nsp check"
   },
   "dependencies": {
