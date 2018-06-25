@@ -8,9 +8,7 @@ node_js:
 
 before_install:
   - echo 'Installing example dependencies...'
-  - cd examples
-  - npm install --prefix basic-starter basic-starter
-  - cd ..
+  - npm run install-example-dependencies
   - echo 'Example dependencies installed!'
 
 jobs:
