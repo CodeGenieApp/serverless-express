@@ -1,4 +1,7 @@
 'use strict'
+
+const path = require('path')
+
 const awsServerlessExpress = require('../src/index')
 
 test('getPathWithQueryStringParams: no params', () => {
@@ -92,7 +95,9 @@ test('mapApiGatewayEventToHttpRequest: without headers', () => {
 
 test('getSocketPath', () => {
   const socketPath = awsServerlessExpress.getSocketPath('12345abcdef')
-  expect(socketPath).toEqual('/tmp/server-12345abcdef.sock')
+  const isWin = process.platform === 'win32'
+  const expectedSocketPath = isWin ? path.join('\\\\?\\\\pipe\\\\', process.cwd(), 'server-12345abcdef') : '/tmp/server-12345abcdef.sock'
+  expect(socketPath).toBe(expectedSocketPath)
 })
 
 const PassThrough = require('stream').PassThrough
