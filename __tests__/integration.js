@@ -50,6 +50,19 @@ function makeResponse (response) {
 }
 
 describe('integration tests', () => {
+  test('proxy returns server', (done) => {
+    const succeed = () => {
+      done()
+    }
+
+    const server = lambdaFunction.handler(makeEvent({
+      path: '/',
+      httpMethod: 'GET'
+    }), {
+      succeed
+    })
+    expect(server._socketPathSuffix).toBeTruthy()
+  })
   test('GET HTML (initial request)', (done) => {
     const succeed = response => {
       delete response.headers.date
