@@ -128,9 +128,7 @@ describe('forwardConnectionErrorResponseToApiGateway', () => {
       (resolve, reject) => {
         const context = new MockContext(resolve)
         const contextResolver = {
-          succeed: ({
-            response
-          }) => context.succeed(response)
+          succeed: (p) => context.succeed(p.response)
         }
         awsServerlessExpress.forwardConnectionErrorResponseToApiGateway('ERROR', contextResolver)
       }
@@ -148,9 +146,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
       (resolve, reject) => {
         const context = new MockContext(resolve)
         const contextResolver = {
-          succeed: ({
-            response
-          }) => context.succeed(response)
+          succeed: (p) => context.succeed(p.response)
         }
         awsServerlessExpress.forwardLibraryErrorResponseToApiGateway('ERROR', contextResolver)
       }
@@ -165,9 +161,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
 function getContextResolver (resolve) {
   const context = new MockContext(resolve)
   const contextResolver = {
-    succeed: ({
-      response
-    }) => context.succeed(response)
+    succeed: (p) => context.succeed(p.response)
   }
 
   return contextResolver

@@ -182,7 +182,7 @@ function createServer (requestListener, serverListenCallback, binaryTypes) {
   return server
 }
 
-function proxy (server, event, context, resolutionMode, callback = () => null) {
+function proxy (server, event, context, resolutionMode, callback) {
   // DEPRECATED: Legacy support
   if (!resolutionMode) {
     const resolver = makeResolver({ context, resolutionMode: 'CONTEXT_SUCCEED' })
@@ -218,19 +218,19 @@ function proxy (server, event, context, resolutionMode, callback = () => null) {
   }
 }
 
-function makeResolver ({
+function makeResolver (params/* {
   context,
   callback,
   promise,
   resolutionMode
-}) {
+} */) {
   return {
-    succeed: ({
+    succeed: (params2/* {
       response
-    }) => {
-      if (resolutionMode === 'CONTEXT_SUCCEED') return context.succeed(response)
-      if (resolutionMode === 'CALLBACK') return callback(null, response)
-      if (resolutionMode === 'PROMISE') return promise.resolve(response)
+    } */) => {
+      if (params.resolutionMode === 'CONTEXT_SUCCEED') return params.context.succeed(params2.response)
+      if (params.resolutionMode === 'CALLBACK') return params.callback(null, params2.response)
+      if (params.resolutionMode === 'PROMISE') return params.promise.resolve(params2.response)
     }
   }
 }
