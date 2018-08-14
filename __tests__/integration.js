@@ -6,7 +6,7 @@ const app = require('../examples/basic-starter/app')
 
 const server = awsServerlessExpress.createServer(app)
 const lambdaFunction = {
-  handler: (event, context) => awsServerlessExpress.proxy(server, event, context)
+  handler: (event, context, resolutionMode, callback) => awsServerlessExpress.proxy(server, event, context, resolutionMode, callback)
 }
 
 function clone (json) {
@@ -63,6 +63,7 @@ describe('integration tests', () => {
     })
     expect(server._socketPathSuffix).toBeTruthy()
   })
+
   test('GET HTML (initial request)', (done) => {
     const succeed = response => {
       delete response.headers.date
@@ -95,7 +96,6 @@ describe('integration tests', () => {
       succeed
     })
   })
-
   test('GET JSON collection', (done) => {
     const succeed = response => {
       delete response.headers.date
@@ -160,6 +160,43 @@ describe('integration tests', () => {
     }), {
       succeed
     })
+  })
+
+  test('GET JSON single (resolutionMode = CALLBACK)', (done) => {
+    const callback = (e, response) => {
+      delete response.headers.date
+      expect(response).toEqual(makeResponse({
+        'body': '{"id":1,"name":"Joe"}',
+        'headers': {
+          'content-length': '21',
+          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
+        }
+      }))
+      done()
+    }
+    lambdaFunction.handler(makeEvent({
+      path: '/users/1',
+      httpMethod: 'GET'
+    }), {}, 'CALLBACK', callback)
+  })
+
+  test('GET JSON single (resolutionMode = PROMISE)', (done) => {
+    const succeed = response => {
+      delete response.headers.date
+      expect(response).toEqual(makeResponse({
+        'body': '{"id":1,"name":"Joe"}',
+        'headers': {
+          'content-length': '21',
+          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
+        }
+      }))
+      done()
+    }
+    lambdaFunction.handler(makeEvent({
+      path: '/users/1',
+      httpMethod: 'GET'
+    }), {}, 'PROMISE')
+      .promise.then(succeed)
   })
 
   test('GET JSON single 404', (done) => {
