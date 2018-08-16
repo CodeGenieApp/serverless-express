@@ -36,7 +36,6 @@ jobs:
           branch: master
         skip_cleanup: true
         script:
-          # - npm run security-scan
           - npm run release
 
 cache:
