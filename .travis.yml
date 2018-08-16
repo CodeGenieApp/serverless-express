@@ -11,6 +11,11 @@ before_install:
   - npm run install-example-dependencies
   - echo 'Example dependencies installed!'
 
+# NOTE: forcing Travis to use `npm install` instead of `npm ci`
+# which was removing our examples' node_modules
+install:
+  - npm install
+
 jobs:
   include:
     - stage: test
