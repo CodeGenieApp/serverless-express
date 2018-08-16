@@ -20,6 +20,7 @@ jobs:
   include:
     - stage: test
       script:
+        - pwd
         - npm test
     - stage: lint
       script:
@@ -41,7 +42,7 @@ jobs:
 cache:
   directories:
     - node_modules
-    - example/node_modules
+    - example/basic-starter/node_modules
 
 notifications:
   email:
