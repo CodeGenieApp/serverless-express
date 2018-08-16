@@ -41,7 +41,7 @@ jobs:
 cache:
   directories:
     - node_modules
-    - example/basic-starter/node_modules
+    - examples/basic-starter/node_modules
 
 notifications:
   email:
