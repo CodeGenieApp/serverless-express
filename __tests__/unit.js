@@ -2,7 +2,7 @@
 
 const path = require('path')
 
-const awsServerlessExpress = require('../src/index')
+const awsServerlessExpress = require('../index')
 
 test('getPathWithQueryStringParams: no params', () => {
   const event = {

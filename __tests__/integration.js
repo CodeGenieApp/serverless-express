@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const awsServerlessExpress = require('../src/index')
+const awsServerlessExpress = require('../index')
 const apiGatewayEvent = require('../examples/basic-starter/api-gateway-event.json')
 const app = require('../examples/basic-starter/app')
 
