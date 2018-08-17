@@ -6,7 +6,7 @@ const app = require('../examples/basic-starter/app')
 
 const server = awsServerlessExpress.createServer(app)
 const lambdaFunction = {
-  handler: (event, context, resolutionMode, callback, _server = server) => awsServerlessExpress.proxy(_server, event, context, resolutionMode, callback)
+  handler: (event, context, resolutionMode, callback, _server) => awsServerlessExpress.proxy(_server || server, event, context, resolutionMode, callback)
 }
 
 function clone (json) {
