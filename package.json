@@ -46,6 +46,7 @@
         "path": "@semantic-release/git",
         "assets": [
           "package.json",
+          "package-lock.json",
           "CHANGELOG.md",
           "dist/**/*.{js|css}"
         ],
