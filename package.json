@@ -46,6 +46,7 @@
         "path": "@semantic-release/git",
         "assets": [
           "package.json",
+          "package-lock.json",
           "CHANGELOG.md",
           "dist/**/*.{js|css}"
         ],
@@ -104,7 +105,7 @@
   },
   "scripts": {
     "test": "jest",
-    "test-watch": "jest --watch",
+    "test:watch": "jest --watch",
     "coverage": "jest --coverage",
     "cz": "git-cz",
     "release": "semantic-release",
