@@ -1,3 +1,11 @@
+<a name="3.3.4"></a>
+## [3.3.4](https://github.com/awslabs/aws-serverless-express/compare/v3.3.3...v3.3.4) (2018-08-19)
+
+
+### Bug Fixes
+
+* update example to use 3.3.3 ([bc7bdaf](https://github.com/awslabs/aws-serverless-express/commit/bc7bdaf))
+
 <a name="3.3.3"></a>
 ## [3.3.3](https://github.com/awslabs/aws-serverless-express/compare/v3.3.2...v3.3.3) (2018-08-16)
 
