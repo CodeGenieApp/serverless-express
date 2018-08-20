@@ -6,7 +6,7 @@ const app = require('../examples/basic-starter/app')
 
 const server = awsServerlessExpress.createServer(app)
 const lambdaFunction = {
-  handler: (event, context, resolutionMode, callback) => awsServerlessExpress.proxy(server, event, context, resolutionMode, callback)
+  handler: (event, context, resolutionMode, callback, _server) => awsServerlessExpress.proxy(_server || server, event, context, resolutionMode, callback)
 }
 
 function clone (json) {
@@ -96,6 +96,7 @@ describe('integration tests', () => {
       succeed
     })
   })
+
   test('GET JSON collection', (done) => {
     const succeed = response => {
       delete response.headers.date
@@ -196,6 +197,27 @@ describe('integration tests', () => {
       path: '/users/1',
       httpMethod: 'GET'
     }), {}, 'PROMISE')
+      .promise.then(succeed)
+  })
+
+  test('GET JSON single (resolutionMode = PROMISE; new server)', (done) => {
+    const succeed = response => {
+      delete response.headers.date
+      expect(response).toEqual(makeResponse({
+        'body': '{"id":1,"name":"Joe"}',
+        'headers': {
+          'content-length': '21',
+          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
+        }
+      }))
+      newServer.close()
+      done()
+    }
+    const newServer = awsServerlessExpress.createServer(app)
+    lambdaFunction.handler(makeEvent({
+      path: '/users/1',
+      httpMethod: 'GET'
+    }), {}, 'PROMISE', null, newServer)
       .promise.then(succeed)
   })
 
