@@ -1,33 +1,46 @@
 'use strict'
+const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const compression = require('compression')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const app = express()
+const router = express.Router()
 
 app.set('view engine', 'pug')
-app.use(compression())
-app.use(cors())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(awsServerlessExpressMiddleware.eventContext())
 
-app.get('/', (req, res) => {
+if (process.env.NODE_ENV === 'test') {
+  // NOTE: aws-serverless-express uses this app for its integration tests
+  // and only applies compression to the /sam endpoint during testing.
+  router.use('/sam', compression())
+} else {
+  router.use(compression())
+}
+
+router.use(cors())
+router.use(bodyParser.json())
+router.use(bodyParser.urlencoded({ extended: true }))
+router.use(awsServerlessExpressMiddleware.eventContext())
+
+// NOTE: tests can't find the views directory without this
+app.set('views', path.join(__dirname, 'views'))
+
+router.get('/', (req, res) => {
   res.render('index', {
     apiUrl: req.apiGateway ? `https://${req.apiGateway.event.headers.Host}/${req.apiGateway.event.requestContext.stage}` : 'http://localhost:3000'
   })
 })
 
-app.get('/sam', (req, res) => {
+router.get('/sam', (req, res) => {
   res.sendFile(`${__dirname}/sam-logo.png`)
 })
 
-app.get('/users', (req, res) => {
+router.get('/users', (req, res) => {
   res.json(users)
 })
 
-app.get('/users/:userId', (req, res) => {
+router.get('/users/:userId', (req, res) => {
   const user = getUser(req.params.userId)
 
   if (!user) return res.status(404).json({})
@@ -35,7 +48,7 @@ app.get('/users/:userId', (req, res) => {
   return res.json(user)
 })
 
-app.post('/users', (req, res) => {
+router.post('/users', (req, res) => {
   const user = {
     id: ++userIdCounter,
     name: req.body.name
@@ -44,7 +57,7 @@ app.post('/users', (req, res) => {
   res.status(201).json(user)
 })
 
-app.put('/users/:userId', (req, res) => {
+router.put('/users/:userId', (req, res) => {
   const user = getUser(req.params.userId)
 
   if (!user) return res.status(404).json({})
@@ -53,10 +66,10 @@ app.put('/users/:userId', (req, res) => {
   res.json(user)
 })
 
-app.delete('/users/:userId', (req, res) => {
+router.delete('/users/:userId', (req, res) => {
   const userIndex = getUserIndex(req.params.userId)
 
-  if(userIndex === -1) return res.status(404).json({})
+  if (userIndex === -1) return res.status(404).json({})
 
   users.splice(userIndex, 1)
   res.json(users)
@@ -78,6 +91,7 @@ let userIdCounter = users.length
 // The aws-serverless-express library creates a server and listens on a Unix
 // Domain Socket for you, so you can remove the usual call to app.listen.
 // app.listen(3000)
+app.use('/', router)
 
 // Export your express server so you can import it in the lambda function.
 module.exports = app

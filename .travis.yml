@@ -4,16 +4,28 @@ node_js:
   - 4
   - 6
   - 8
-  - node # Latest
+  # - node # runs tests against latest version of Node.js for future-proofing
+
+before_install:
+  - echo 'Installing example dependencies...'
+  - npm run install-example-dependencies
+  - echo 'Example dependencies installed!'
+
+# NOTE: forcing Travis to use `npm install` instead of `npm ci`
+# which was removing our examples' node_modules
+install:
+  - npm install
 
 jobs:
   include:
     - stage: test
       script:
+        - pwd
         - npm test
     - stage: lint
       script:
         - commitlint-travis
+        - npm run lint
     - stage: deploy
       script: skip
       node_js: 8 # semantic-release requires Node >= 8.3
@@ -24,12 +36,12 @@ jobs:
           branch: master
         skip_cleanup: true
         script:
-          # - npm run security-scan
           - npm run release
 
 cache:
   directories:
     - node_modules
+    - examples/basic-starter/node_modules
 
 notifications:
   email:
