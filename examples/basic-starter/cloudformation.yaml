@@ -17,7 +17,6 @@ Resources:
       CodeUri: ./
       Handler: lambda.handler
       MemorySize: 1024
-      Role: !GetAtt LambdaExecutionRole.Arn
       Runtime: nodejs8.10
       Timeout: 30
       Events:
