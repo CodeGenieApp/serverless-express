@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
 
 ### Is AWS serverless right for my app?
 
-#### Pros
+#### Benefits
 
  - Pay for what you use
  - No infrastructure to manage
