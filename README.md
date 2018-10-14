@@ -18,7 +18,7 @@ const awsServerlessExpress = require('aws-serverless-express')
 const app = require('./app')
 const server = awsServerlessExpress.createServer(app)
 
-exports.handler = (event, context) => awsServerlessExpress.proxy(server, event, context)
+exports.handler = (event, context) => { awsServerlessExpress.proxy(server, event, context) }
 ```
 
 [Package and create your Lambda function](http://docs.aws.amazon.com/lambda/latest/dg/nodejs-create-deployment-pkg.html), then configure a simple proxy API using Amazon API Gateway and integrate it with your Lambda function.
