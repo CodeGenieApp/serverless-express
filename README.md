@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
 
 ### Is AWS serverless right for my app?
 
-#### Pros
+#### Benefits
 
  - Pay for what you use
  - No infrastructure to manage
@@ -60,7 +60,7 @@ app.get('/', (req, res) => {
  - [Request Validation](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html)
  - [Documentation](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-documenting-api.html)
 
-#### Cons
+#### Considerations
 
  - For apps that may not see traffic for several minutes at a time, you could see [cold starts](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)
  - Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
