@@ -15,7 +15,7 @@ test('getPathWithQueryStringParams: no params', () => {
 test('getPathWithQueryStringParams: 1 param', () => {
   const event = {
     path: '/foo/bar',
-    queryStringParameters: {
+    multiValueQueryStringParameters: {
       'bizz': 'bazz'
     }
   }
@@ -26,7 +26,7 @@ test('getPathWithQueryStringParams: 1 param', () => {
 test('getPathWithQueryStringParams: to be url-encoded param', () => {
   const event = {
     path: '/foo/bar',
-    queryStringParameters: {
+    multiValueQueryStringParameters: {
       'redirect_uri': 'http://lvh.me:3000/cb'
     }
   }
@@ -37,13 +37,27 @@ test('getPathWithQueryStringParams: to be url-encoded param', () => {
 test('getPathWithQueryStringParams: 2 params', () => {
   const event = {
     path: '/foo/bar',
-    queryStringParameters: {
+    multiValueQueryStringParameters: {
       'bizz': 'bazz',
       'buzz': 'bozz'
     }
   }
   const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams(event)
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&buzz=bozz')
+})
+
+test('getPathWithQueryStringParams: array param', () => {
+  const event = {
+    path: '/foo/bar',
+    multiValueQueryStringParameters: {
+      'bizz': [
+        'bazz',
+        'buzz'
+      ]
+    }
+  }
+  const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams(event)
+  expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&bizz=buzz')
 })
 
 function mapApiGatewayEventToHttpRequest (headers) {

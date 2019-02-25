@@ -7,7 +7,7 @@ const generateMockReq = () => {
     headers: {
       'x-apigateway-event': encodeURIComponent(JSON.stringify({
         path: '/foo/bar',
-        queryStringParameters: {
+        multiValueQueryStringParameters: {
           foo: '🖖',
           bar: '~!@#$%^&*()_+`-=;\':",./<>?`'
         }
