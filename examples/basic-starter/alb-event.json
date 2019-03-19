@@ -1,0 +1,26 @@
+{
+  "requestContext": {
+    "elb": {
+      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:966390130392:targetgroup/tg-scinapse-web-client-dev/1344e93a2a43ba88"
+    }
+  },
+  "httpMethod": "GET",
+  "path": "/",
+  "queryStringParameters": { "branch": "exp/log" },
+  "headers": {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "accept-encoding": "gzip, deflate, br",
+    "accept-language": "en-US,ko;q=0.7,en;q=0.3",
+    "cookie": "_ga=GA1.2.1453448834.1543803900; _gid=GA1.2.1127325896.1552875399; pvForFeedback=7",
+    "host": "dev.scinapse.io",
+    "te": "trailers",
+    "upgrade-insecure-requests": "1",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0",
+    "x-amzn-trace-id": "Root=1-5c9099d8-3ef7f2285c75061a11a3612c",
+    "x-forwarded-for": "183.98.101.110",
+    "x-forwarded-port": "443",
+    "x-forwarded-proto": "https"
+  },
+  "body": "",
+  "isBase64Encoded": true
+}

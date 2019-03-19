@@ -65,7 +65,26 @@ function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
   }
 }
 
-function forwardResponseToApiGateway (server, response, resolver) {
+function mapALBEventToHttpRequest (event, context, socketPath) {
+  const headers = Object.assign({}, event.headers)
+
+  const clonedEventWithoutBody = clone(event)
+  delete clonedEventWithoutBody.body
+
+  headers['x-alb-event'] = encodeURIComponent(
+    JSON.stringify(clonedEventWithoutBody)
+  )
+  headers['x-alb-context'] = encodeURIComponent(JSON.stringify(context))
+
+  return {
+    method: event.httpMethod,
+    path: getPathWithQueryStringParams(event),
+    headers,
+    socketPath
+  }
+}
+
+function forwardResponseToEndpoint (server, response, resolver) {
   let buf = []
 
   response
@@ -106,25 +125,27 @@ function forwardResponseToApiGateway (server, response, resolver) {
     })
 }
 
-function forwardConnectionErrorResponseToApiGateway (error, resolver) {
+function forwardConnectionErrorResponseToEndpoint (error, resolver) {
   console.log('ERROR: aws-serverless-express connection error')
   console.error(error)
   const errorResponse = {
     statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
     body: '',
-    headers: {}
+    headers: {},
+    isBase64Encoded: false
   }
 
   resolver.succeed({ response: errorResponse })
 }
 
-function forwardLibraryErrorResponseToApiGateway (error, resolver) {
+function forwardLibraryErrorResponseToEndpoint (error, resolver) {
   console.log('ERROR: aws-serverless-express error')
   console.error(error)
   const errorResponse = {
     statusCode: 500,
     body: '',
-    headers: {}
+    headers: {},
+    isBase64Encoded: false
   }
 
   resolver.succeed({ response: errorResponse })
@@ -132,18 +153,25 @@ function forwardLibraryErrorResponseToApiGateway (error, resolver) {
 
 function forwardRequestToNodeServer (server, event, context, resolver) {
   try {
-    const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
-    const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, resolver))
+    let requestOptions
+    if (event.requestContext && event.requestContext.elb) { // from ALB
+      requestOptions = mapALBEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
+    } else { // from API Gateway
+      requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
+    }
+
+    const req = http.request(requestOptions, (response) => forwardResponseToEndpoint(server, response, resolver))
+
     if (event.body) {
       const body = getEventBody(event)
 
       req.write(body)
     }
 
-    req.on('error', (error) => forwardConnectionErrorResponseToApiGateway(error, resolver))
+    req.on('error', (error) => forwardConnectionErrorResponseToEndpoint(error, resolver))
       .end()
   } catch (error) {
-    forwardLibraryErrorResponseToApiGateway(error, resolver)
+    forwardLibraryErrorResponseToEndpoint(error, resolver)
     return server
   }
 }
@@ -254,9 +282,10 @@ exports.proxy = proxy
 if (process.env.NODE_ENV === 'test') {
   exports.getPathWithQueryStringParams = getPathWithQueryStringParams
   exports.mapApiGatewayEventToHttpRequest = mapApiGatewayEventToHttpRequest
-  exports.forwardResponseToApiGateway = forwardResponseToApiGateway
-  exports.forwardConnectionErrorResponseToApiGateway = forwardConnectionErrorResponseToApiGateway
-  exports.forwardLibraryErrorResponseToApiGateway = forwardLibraryErrorResponseToApiGateway
+  exports.mapALBEventToHttpRequest = mapALBEventToHttpRequest
+  exports.forwardResponseToEndpoint = forwardResponseToEndpoint
+  exports.forwardConnectionErrorResponseToEndpoint = forwardConnectionErrorResponseToEndpoint
+  exports.forwardLibraryErrorResponseToEndpoint = forwardLibraryErrorResponseToEndpoint
   exports.forwardRequestToNodeServer = forwardRequestToNodeServer
   exports.startServer = startServer
   exports.getSocketPath = getSocketPath

@@ -17,6 +17,7 @@
   "license": "Apache-2.0",
   "files": [
     "index.js",
+    "albMiddleware.js",
     "middleware.js",
     "src/"
   ],

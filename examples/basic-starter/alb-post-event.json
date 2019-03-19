@@ -1,0 +1,27 @@
+{
+  "requestContext": {
+    "elb": {
+      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:966390130392:targetgroup/tg-scinapse-web-client-dev/1344e93a2a43ba88"
+    }
+  },
+  "httpMethod": "POST",
+  "path": "/",
+  "queryStringParameters": { "branch": "exp/log" },
+  "headers": {
+    "accept": "*/*",
+    "accept-encoding": "gzip, deflate",
+    "cache-control": "no-cache",
+    "connection": "keep-alive",
+    "content-length": "445",
+    "content-type": "multipart/form-data; boundary=--------------------------890630382963112405855458",
+    "host": "dev.scinapse.io",
+    "postman-token": "0002d50f-1c8f-41df-ac6f-4731de8ca69d",
+    "user-agent": "PostmanRuntime/7.6.1",
+    "x-amzn-trace-id": "Root=1-5c909bf3-90b421139c81a5aaa3776b90",
+    "x-forwarded-for": "183.98.101.110",
+    "x-forwarded-port": "443",
+    "x-forwarded-proto": "https"
+  },
+  "body": "LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLTg5MDYzMDM4Mjk2MzExMjQwNTg1NTQ1OA0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJzZGZhYXNkZmFzZGZzZCINCg0KZHNmYXNkZmFzZGYNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS04OTA2MzAzODI5NjMxMTI0MDU4NTU0NTgNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0ieHpjdnp4Y3Z4Y3p2Ig0KDQpzZGFmYXNkZmFzZGZkYXNmDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tODkwNjMwMzgyOTYzMTEyNDA1ODU1NDU4DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9ImRhc2Zhc2RmYWRzZmRzYWYiDQoNCmFmZHNmY3p2Y3Zkc2V3ZXdxcXJld3FyDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tODkwNjMwMzgyOTYzMTEyNDA1ODU1NDU4LS0NCg==",
+  "isBase64Encoded": true
+}

@@ -384,13 +384,14 @@ describe('integration tests', () => {
     })
   })
 
-  test('forwardConnectionErrorResponseToApiGateway', (done) => {
+  test('forwardConnectionErrorResponseToEndpoint', (done) => {
     const succeed = response => {
       delete response.headers.date
       expect(response).toEqual({
         'body': '',
         'headers': {},
-        statusCode: 502
+        statusCode: 502,
+        isBase64Encoded: false
       })
       done()
     }
@@ -410,12 +411,13 @@ describe('integration tests', () => {
     res.end('')
   }
 
-  test('forwardLibraryErrorResponseToApiGateway', (done) => {
+  test('forwardLibraryErrorResponseToEndpoint', (done) => {
     const succeed = response => {
       expect(response).toEqual({
         statusCode: 500,
         body: '',
-        headers: {}
+        headers: {},
+        isBase64Encoded: false
       })
       done()
     }
