@@ -96,7 +96,7 @@ function forwardResponseToEndpoint (server, response, resolver) {
 
       // chunked transfer not currently supported by API Gateway
       /* istanbul ignore else */
-      if (headers['transfer-encoding'] === 'chunked') {
+      if (headers['x-apigateway-event'] && headers['transfer-encoding'] === 'chunked') {
         delete headers['transfer-encoding']
       }
 
