@@ -23,7 +23,6 @@ jobs:
         - npm test
     - stage: lint
       script:
-        - commitlint-travis
         - npm run lint
     - stage: deploy
       script: skip
