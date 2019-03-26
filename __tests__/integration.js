@@ -451,7 +451,7 @@ describe('integration tests', () => {
     })
   })
 
-  test.skip('set-cookie')
+  test.todo('set-cookie')
 
   test('server.onClose', (done) => {
     // NOTE: this must remain as the final test as it closes `server`
