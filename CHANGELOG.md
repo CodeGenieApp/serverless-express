@@ -1,3 +1,14 @@
+## [3.3.6](https://github.com/awslabs/aws-serverless-express/compare/v3.3.5...v3.3.6) (2019-03-26)
+
+
+### Bug Fixes
+
+* remove commitlint from travis ([7b12e56](https://github.com/awslabs/aws-serverless-express/commit/7b12e56))
+* remove Node.js 4 support ([713ad14](https://github.com/awslabs/aws-serverless-express/commit/713ad14))
+* remove Node.js 4 support ([e01c9af](https://github.com/awslabs/aws-serverless-express/commit/e01c9af))
+* update dependencies ([075e15b](https://github.com/awslabs/aws-serverless-express/commit/075e15b))
+* update dependencies ([39c55eb](https://github.com/awslabs/aws-serverless-express/commit/39c55eb))
+
 <a name="3.3.5"></a>
 ## [3.3.5](https://github.com/awslabs/aws-serverless-express/compare/v3.3.4...v3.3.5) (2018-08-20)
 
