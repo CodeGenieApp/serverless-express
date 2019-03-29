@@ -26,7 +26,7 @@
     "url": "https://github.com/awslabs/aws-serverless-express.git"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=8"
   },
   "release": {
     "verifyConditions": [
@@ -34,6 +34,18 @@
       "@semantic-release/npm",
       "@semantic-release/git",
       "@semantic-release/github"
+    ],
+    "branches": [
+      "master",
+      {
+        "name": "develop",
+        "prerelease": true
+      },
+      {
+        "name": "next",
+        "channel": "alpha",
+        "prerelease": true
+      }
     ],
     "publish": [
       "@semantic-release/changelog",
@@ -115,7 +127,7 @@
     "install-example-dependencies": "cd examples && npm install --prefix basic-starter basic-starter && cd .."
   },
   "dependencies": {
-    "binary-case": "^1.0.0",
+    "binary-case": "^1.1.4",
     "type-is": "^1.6.16"
   },
   "config": {

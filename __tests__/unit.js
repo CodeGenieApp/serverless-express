@@ -1,7 +1,6 @@
 'use strict'
 
 const path = require('path')
-
 const awsServerlessExpress = require('../index')
 
 test('getPathWithQueryStringParams: no params', () => {
@@ -115,8 +114,8 @@ class MockResponse extends PassThrough {
 }
 
 class MockServer {
-  constructor (binaryTypes) {
-    this._binaryTypes = binaryTypes || []
+  constructor (binaryMimeTypes) {
+    this._binaryMimeTypes = binaryMimeTypes || []
   }
 }
 
@@ -176,7 +175,10 @@ function getContextResolver (resolve) {
 describe('forwardResponseToApiGateway: header handling', () => {
   test('multiple headers with the same name get transformed', () => {
     const server = new MockServer()
-    const headers = {'foo': ['bar', 'baz'], 'Set-Cookie': ['bar', 'baz']}
+    const headers = {
+      'foo': ['bar', 'baz'],
+      'Set-Cookie': ['bar', 'baz']
+    }
     const body = 'hello world'
     const response = new MockResponse(200, headers, body)
     return new Promise(
@@ -187,7 +189,11 @@ describe('forwardResponseToApiGateway: header handling', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: body,
-      headers: { foo: 'bar,baz', 'SEt-Cookie': 'baz', 'set-Cookie': 'bar' },
+      headers: {
+        foo: 'bar,baz',
+        'SEt-Cookie': 'baz',
+        'set-Cookie': 'bar'
+      },
       isBase64Encoded: false
     }))
   })

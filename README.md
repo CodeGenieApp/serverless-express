@@ -16,7 +16,8 @@ npm install aws-serverless-express
 'use strict'
 const awsServerlessExpress = require('aws-serverless-express')
 const app = require('./app')
-const server = awsServerlessExpress.createServer(app)
+const servererlessExpress = awsServerlessExpress.configure({
+})
 
 exports.handler = (event, context) => { awsServerlessExpress.proxy(server, event, context) }
 ```
@@ -27,13 +28,13 @@ exports.handler = (event, context) => { awsServerlessExpress.proxy(server, event
 
 Want to get up and running quickly? [Check out our basic starter example](examples/basic-starter) which includes:
 
- - Lambda function
- - Express server
- [Swagger file](http://swagger.io/specification/)
- - [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model)/[CloudFormation](https://aws.amazon.com/cloudformation/aws-cloudformation-templates/) template
- - Helper scripts to configure, deploy, and manage your application
+- Lambda function
+- Express server [Swagger file](http://swagger.io/specification/)
+- [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model)/[CloudFormation](https://aws.amazon.com/cloudformation/aws-cloudformation-templates/) template
+- Helper scripts to configure, deploy, and manage your application
 
 ### Getting the API Gateway event object
+
 This package includes middleware to easily get the event object Lambda receives from API Gateway
 
 ```js
@@ -44,25 +45,36 @@ app.get('/', (req, res) => {
 })
 ```
 
+## 4.0.0 Goals
+
+1. Improved API - Simpler for end user to use and configure; extensible without breaking backwards compatibility or hurting API
+1. Node.js 8+ only - can upgrade dependencies to latest (Jest); can use latest syntax in source and tests; can use server.listening; future-proof for Node.js 10
+1. Promise resolution mode by default? Requires benchmarking. Otherwise try callback with callbackWaitsForEventLoop=false (configurable by user); requires benchmarking. If context.succeed is still most performant, leave as default.
+1. Additional event sources - currently only supports API Gateway Proxy; should also support Lambda@Edge (https://github.com/awslabs/aws-serverless-express/issues/152) and ALB; have had a customer request for DynamoDB; should make it easy to provide your own IO mapping function.
+1. Multiple header values - can get rid of set-cookie hack
+1. Configure logging - NONE, ERROR, INFO, DEBUG; also include option to respond to 500s with the stack trace instead of empty string currently
+1. Improved documentation
+1. Option to strip base path for custom domains (https://github.com/awslabs/aws-serverless-express/issues/86)
+
 ### Is AWS serverless right for my app?
 
 #### Benefits
 
- - Pay for what you use
- - No infrastructure to manage
- - Auto-scaling with no configuration needed
- - [Usage Plans](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html)
- - [Caching](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html)
- - [Authorization](http://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html)
- - [Staging](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-deploy-api.html)
- - [SDK Generation](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-generate-sdk.html)
- - [API Monitoring](http://docs.aws.amazon.com/apigateway/latest/developerguide/monitoring-cloudwatch.html)
- - [Request Validation](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html)
- - [Documentation](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-documenting-api.html)
+- Pay for what you use
+- No infrastructure to manage
+- Auto-scaling with no configuration needed
+- [Usage Plans](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html)
+- [Caching](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html)
+- [Authorization](http://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html)
+- [Staging](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-deploy-api.html)
+- [SDK Generation](http://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-generate-sdk.html)
+- [API Monitoring](http://docs.aws.amazon.com/apigateway/latest/developerguide/monitoring-cloudwatch.html)
+- [Request Validation](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html)
+- [Documentation](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-documenting-api.html)
 
 #### Considerations
 
- - For apps that may not see traffic for several minutes at a time, you could see [cold starts](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)
- - Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
- - Stateless only
- - API Gateway has a timeout of 30 seconds, and Lambda has a maximum execution time of 15 minutes.
+- For apps that may not see traffic for several minutes at a time, you could see [cold starts](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)
+- Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
+- Stateless only
+- API Gateway has a timeout of 30 seconds, and Lambda has a maximum execution time of 15 minutes.
