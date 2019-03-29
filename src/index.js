@@ -213,9 +213,9 @@ function createServer ({
 
 function proxy ({
   server,
-  event,
-  context,
-  callback,
+  event = {},
+  context = {},
+  callback = null,
   resolutionMode = 'CONTEXT_SUCCEED'
 }) {
   return {

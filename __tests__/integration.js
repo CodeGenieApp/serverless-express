@@ -7,16 +7,6 @@ const app = require('../examples/basic-starter/app')
 const serverlessExpress = awsServerlessExpress.configure({ app })
 const server = serverlessExpress.server
 
-const lambdaFunction = {
-  handler: (event, context, resolutionMode, callback, _server) => serverlessExpress.proxy({
-    server: _server || server,
-    event,
-    context,
-    resolutionMode,
-    callback
-  })
-}
-
 function clone (json) {
   return JSON.parse(JSON.stringify(json))
 }
@@ -63,7 +53,7 @@ describe('integration tests', () => {
       done()
     }
 
-    const response = lambdaFunction.handler(makeEvent({
+    const response = serverlessExpress.handler(makeEvent({
       path: '/',
       httpMethod: 'GET'
     }), {
@@ -82,7 +72,7 @@ describe('integration tests', () => {
       expect(response).toEqual(expectedResponse)
       done()
     }
-    lambdaFunction.handler(makeEvent({ path: '/', httpMethod: 'GET' }), {
+    serverlessExpress.handler(makeEvent({ path: '/', httpMethod: 'GET' }), {
       succeed
     })
   })
@@ -97,7 +87,7 @@ describe('integration tests', () => {
       expect(response).toEqual(expectedResponse)
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/',
       httpMethod: 'GET'
     }), {
@@ -117,7 +107,7 @@ describe('integration tests', () => {
       }))
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/users',
       httpMethod: 'GET'
     }), {
@@ -143,7 +133,7 @@ describe('integration tests', () => {
       expect(response).toEqual(expectedResponse)
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/nothing-here',
       httpMethod: 'GET'
     }), {
@@ -163,7 +153,7 @@ describe('integration tests', () => {
       }))
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/users/1',
       httpMethod: 'GET'
     }), {
@@ -183,10 +173,14 @@ describe('integration tests', () => {
       }))
       done()
     }
-    lambdaFunction.handler(makeEvent({
-      path: '/users/1',
-      httpMethod: 'GET'
-    }), {}, 'CALLBACK', callback)
+    serverlessExpress.proxy({
+      event: makeEvent({
+        path: '/users/1',
+        httpMethod: 'GET'
+      }),
+      resolutionMode: 'CALLBACK',
+      callback
+    })
   })
 
   test('GET JSON single (resolutionMode = PROMISE)', (done) => {
@@ -201,10 +195,13 @@ describe('integration tests', () => {
       }))
       done()
     }
-    lambdaFunction.handler(makeEvent({
-      path: '/users/1',
-      httpMethod: 'GET'
-    }), {}, 'PROMISE')
+    serverlessExpress.proxy({
+      event: makeEvent({
+        path: '/users/1',
+        httpMethod: 'GET'
+      }),
+      resolutionMode: 'PROMISE'
+    })
       .promise.then(succeed)
   })
 
@@ -218,15 +215,15 @@ describe('integration tests', () => {
           'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
         }
       }))
-      newServer.close()
+      newServererlessExpress.server.close()
       done()
     }
-    const newServer = serverlessExpress.createServer({ app })
-    lambdaFunction.handler(makeEvent({
+    const newServererlessExpress = awsServerlessExpress.configure({ app, resolutionMode: 'PROMISE' })
+    const event = makeEvent({
       path: '/users/1',
       httpMethod: 'GET'
-    }), {}, 'PROMISE', null, newServer)
-      .promise.then(succeed)
+    })
+    newServererlessExpress.handler(event).promise.then(succeed)
   })
 
   test('GET JSON single 404', (done) => {
@@ -242,7 +239,7 @@ describe('integration tests', () => {
       }))
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/users/3',
       httpMethod: 'GET'
     }), {
@@ -277,15 +274,17 @@ describe('integration tests', () => {
       app,
       binaryMimeTypes: ['image/*']
     })
+    const event = makeEvent({
+      path: '/sam',
+      httpMethod: 'GET'
+    })
     serverlessExpress.proxy({
       server: serverWithBinaryTypes,
-      event: makeEvent({
-        path: '/sam',
-        httpMethod: 'GET'
-      }),
+      event,
       context: {
         succeed
-      }})
+      }
+    })
   })
   const newName = 'Sandy Samantha Salamander'
 
@@ -302,7 +301,7 @@ describe('integration tests', () => {
       }))
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/users',
       httpMethod: 'POST',
       body: `{"name": "${newName}"}`
@@ -324,7 +323,7 @@ describe('integration tests', () => {
       }))
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/users/3',
       httpMethod: 'GET'
     }), {
@@ -345,7 +344,7 @@ describe('integration tests', () => {
       }))
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/users/1',
       httpMethod: 'DELETE'
     }), {
@@ -366,7 +365,7 @@ describe('integration tests', () => {
       }))
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/users/2',
       httpMethod: 'PUT',
       body: '{"name": "Samuel"}'
@@ -388,7 +387,7 @@ describe('integration tests', () => {
       }))
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/users/2',
       httpMethod: 'PUT',
       body: global.btoa('{"name": "Samuel"}'),
@@ -411,7 +410,7 @@ describe('integration tests', () => {
       })
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    serverlessExpress.handler(makeEvent({
       path: '/',
       httpMethod: 'GET',
       body: '{"name": "Sam502"}',
@@ -436,12 +435,7 @@ describe('integration tests', () => {
       })
       done()
     }
-    serverlessExpress.proxy({
-      server,
-      context: {
-        succeed
-      }
-    })
+    serverlessExpress.handler(null, { succeed })
   })
 
   test('serverListenCallback', (done) => {
@@ -477,7 +471,8 @@ describe('integration tests', () => {
       event: makeEvent({}),
       context: {
         succeed
-      }})
+      }
+    })
   })
 
   test.todo('set-cookie')
@@ -492,7 +487,7 @@ describe('integration tests', () => {
       server.close()
     }
 
-    lambdaFunction.handler(makeEvent({}), {
+    serverlessExpress.handler(makeEvent({}), {
       succeed
     })
   })
