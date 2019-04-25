@@ -19,7 +19,9 @@ const binarycase = require('binary-case')
 const isType = require('type-is')
 
 function getPathWithQueryStringParams (event) {
-  return url.format({ pathname: event.path, query: event.queryStringParameters })
+  const query = Object.assign({}, event.queryStringParameters, event.multiValueQueryStringParameters)
+
+  return url.format({ pathname: event.path, query: query })
 }
 function getEventBody (event) {
   return Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
