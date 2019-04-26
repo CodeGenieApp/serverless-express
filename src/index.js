@@ -25,10 +25,6 @@ function getEventBody (event) {
   return Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
 }
 
-function clone (json) {
-  return JSON.parse(JSON.stringify(json))
-}
-
 function getContentType (params) {
   // only compare mime type; ignore encoding part
   return params.contentTypeHeader ? params.contentTypeHeader.split(';')[0] : ''
@@ -47,8 +43,7 @@ function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
     headers['Content-Length'] = Buffer.byteLength(body)
   }
 
-  const clonedEventWithoutBody = clone(event)
-  delete clonedEventWithoutBody.body
+  const clonedEventWithoutBody = Object.assign({}, event, { body: undefined })
 
   headers['x-apigateway-event'] = encodeURIComponent(JSON.stringify(clonedEventWithoutBody))
   headers['x-apigateway-context'] = encodeURIComponent(JSON.stringify(context))
