@@ -65,4 +65,4 @@ app.get('/', (req, res) => {
  - For apps that may not see traffic for several minutes at a time, you could see [cold starts](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)
  - Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
  - Stateless only
- - API Gateway has a timeout of 30 seconds, and Lambda has a maximum execution time of 15 minutes.
+ - API Gateway has a timeout of 29 seconds, and Lambda has a maximum execution time of 15 minutes.
