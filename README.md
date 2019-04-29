@@ -33,28 +33,29 @@ Want to get up and running quickly? [Check out our basic starter example](exampl
 - [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model)/[CloudFormation](https://aws.amazon.com/cloudformation/aws-cloudformation-templates/) template
 - Helper scripts to configure, deploy, and manage your application
 
-### Getting the API Gateway event object
+### Accessing the event and context objects
 
-This package includes middleware to easily get the event object Lambda receives from API Gateway
+This package exposes a function to easily get the `event` and `context` objects Lambda receives from the event source.
 
 ```js
-const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
-app.use(awsServerlessExpressMiddleware.eventContext())
+const { getCurrentLambdaInvoke } = require('aws-serverless-express')
 app.get('/', (req, res) => {
-  res.json(req.lambda.event)
+  const currentLambdaInvoke = getCurrentLambdaInvoke()
+
+  res.json(currentLambdaInvoke.event)
 })
 ```
 
 ## 4.0.0 Goals
 
 1. Improved API - Simpler for end user to use and configure; extensible without breaking backwards compatibility or hurting API
-1. Node.js 8+ only - can upgrade dependencies to latest (Jest); can use latest syntax in source and tests; can use server.listening; future-proof for Node.js 10
-1. Promise resolution mode by default? Requires benchmarking. Otherwise try callback with callbackWaitsForEventLoop=false (configurable by user); requires benchmarking. If context.succeed is still most performant, leave as default.
-1. Additional event sources - currently only supports API Gateway Proxy; should also support Lambda@Edge (https://github.com/awslabs/aws-serverless-express/issues/152) and ALB; have had a customer request for DynamoDB; should make it easy to provide your own IO mapping function.
-1. Multiple header values - can get rid of set-cookie hack
-1. Configure logging - NONE, ERROR, INFO, DEBUG; also include option to respond to 500s with the stack trace instead of empty string currently
-1. Improved documentation
-1. Option to strip base path for custom domains (https://github.com/awslabs/aws-serverless-express/issues/86)
+2. Node.js 8+ only - can upgrade dependencies to latest (Jest); can use latest syntax in source and tests; can use server.listening; future-proof for Node.js 10
+3. Promise resolution mode by default? Requires benchmarking. Otherwise try callback with callbackWaitsForEventLoop=false (configurable by user); requires benchmarking. If context.succeed is still most performant, leave as default.
+4. Additional event sources - currently only supports API Gateway Proxy; should also support Lambda@Edge (https://github.com/awslabs/aws-serverless-express/issues/152) and ALB; have had a customer request for DynamoDB; should make it easy to provide your own IO mapping function.
+5. Multiple header values - can get rid of set-cookie hack
+6. Configure logging - NONE, ERROR, INFO, DEBUG; also include option to respond to 500s with the stack trace instead of empty string currently
+7. Improved documentation
+8. Option to strip base path for custom domains (https://github.com/awslabs/aws-serverless-express/issues/86)
 
 ### Is AWS serverless right for my app?
 

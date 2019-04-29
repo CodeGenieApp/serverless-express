@@ -17,6 +17,17 @@ const http = require('http')
 const url = require('url')
 const isType = require('type-is')
 
+const currentLambdaInvoke = {}
+
+function getCurrentLambdaInvoke () {
+  return currentLambdaInvoke
+}
+
+function setCurrentLambdaInvoke ({ event, context }) {
+  currentLambdaInvoke.event = event
+  currentLambdaInvoke.context = context
+}
+
 function getPathWithQueryStringParams ({ event }) {
   return url.format({
     pathname: event.path,
@@ -26,10 +37,6 @@ function getPathWithQueryStringParams ({ event }) {
 
 function getEventBody ({ event }) {
   return Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
-}
-
-function clone ({ object }) {
-  return JSON.parse(JSON.stringify(object))
 }
 
 function getContentType ({ contentTypeHeader }) {
@@ -43,13 +50,9 @@ function isContentTypeBinaryMimeType ({ contentType, binaryMimeTypes }) {
 
 function mapEventToHttpRequest ({
   event,
-  eventWithoutBody = { ...clone({ object: event }), body: undefined },
-  context,
   socketPath,
   headers = {
-    ...event.multiValueHeaders,
-    'x-lambda-event': encodeURIComponent(JSON.stringify(eventWithoutBody)),
-    'x-lambda-context': encodeURIComponent(JSON.stringify(context))
+    ...event.multiValueHeaders
   }
 }) {
   return {
@@ -64,8 +67,8 @@ function mapEventToHttpRequest ({
   }
 }
 
-function mapApiGatewayEventToHttpRequest ({ event, context, socketPath }) {
-  const httpRequest = mapEventToHttpRequest({ event, context, socketPath })
+function mapApiGatewayEventToHttpRequest ({ event, socketPath }) {
+  const httpRequest = mapEventToHttpRequest({ event, socketPath })
 
   // NOTE: API Gateway is not setting Content-Length header on requests even when they have a body
   if (event.body && !httpRequest.headers['Content-Length']) {
@@ -76,14 +79,14 @@ function mapApiGatewayEventToHttpRequest ({ event, context, socketPath }) {
   return httpRequest
 }
 
-function mapAlbEventToHttpRequest ({ event, context, socketPath }) {
-  const httpRequest = mapEventToHttpRequest({ event, context, socketPath })
+function mapAlbEventToHttpRequest ({ event, socketPath }) {
+  const httpRequest = mapEventToHttpRequest({ event, socketPath })
 
   return httpRequest
 }
 
 function mapLambdaEdgeEventToHttpRequest ({ event, context, socketPath }) {
-  const httpRequest = mapEventToHttpRequest({ event, context, socketPath })
+  const httpRequest = mapEventToHttpRequest({ event, socketPath })
 
   return httpRequest
 }
@@ -190,10 +193,10 @@ function forwardRequestToNodeServer ({
   eventSource,
   eventFns = getEventFnsBasedOnEventSource({ eventSource })
 }) {
+  setCurrentLambdaInvoke({ event, context })
   try {
     const requestOptions = eventFns.request({
       event,
-      context,
       socketPath: getSocketPath({ socketPathSuffix: server._socketPathSuffix })
     })
     const req = http.request(requestOptions, (response) => forwardResponse({ server, response, resolver, responseFn: eventFns.response }))
@@ -378,6 +381,7 @@ function configure ({
 }
 
 exports.configure = configure
+exports.getCurrentLambdaInvoke = getCurrentLambdaInvoke
 
 /* istanbul ignore else */
 if (process.env.NODE_ENV === 'test') {

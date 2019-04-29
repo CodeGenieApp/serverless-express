@@ -17,7 +17,6 @@
   "license": "Apache-2.0",
   "files": [
     "index.js",
-    "middleware.js",
     "src/"
   ],
   "main": "index.js",

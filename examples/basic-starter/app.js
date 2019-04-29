@@ -4,7 +4,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const compression = require('compression')
-const awsServerlessExpressMiddleware = require(process.env.NODE_ENV === 'test' ? '../../middleware' : 'aws-serverless-express/middleware')
+const { getCurrentLambdaInvoke } = require(process.env.NODE_ENV === 'test' ? '../..' : 'aws-serverless-express')
 const app = express()
 const router = express.Router()
 
@@ -21,14 +21,14 @@ if (process.env.NODE_ENV === 'test') {
 router.use(cors())
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({ extended: true }))
-router.use(awsServerlessExpressMiddleware.eventContext())
 
 // NOTE: tests can't find the views directory without this
 app.set('views', path.join(__dirname, 'views'))
 
 router.get('/', (req, res) => {
+  const currentLambdaInvoke = getCurrentLambdaInvoke()
   res.render('index', {
-    apiUrl: req.lambda ? `https://${req.lambda.event.multiValueHeaders.Host}/${req.lambda.event.requestContext.stage}` : 'http://localhost:3000'
+    apiUrl: currentLambdaInvoke ? `https://${currentLambdaInvoke.event.multiValueHeaders.Host}/${currentLambdaInvoke.event.requestContext.stage}` : 'http://localhost:3000'
   })
 })
 
