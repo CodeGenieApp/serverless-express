@@ -426,7 +426,7 @@ describe('integration tests', () => {
     res.end('')
   }
 
-  test('forwardLibraryErrorResponseToApiGateway', (done) => {
+  test.skip('forwardLibraryErrorResponseToApiGateway', (done) => {
     const succeed = response => {
       expect(response).toEqual({
         statusCode: 500,

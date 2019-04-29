@@ -44,16 +44,15 @@ function isContentTypeBinaryMimeType ({ contentType, binaryMimeTypes }) {
 
 function mapEventToHttpRequest ({
   event,
+  eventWithoutBody = { ...clone({ object: event }), body: undefined },
   context,
   socketPath,
-  headers = Object.assign({}, event.headers)
+  headers = {
+    ...event.headers,
+    'x-lambda-event': encodeURIComponent(JSON.stringify(eventWithoutBody)),
+    'x-lambda-context': encodeURIComponent(JSON.stringify(context))
+  }
 }) {
-  const clonedEventWithoutBody = clone({ object: event })
-  delete clonedEventWithoutBody.body
-
-  headers['x-lambda-event'] = encodeURIComponent(JSON.stringify(clonedEventWithoutBody))
-  headers['x-lambda-context'] = encodeURIComponent(JSON.stringify(context))
-
   return {
     method: event.httpMethod,
     path: getPathWithQueryStringParams({ event }),
@@ -81,13 +80,17 @@ function mapApiGatewayEventToHttpRequest ({ event, context, socketPath }) {
 function mapAlbEventToHttpRequest ({ event, context, socketPath }) {
   const httpRequest = mapEventToHttpRequest({ event, context, socketPath })
 
-  // NOTE: API Gateway is not setting Content-Length header on requests even when they have a body
-  if (event.body && !httpRequest.headers['Content-Length']) {
-    const body = getEventBody({ event })
-    httpRequest.headers['Content-Length'] = Buffer.byteLength(body)
-  }
+  return httpRequest
+}
+
+function mapLambdaEdgeEventToHttpRequest ({ event, context, socketPath }) {
+  const httpRequest = mapEventToHttpRequest({ event, context, socketPath })
 
   return httpRequest
+}
+
+function forwardResponse ({ server, response, resolver }) {
+  return forwardResponseToApiGateway({ server, response, resolver })
 }
 
 function forwardResponseToApiGateway ({ server, response, resolver }) {
@@ -171,12 +174,28 @@ function forwardLibraryErrorResponseToApiGateway ({ error, resolver }) {
   })
 }
 
-function getEventMapperBasedOnEventSource ({ eventSource }) {
+function getEventFnsBasedOnEventSource ({ eventSource }) {
   switch (eventSource) {
+    case 'API_GATEWAY':
+      return {
+        request: mapApiGatewayEventToHttpRequest,
+        response: forwardResponseToApiGateway
+      }
     case 'ALB':
-      return mapAlbEventToHttpRequest
+      return {
+        request: mapAlbEventToHttpRequest,
+        response: forwardResponseToApiGateway
+      }
+    case 'LAMBDA_EDGE':
+      return {
+        request: mapLambdaEdgeEventToHttpRequest,
+        response: forwardResponseToApiGateway
+      }
     default:
-      return mapApiGatewayEventToHttpRequest
+      return {
+        request: mapEventToHttpRequest,
+        response: forwardResponseToApiGateway
+      }
   }
 }
 
@@ -186,22 +205,22 @@ function forwardRequestToNodeServer ({
   context,
   resolver,
   eventSource,
-  eventMapper = getEventMapperBasedOnEventSource({ eventSource })
+  eventFns = getEventFnsBasedOnEventSource({ eventSource })
 }) {
   try {
-    const requestOptions = eventMapper({
+    const requestOptions = eventFns.request({
       event,
       context,
       socketPath: getSocketPath({ socketPathSuffix: server._socketPathSuffix })
     })
-    const req = http.request(requestOptions, (response) => forwardResponseToApiGateway({ server, response, resolver }))
+    const req = http.request(requestOptions, (response) => forwardResponse({ server, response, resolver, responseFn: eventFns.response }))
 
     if (event.body) {
       const body = getEventBody({ event })
       req.write(body)
     }
 
-    req.on('error', (error) => forwardConnectionErrorResponseToApiGateway({ error, resolver }))
+    req.on('error', (error) => forwardConnectionErrorResponseToApiGateway({ error, resolver, responseFn: eventFns.response }))
       .end()
   } catch (error) {
     forwardLibraryErrorResponseToApiGateway({ error, resolver })
@@ -255,8 +274,10 @@ function getEventSourceBasedOnEvent ({
   event
 }) {
   if (event && event.requestContext && event.requestContext.elb) return 'ALB'
-
-  return 'API_GATEWAY'
+  if (event && event.requestContext && event.requestContext.stage) return 'API_GATEWAY'
+  if (event && event.Records) return 'LAMBDA_EDGE'
+  console.log('missing event', event)
+  throw new Error('Unable to determine event source based on event.')
 }
 
 function proxy ({
@@ -265,8 +286,11 @@ function proxy ({
   context = {},
   callback = null,
   resolutionMode = 'CONTEXT_SUCCEED',
-  eventSource = getEventSourceBasedOnEvent({ event })
+  eventSource = getEventSourceBasedOnEvent({ event }),
+  eventFns = getEventFnsBasedOnEventSource({ eventSource })
 }) {
+  console.log('eventSource', eventSource)
+  console.log(eventFns)
   return {
     server,
     promise: new Promise((resolve, reject) => {
@@ -287,7 +311,8 @@ function proxy ({
           event,
           context,
           resolver,
-          eventSource
+          eventSource,
+          eventFns
         })
       } else {
         startServer({ server })
@@ -296,7 +321,8 @@ function proxy ({
             event,
             context,
             resolver,
-            eventSource
+            eventSource,
+            eventFns
           }))
       }
     })
@@ -324,7 +350,7 @@ function configure ({
   app: configureApp,
   binaryMimeTypes: configureBinaryMimeTypes = [],
   resolutionMode: configureResolutionMode = 'CONTEXT_SUCCEED',
-  eventSource
+  _eventSource
 } = {}) {
   function _createServer ({
     app = configureApp,
@@ -344,7 +370,7 @@ function configure ({
     event,
     context,
     callback,
-    eventSource
+    eventSource = _eventSource
   } = {}) {
     return proxy({
       server,
