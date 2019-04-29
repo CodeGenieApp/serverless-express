@@ -41,7 +41,7 @@ This package includes middleware to easily get the event object Lambda receives 
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 app.use(awsServerlessExpressMiddleware.eventContext())
 app.get('/', (req, res) => {
-  res.json(req.apiGateway.event)
+  res.json(req.lambda.event)
 })
 ```
 

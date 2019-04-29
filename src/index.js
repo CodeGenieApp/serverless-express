@@ -42,20 +42,17 @@ function isContentTypeBinaryMimeType ({ contentType, binaryMimeTypes }) {
   return binaryMimeTypes.length > 0 && !!isType.is(contentType, binaryMimeTypes)
 }
 
-function mapApiGatewayEventToHttpRequest ({ event, context, socketPath }) {
-  const headers = Object.assign({}, event.headers)
-
-  // NOTE: API Gateway is not setting Content-Length header on requests even when they have a body
-  if (event.body && !headers['Content-Length']) {
-    const body = getEventBody({ event })
-    headers['Content-Length'] = Buffer.byteLength(body)
-  }
-
+function mapEventToHttpRequest ({
+  event,
+  context,
+  socketPath,
+  headers = Object.assign({}, event.headers)
+}) {
   const clonedEventWithoutBody = clone({ object: event })
   delete clonedEventWithoutBody.body
 
-  headers['x-apigateway-event'] = encodeURIComponent(JSON.stringify(clonedEventWithoutBody))
-  headers['x-apigateway-context'] = encodeURIComponent(JSON.stringify(context))
+  headers['x-lambda-event'] = encodeURIComponent(JSON.stringify(clonedEventWithoutBody))
+  headers['x-lambda-context'] = encodeURIComponent(JSON.stringify(context))
 
   return {
     method: event.httpMethod,
@@ -67,6 +64,30 @@ function mapApiGatewayEventToHttpRequest ({ event, context, socketPath }) {
     // hostname: headers.Host, // Alias for host
     // port: headers['X-Forwarded-Port']
   }
+}
+
+function mapApiGatewayEventToHttpRequest ({ event, context, socketPath }) {
+  const httpRequest = mapEventToHttpRequest({ event, context, socketPath })
+
+  // NOTE: API Gateway is not setting Content-Length header on requests even when they have a body
+  if (event.body && !httpRequest.headers['Content-Length']) {
+    const body = getEventBody({ event })
+    httpRequest.headers['Content-Length'] = Buffer.byteLength(body)
+  }
+
+  return httpRequest
+}
+
+function mapAlbEventToHttpRequest ({ event, context, socketPath }) {
+  const httpRequest = mapEventToHttpRequest({ event, context, socketPath })
+
+  // NOTE: API Gateway is not setting Content-Length header on requests even when they have a body
+  if (event.body && !httpRequest.headers['Content-Length']) {
+    const body = getEventBody({ event })
+    httpRequest.headers['Content-Length'] = Buffer.byteLength(body)
+  }
+
+  return httpRequest
 }
 
 function forwardResponseToApiGateway ({ server, response, resolver }) {
@@ -150,14 +171,25 @@ function forwardLibraryErrorResponseToApiGateway ({ error, resolver }) {
   })
 }
 
+function getEventMapperBasedOnEventSource ({ eventSource }) {
+  switch (eventSource) {
+    case 'ALB':
+      return mapAlbEventToHttpRequest
+    default:
+      return mapApiGatewayEventToHttpRequest
+  }
+}
+
 function forwardRequestToNodeServer ({
   server,
   event,
   context,
-  resolver
+  resolver,
+  eventSource,
+  eventMapper = getEventMapperBasedOnEventSource({ eventSource })
 }) {
   try {
-    const requestOptions = mapApiGatewayEventToHttpRequest({
+    const requestOptions = eventMapper({
       event,
       context,
       socketPath: getSocketPath({ socketPathSuffix: server._socketPathSuffix })
@@ -220,8 +252,10 @@ function createServer ({
 }
 
 function getEventSourceBasedOnEvent ({
-  eventSource
+  event
 }) {
+  if (event && event.requestContext && event.requestContext.elb) return 'ALB'
+
   return 'API_GATEWAY'
 }
 
@@ -252,7 +286,8 @@ function proxy ({
           server,
           event,
           context,
-          resolver
+          resolver,
+          eventSource
         })
       } else {
         startServer({ server })
@@ -260,7 +295,8 @@ function proxy ({
             server,
             event,
             context,
-            resolver
+            resolver,
+            eventSource
           }))
       }
     })
@@ -287,7 +323,8 @@ function makeResolver ({
 function configure ({
   app: configureApp,
   binaryMimeTypes: configureBinaryMimeTypes = [],
-  resolutionMode: configureResolutionMode = 'CONTEXT_SUCCEED'
+  resolutionMode: configureResolutionMode = 'CONTEXT_SUCCEED',
+  eventSource
 } = {}) {
   function _createServer ({
     app = configureApp,
@@ -306,14 +343,16 @@ function configure ({
     resolutionMode = configureResolutionMode,
     event,
     context,
-    callback
+    callback,
+    eventSource
   } = {}) {
     return proxy({
       server,
       event,
       context,
       resolutionMode,
-      callback
+      callback,
+      eventSource
     })
   }
 

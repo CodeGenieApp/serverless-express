@@ -5,14 +5,14 @@ const mockNext = () => true
 const generateMockReq = () => {
   return {
     headers: {
-      'x-apigateway-event': encodeURIComponent(JSON.stringify({
+      'x-lambda-event': encodeURIComponent(JSON.stringify({
         path: '/foo/bar',
         queryStringParameters: {
           foo: '🖖',
           bar: '~!@#$%^&*()_+`-=;\':",./<>?`'
         }
       })),
-      'x-apigateway-context': encodeURIComponent(JSON.stringify({foo: 'bar'}))
+      'x-lambda-context': encodeURIComponent(JSON.stringify({foo: 'bar'}))
     }
   }
 }
@@ -24,10 +24,10 @@ test('defaults', () => {
 
   eventContextMiddleware()(req, mockRes, mockNext)
 
-  expect(req.apiGateway.event).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-event'])))
-  expect(req.apiGateway.context).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-context'])))
-  expect(req.headers['x-apigateway-event']).toBe(undefined)
-  expect(req.headers['x-apigateway-context']).toBe(undefined)
+  expect(req.lambda.event).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-lambda-event'])))
+  expect(req.lambda.context).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-lambda-context'])))
+  expect(req.headers['x-lambda-event']).toBe(undefined)
+  expect(req.headers['x-lambda-context']).toBe(undefined)
 })
 
 test('options.reqPropKey', () => {
@@ -36,10 +36,10 @@ test('options.reqPropKey', () => {
 
   eventContextMiddleware({ reqPropKey: '_apiGateway' })(req, mockRes, mockNext)
 
-  expect(req._apiGateway.event).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-event'])))
-  expect(req._apiGateway.context).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-context'])))
-  expect(req.headers['x-apigateway-event']).toBe(undefined)
-  expect(req.headers['x-apigateway-context']).toBe(undefined)
+  expect(req._apiGateway.event).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-lambda-event'])))
+  expect(req._apiGateway.context).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-lambda-context'])))
+  expect(req.headers['x-lambda-event']).toBe(undefined)
+  expect(req.headers['x-lambda-context']).toBe(undefined)
 })
 
 test('options.deleteHeaders = false', () => {
@@ -48,26 +48,26 @@ test('options.deleteHeaders = false', () => {
 
   eventContextMiddleware({ deleteHeaders: false })(req, mockRes, mockNext)
 
-  expect(req.apiGateway.event).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-event'])))
-  expect(req.apiGateway.context).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-apigateway-context'])))
-  expect(req.headers['x-apigateway-event']).toEqual(originalHeaders['x-apigateway-event'])
-  expect(req.headers['x-apigateway-context']).toEqual(originalHeaders['x-apigateway-context'])
+  expect(req.lambda.event).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-lambda-event'])))
+  expect(req.lambda.context).toEqual(JSON.parse(decodeURIComponent(originalHeaders['x-lambda-context'])))
+  expect(req.headers['x-lambda-event']).toEqual(originalHeaders['x-lambda-event'])
+  expect(req.headers['x-lambda-context']).toEqual(originalHeaders['x-lambda-context'])
 })
 
-test('Missing x-apigateway-event', () => {
+test('Missing x-lambda-event', () => {
   const req = generateMockReq()
-  delete req.headers['x-apigateway-event']
+  delete req.headers['x-lambda-event']
 
   eventContextMiddleware({ deleteHeaders: false })(req, mockRes, mockNext)
 
-  expect(req.apiGateway).toBe(undefined)
+  expect(req.lambda).toBe(undefined)
 })
 
-test('Missing x-apigateway-context', () => {
+test('Missing x-lambda-context', () => {
   const req = generateMockReq()
-  delete req.headers['x-apigateway-context']
+  delete req.headers['x-lambda-context']
 
   eventContextMiddleware({ deleteHeaders: false })(req, mockRes, mockNext)
 
-  expect(req.apiGateway).toBe(undefined)
+  expect(req.lambda).toBe(undefined)
 })

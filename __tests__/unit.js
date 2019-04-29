@@ -72,8 +72,8 @@ test('mapApiGatewayEventToHttpRequest: with headers', () => {
     headers: {
       'x-foo': 'foo',
       'Content-Length': Buffer.byteLength('Hello serverless!'),
-      'x-apigateway-event': encodeURIComponent(JSON.stringify(r.eventClone)),
-      'x-apigateway-context': encodeURIComponent(JSON.stringify(r.context))
+      'x-lambda-event': encodeURIComponent(JSON.stringify(r.eventClone)),
+      'x-lambda-context': encodeURIComponent(JSON.stringify(r.context))
     },
     socketPath: '/tmp/server0.sock'
   })
@@ -87,8 +87,8 @@ test('mapApiGatewayEventToHttpRequest: without headers', () => {
     path: '/foo',
     headers: {
       'Content-Length': Buffer.byteLength('Hello serverless!'),
-      'x-apigateway-event': encodeURIComponent(JSON.stringify(r.eventClone)),
-      'x-apigateway-context': encodeURIComponent(JSON.stringify(r.context))
+      'x-lambda-event': encodeURIComponent(JSON.stringify(r.eventClone)),
+      'x-lambda-context': encodeURIComponent(JSON.stringify(r.context))
     },
     socketPath: '/tmp/server0.sock'
   })

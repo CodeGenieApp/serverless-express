@@ -4,7 +4,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const compression = require('compression')
-const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const awsServerlessExpressMiddleware = require(process.env.NODE_ENV === 'test' ? '../../middleware' : 'aws-serverless-express/middleware')
 const app = express()
 const router = express.Router()
 
@@ -28,7 +28,7 @@ app.set('views', path.join(__dirname, 'views'))
 
 router.get('/', (req, res) => {
   res.render('index', {
-    apiUrl: req.apiGateway ? `https://${req.apiGateway.event.headers.Host}/${req.apiGateway.event.requestContext.stage}` : 'http://localhost:3000'
+    apiUrl: req.lambda ? `https://${req.lambda.event.headers.Host}/${req.lambda.event.requestContext.stage}` : 'http://localhost:3000'
   })
 })
 

@@ -1,21 +1,21 @@
 module.exports.eventContext = ({
-  reqPropKey = 'apiGateway',
+  reqPropKey = 'lambda',
   deleteHeaders = true
 } = {}) => function apiGatewayEventParser (req, res, next) {
-  if (!req.headers['x-apigateway-event'] || !req.headers['x-apigateway-context']) {
-    console.error('Missing x-apigateway-event or x-apigateway-context header(s)')
+  if (!req.headers['x-lambda-event'] || !req.headers['x-lambda-context']) {
+    console.error('Missing x-lambda-event or x-lambda-context header(s)')
     next()
     return
   }
 
   req[reqPropKey] = {
-    event: JSON.parse(decodeURIComponent(req.headers['x-apigateway-event'])),
-    context: JSON.parse(decodeURIComponent(req.headers['x-apigateway-context']))
+    event: JSON.parse(decodeURIComponent(req.headers['x-lambda-event'])),
+    context: JSON.parse(decodeURIComponent(req.headers['x-lambda-context']))
   }
 
   if (deleteHeaders) {
-    delete req.headers['x-apigateway-event']
-    delete req.headers['x-apigateway-context']
+    delete req.headers['x-lambda-event']
+    delete req.headers['x-lambda-context']
   }
 
   next()
