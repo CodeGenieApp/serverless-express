@@ -13,15 +13,15 @@ function clone (json) {
 
 function makeEvent (eventOverrides) {
   const baseEvent = clone(apiGatewayEvent)
-  const headers = Object.assign({}, baseEvent.headers, eventOverrides.headers)
+  const multiValueHeaders = Object.assign({}, baseEvent.multiValueHeaders, eventOverrides.multiValueHeaders)
   const root = Object.assign({}, baseEvent, eventOverrides)
-  root.headers = headers
+  root.multiValueHeaders = multiValueHeaders
   return root
 }
 
 function expectedRootResponse () {
   return makeResponse({
-    'headers': {
+    'multiValueHeaders': {
       'content-length': '3747',
       'content-type': 'text/html; charset=utf-8',
       'etag': 'W/"ea3-WawLnWdlaCO/ODv9DBVcX0ZTchw"'
@@ -41,9 +41,9 @@ function makeResponse (response) {
     'content-type': 'application/json; charset=utf-8',
     'x-powered-by': 'Express'
   }
-  const headers = Object.assign({}, baseHeaders, response.headers)
+  const multiValueHeaders = Object.assign({}, baseHeaders, response.multiValueHeaders)
   const finalResponse = Object.assign({}, baseResponse, response)
-  finalResponse.headers = headers
+  finalResponse.multiValueHeaders = multiValueHeaders
   return finalResponse
 }
 
@@ -64,7 +64,7 @@ describe('integration tests', () => {
 
   test('GET HTML (initial request)', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
       const expectedResponse = expectedRootResponse()
       delete response.body
@@ -79,7 +79,7 @@ describe('integration tests', () => {
 
   test('GET HTML (subsequent request)', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
       const expectedResponse = expectedRootResponse()
       delete response.body
@@ -97,10 +97,10 @@ describe('integration tests', () => {
 
   test('GET JSON collection', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': '[{"id":1,"name":"Joe"},{"id":2,"name":"Jane"}]',
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '46',
           'etag': 'W/"2e-Lu6qxFOQSPFulDAGUFiiK6QgREo"'
         }
@@ -117,10 +117,10 @@ describe('integration tests', () => {
 
   test('GET missing route', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
       const expectedResponse = makeResponse({
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '151',
           'content-security-policy': "default-src 'self'",
           'content-type': 'text/html; charset=utf-8',
@@ -143,10 +143,10 @@ describe('integration tests', () => {
 
   test('GET JSON single', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":1,"name":"Joe"}',
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '21',
           'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
         }
@@ -163,10 +163,10 @@ describe('integration tests', () => {
 
   test('GET JSON single (resolutionMode = CALLBACK)', (done) => {
     const callback = (e, response) => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":1,"name":"Joe"}',
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '21',
           'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
         }
@@ -185,10 +185,10 @@ describe('integration tests', () => {
 
   test('GET JSON single (resolutionMode = PROMISE)', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":1,"name":"Joe"}',
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '21',
           'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
         }
@@ -207,10 +207,10 @@ describe('integration tests', () => {
 
   test('GET JSON single (resolutionMode = PROMISE; new server)', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":1,"name":"Joe"}',
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '21',
           'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
         }
@@ -228,10 +228,10 @@ describe('integration tests', () => {
 
   test('GET JSON single 404', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': '{}',
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '2',
           'etag': 'W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"'
         },
@@ -249,9 +249,9 @@ describe('integration tests', () => {
 
   test('success - image response', (done) => {
     const succeed = response => {
-      delete response.headers.date
-      delete response.headers.etag
-      delete response.headers['last-modified']
+      delete response.multiValueHeaders.date
+      delete response.multiValueHeaders.etag
+      delete response.multiValueHeaders['last-modified']
 
       const samLogoPath = path.resolve(path.join(__dirname, '../examples/basic-starter/sam-logo.png'))
       const samLogoImage = fs.readFileSync(samLogoPath)
@@ -259,7 +259,7 @@ describe('integration tests', () => {
 
       expect(response).toEqual(makeResponse({
         'body': samLogoBase64,
-        'headers': {
+        'multiValueHeaders': {
           'accept-ranges': 'bytes',
           'cache-control': 'public, max-age=0',
           'content-length': '15933',
@@ -290,10 +290,10 @@ describe('integration tests', () => {
 
   test('POST JSON', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': `{"id":3,"name":"${newName}"}`,
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '43',
           'etag': 'W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"'
         },
@@ -312,10 +312,10 @@ describe('integration tests', () => {
 
   test('GET JSON single (again; post-creation) 200', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': `{"id":3,"name":"${newName}"}`,
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '43',
           'etag': 'W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"'
         },
@@ -333,10 +333,10 @@ describe('integration tests', () => {
 
   test('DELETE JSON', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': `[{"id":2,"name":"Jane"},{"id":3,"name":"${newName}"}]`,
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '68',
           'etag': 'W/"44-AtuxlvrIBL8NXP4gvEQTI77suNg"'
         },
@@ -354,10 +354,10 @@ describe('integration tests', () => {
 
   test('PUT JSON', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":2,"name":"Samuel"}',
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '24',
           'etag': 'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"'
         },
@@ -376,10 +376,10 @@ describe('integration tests', () => {
 
   test('base64 encoded request', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":2,"name":"Samuel"}',
-        'headers': {
+        'multiValueHeaders': {
           'content-length': '24',
           'etag': 'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"'
         },
@@ -402,10 +402,10 @@ describe('integration tests', () => {
   // For now, we still have a unit test for forwardConnectionErrorResponseToApiGateway.
   test.skip('forwardConnectionErrorResponseToApiGateway', (done) => {
     const succeed = response => {
-      delete response.headers.date
+      delete response.multiValueHeaders.date
       expect(response).toEqual({
         'body': '',
-        'headers': {},
+        'multiValueHeaders': {},
         statusCode: 502
       })
       done()
@@ -414,7 +414,7 @@ describe('integration tests', () => {
       path: '/',
       httpMethod: 'GET',
       body: '{"name": "Sam502"}',
-      headers: {
+      multiValueHeaders: {
         'Content-Length': '-1'
       }
     }), {
@@ -431,7 +431,7 @@ describe('integration tests', () => {
       expect(response).toEqual({
         statusCode: 500,
         body: '',
-        headers: {}
+        multiValueHeaders: {}
       })
       done()
     }

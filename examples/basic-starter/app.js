@@ -28,7 +28,7 @@ app.set('views', path.join(__dirname, 'views'))
 
 router.get('/', (req, res) => {
   res.render('index', {
-    apiUrl: req.lambda ? `https://${req.lambda.event.headers.Host}/${req.lambda.event.requestContext.stage}` : 'http://localhost:3000'
+    apiUrl: req.lambda ? `https://${req.lambda.event.multiValueHeaders.Host}/${req.lambda.event.requestContext.stage}` : 'http://localhost:3000'
   })
 })
 

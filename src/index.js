@@ -15,13 +15,12 @@
 'use strict'
 const http = require('http')
 const url = require('url')
-const binarycase = require('binary-case')
 const isType = require('type-is')
 
 function getPathWithQueryStringParams ({ event }) {
   return url.format({
     pathname: event.path,
-    query: event.queryStringParameters
+    query: event.multiValueQueryStringParameters
   })
 }
 
@@ -48,7 +47,7 @@ function mapEventToHttpRequest ({
   context,
   socketPath,
   headers = {
-    ...event.headers,
+    ...event.multiValueHeaders,
     'x-lambda-event': encodeURIComponent(JSON.stringify(eventWithoutBody)),
     'x-lambda-context': encodeURIComponent(JSON.stringify(context))
   }
@@ -89,8 +88,8 @@ function mapLambdaEdgeEventToHttpRequest ({ event, context, socketPath }) {
   return httpRequest
 }
 
-function forwardResponse ({ server, response, resolver }) {
-  return forwardResponseToApiGateway({ server, response, resolver })
+function forwardResponse ({ server, response, resolver, responseFn }) {
+  return responseFn({ server, response, resolver })
 }
 
 function forwardResponseToApiGateway ({ server, response, resolver }) {
@@ -109,22 +108,6 @@ function forwardResponseToApiGateway ({ server, response, resolver }) {
         delete headers['transfer-encoding']
       }
 
-      // HACK: modifies header casing to get around API Gateway's limitation of not allowing multiple
-      // headers with the same name, as discussed on the AWS Forum https://forums.aws.amazon.com/message.jspa?messageID=725953#725953
-      Object.keys(headers)
-        .forEach(h => {
-          if (Array.isArray(headers[h])) {
-            if (h.toLowerCase() === 'set-cookie') {
-              headers[h].forEach((value, i) => {
-                headers[binarycase(h, i + 1)] = value
-              })
-              delete headers[h]
-            } else {
-              headers[h] = headers[h].join(',')
-            }
-          }
-        })
-
       const contentType = getContentType({
         contentTypeHeader: headers['content-type']
       })
@@ -136,7 +119,7 @@ function forwardResponseToApiGateway ({ server, response, resolver }) {
       const successResponse = {
         statusCode,
         body,
-        headers,
+        multiValueHeaders: headers,
         isBase64Encoded
       }
 
@@ -152,7 +135,7 @@ function forwardConnectionErrorResponseToApiGateway ({ error, resolver }) {
   const errorResponse = {
     statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
     body: '',
-    headers: {}
+    multiValueHeaders: {}
   }
 
   resolver.succeed({
@@ -166,7 +149,7 @@ function forwardLibraryErrorResponseToApiGateway ({ error, resolver }) {
   const errorResponse = {
     statusCode: 500,
     body: '',
-    headers: {}
+    multiValueHeaders: {}
   }
 
   resolver.succeed({
@@ -276,7 +259,7 @@ function getEventSourceBasedOnEvent ({
   if (event && event.requestContext && event.requestContext.elb) return 'ALB'
   if (event && event.requestContext && event.requestContext.stage) return 'API_GATEWAY'
   if (event && event.Records) return 'LAMBDA_EDGE'
-  console.log('missing event', event)
+
   throw new Error('Unable to determine event source based on event.')
 }
 
@@ -289,8 +272,6 @@ function proxy ({
   eventSource = getEventSourceBasedOnEvent({ event }),
   eventFns = getEventFnsBasedOnEventSource({ eventSource })
 }) {
-  console.log('eventSource', eventSource)
-  console.log(eventFns)
   return {
     server,
     promise: new Promise((resolve, reject) => {

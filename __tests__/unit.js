@@ -14,7 +14,7 @@ test('getPathWithQueryStringParams: no params', () => {
 test('getPathWithQueryStringParams: 1 param', () => {
   const event = {
     path: '/foo/bar',
-    queryStringParameters: {
+    multiValueQueryStringParameters: {
       'bizz': 'bazz'
     }
   }
@@ -25,7 +25,7 @@ test('getPathWithQueryStringParams: 1 param', () => {
 test('getPathWithQueryStringParams: to be url-encoded param', () => {
   const event = {
     path: '/foo/bar',
-    queryStringParameters: {
+    multiValueQueryStringParameters: {
       'redirect_uri': 'http://lvh.me:3000/cb'
     }
   }
@@ -36,7 +36,7 @@ test('getPathWithQueryStringParams: to be url-encoded param', () => {
 test('getPathWithQueryStringParams: 2 params', () => {
   const event = {
     path: '/foo/bar',
-    queryStringParameters: {
+    multiValueQueryStringParameters: {
       'bizz': 'bazz',
       'buzz': 'bozz'
     }
@@ -45,12 +45,26 @@ test('getPathWithQueryStringParams: 2 params', () => {
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&buzz=bozz')
 })
 
-function mapApiGatewayEventToHttpRequest (headers) {
+test('getPathWithQueryStringParams: array param', () => {
+  const event = {
+    path: '/foo/bar',
+    multiValueQueryStringParameters: {
+      'bizz': [
+        'bazz',
+        'buzz'
+      ]
+    }
+  }
+  const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams({ event })
+  expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&bizz=buzz')
+})
+
+function mapApiGatewayEventToHttpRequest (multiValueHeaders) {
   const event = {
     path: '/foo',
     httpMethod: 'GET',
     body: 'Hello serverless!',
-    headers
+    multiValueHeaders
   }
   const eventClone = JSON.parse(JSON.stringify(event))
   delete eventClone.body
@@ -141,7 +155,7 @@ describe('forwardConnectionErrorResponseToApiGateway', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 502,
       body: '',
-      headers: {}
+      multiValueHeaders: {}
     }))
   })
 })
@@ -159,7 +173,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 500,
       body: '',
-      headers: {}
+      multiValueHeaders: {}
     }))
   })
 })
@@ -176,7 +190,7 @@ describe('forwardResponseToApiGateway: header handling', () => {
   test('multiple headers with the same name get transformed', () => {
     const server = new MockServer()
     const headers = {
-      'foo': ['bar', 'baz'],
+      'foo': ['bizz', 'buzz'],
       'Set-Cookie': ['bar', 'baz']
     }
     const body = 'hello world'
@@ -189,10 +203,9 @@ describe('forwardResponseToApiGateway: header handling', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: body,
-      headers: {
-        foo: 'bar,baz',
-        'SEt-Cookie': 'baz',
-        'set-Cookie': 'bar'
+      multiValueHeaders: {
+        foo: ['bizz', 'buzz'],
+        'Set-Cookie': ['bar', 'baz']
       },
       isBase64Encoded: false
     }))
@@ -213,7 +226,7 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: body,
-      headers: headers,
+      multiValueHeaders: headers,
       isBase64Encoded: false
     }))
   })
@@ -231,7 +244,7 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: Buffer.from(body).toString('base64'),
-      headers: headers,
+      multiValueHeaders: headers,
       isBase64Encoded: true
     }))
   })
@@ -249,7 +262,7 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: body,
-      headers: headers,
+      multiValueHeaders: headers,
       isBase64Encoded: false
     }))
   })
@@ -267,7 +280,7 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: Buffer.from(body).toString('base64'),
-      headers: headers,
+      multiValueHeaders: headers,
       isBase64Encoded: true
     }))
   })
@@ -285,7 +298,7 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: Buffer.from(body).toString('base64'),
-      headers: headers,
+      multiValueHeaders: headers,
       isBase64Encoded: true
     }))
   })
