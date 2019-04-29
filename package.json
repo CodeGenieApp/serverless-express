@@ -42,7 +42,7 @@
         "prerelease": true
       },
       {
-        "name": "next",
+        "name": "v4",
         "channel": "alpha",
         "prerelease": true
       }

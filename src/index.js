@@ -18,40 +18,40 @@ const url = require('url')
 const binarycase = require('binary-case')
 const isType = require('type-is')
 
-function getPathWithQueryStringParams (event) {
+function getPathWithQueryStringParams ({ event }) {
   return url.format({
     pathname: event.path,
     query: event.queryStringParameters
   })
 }
 
-function getEventBody (event) {
+function getEventBody ({ event }) {
   return Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
 }
 
-function clone (json) {
-  return JSON.parse(JSON.stringify(json))
+function clone ({ object }) {
+  return JSON.parse(JSON.stringify(object))
 }
 
-function getContentType (params) {
+function getContentType ({ contentTypeHeader }) {
   // only compare mime type; ignore encoding part
-  return params.contentTypeHeader ? params.contentTypeHeader.split(';')[0] : ''
+  return contentTypeHeader ? contentTypeHeader.split(';')[0] : ''
 }
 
-function isContentTypeBinaryMimeType (params) {
-  return params.binaryMimeTypes.length > 0 && !!isType.is(params.contentType, params.binaryMimeTypes)
+function isContentTypeBinaryMimeType ({ contentType, binaryMimeTypes }) {
+  return binaryMimeTypes.length > 0 && !!isType.is(contentType, binaryMimeTypes)
 }
 
-function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
+function mapApiGatewayEventToHttpRequest ({ event, context, socketPath }) {
   const headers = Object.assign({}, event.headers)
 
   // NOTE: API Gateway is not setting Content-Length header on requests even when they have a body
   if (event.body && !headers['Content-Length']) {
-    const body = getEventBody(event)
+    const body = getEventBody({ event })
     headers['Content-Length'] = Buffer.byteLength(body)
   }
 
-  const clonedEventWithoutBody = clone(event)
+  const clonedEventWithoutBody = clone({ object: event })
   delete clonedEventWithoutBody.body
 
   headers['x-apigateway-event'] = encodeURIComponent(JSON.stringify(clonedEventWithoutBody))
@@ -59,7 +59,7 @@ function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
 
   return {
     method: event.httpMethod,
-    path: getPathWithQueryStringParams(event),
+    path: getPathWithQueryStringParams({ event }),
     headers,
     socketPath
     // protocol: `${headers['X-Forwarded-Proto']}:`,
@@ -69,7 +69,7 @@ function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
   }
 }
 
-function forwardResponseToApiGateway (server, response, resolver) {
+function forwardResponseToApiGateway ({ server, response, resolver }) {
   let buf = []
 
   response
@@ -122,7 +122,7 @@ function forwardResponseToApiGateway (server, response, resolver) {
     })
 }
 
-function forwardConnectionErrorResponseToApiGateway (error, resolver) {
+function forwardConnectionErrorResponseToApiGateway ({ error, resolver }) {
   console.log('ERROR: aws-serverless-express connection error')
   console.error(error)
   const errorResponse = {
@@ -136,7 +136,7 @@ function forwardConnectionErrorResponseToApiGateway (error, resolver) {
   })
 }
 
-function forwardLibraryErrorResponseToApiGateway (error, resolver) {
+function forwardLibraryErrorResponseToApiGateway ({ error, resolver }) {
   console.log('ERROR: aws-serverless-express error')
   console.error(error)
   const errorResponse = {
@@ -150,30 +150,38 @@ function forwardLibraryErrorResponseToApiGateway (error, resolver) {
   })
 }
 
-function forwardRequestToNodeServer (server, event, context, resolver) {
+function forwardRequestToNodeServer ({
+  server,
+  event,
+  context,
+  resolver
+}) {
   try {
-    const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
-    const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, resolver))
+    const requestOptions = mapApiGatewayEventToHttpRequest({
+      event,
+      context,
+      socketPath: getSocketPath({ socketPathSuffix: server._socketPathSuffix })
+    })
+    const req = http.request(requestOptions, (response) => forwardResponseToApiGateway({ server, response, resolver }))
 
     if (event.body) {
-      const body = getEventBody(event)
-
+      const body = getEventBody({ event })
       req.write(body)
     }
 
-    req.on('error', (error) => forwardConnectionErrorResponseToApiGateway(error, resolver))
+    req.on('error', (error) => forwardConnectionErrorResponseToApiGateway({ error, resolver }))
       .end()
   } catch (error) {
-    forwardLibraryErrorResponseToApiGateway(error, resolver)
+    forwardLibraryErrorResponseToApiGateway({ error, resolver })
     return server
   }
 }
 
-function startServer (server) {
-  return server.listen(getSocketPath(server._socketPathSuffix))
+function startServer ({ server }) {
+  return server.listen(getSocketPath({ socketPathSuffix: server._socketPathSuffix }))
 }
 
-function getSocketPath (socketPathSuffix) {
+function getSocketPath ({ socketPathSuffix }) {
   /* only running tests on Linux; Window support is for local dev only */
   /* istanbul ignore if */
   if (/^win/.test(process.platform)) {
@@ -199,9 +207,9 @@ function createServer ({
   server.on('error', (error) => {
     /* istanbul ignore else */
     if (error.code === 'EADDRINUSE') {
-      console.warn(`WARNING: Attempting to listen on socket ${getSocketPath(server._socketPathSuffix)}, but it is already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause, and consider increasing the timeout and/or cpu/memory allocation if this is purely as a result of a timeout. aws-serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
+      console.warn(`WARNING: Attempting to listen on socket ${getSocketPath({ socketPathSuffix: server._socketPathSuffix })}, but it is already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause, and consider increasing the timeout and/or cpu/memory allocation if this is purely as a result of a timeout. aws-serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
       server._socketPathSuffix = getRandomString()
-      return server.close(() => startServer(server))
+      return server.close(() => startServer({ server }))
     } else {
       console.log('ERROR: aws-serverless-express server error')
       console.error(error)
@@ -211,12 +219,19 @@ function createServer ({
   return server
 }
 
+function getEventSourceBasedOnEvent ({
+  eventSource
+}) {
+  return 'API_GATEWAY'
+}
+
 function proxy ({
   server,
   event = {},
   context = {},
   callback = null,
-  resolutionMode = 'CONTEXT_SUCCEED'
+  resolutionMode = 'CONTEXT_SUCCEED',
+  eventSource = getEventSourceBasedOnEvent({ event })
 }) {
   return {
     server,
@@ -233,10 +248,20 @@ function proxy ({
       })
 
       if (server.listening) {
-        forwardRequestToNodeServer(server, event, context, resolver)
+        forwardRequestToNodeServer({
+          server,
+          event,
+          context,
+          resolver
+        })
       } else {
-        startServer(server)
-          .on('listening', () => forwardRequestToNodeServer(server, event, context, resolver))
+        startServer({ server })
+          .on('listening', () => forwardRequestToNodeServer({
+            server,
+            event,
+            context,
+            resolver
+          }))
       }
     })
   }
