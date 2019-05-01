@@ -116,49 +116,44 @@ function configure ({
   app: configureApp,
   binaryMimeTypes: configureBinaryMimeTypes = [],
   resolutionMode: configureResolutionMode = 'CONTEXT_SUCCEED',
-  _eventSource
-} = {}) {
-  function _createServer ({
+  eventSource: configureEventSource,
+  eventFns: configureEventFns,
+  createServer: configureCreateServer = ({
     app = configureApp,
     binaryMimeTypes = configureBinaryMimeTypes
-  } = {}) {
-    return createServer({
-      app,
-      binaryMimeTypes
-    })
-  }
-
-  const _server = _createServer()
-
-  function _proxy ({
-    server = _server,
+  } = {}) => (createServer({
+    app,
+    binaryMimeTypes
+  })),
+  server: configureServer = configureCreateServer(),
+  proxy: configureProxy = ({
+    server = configureServer,
     resolutionMode = configureResolutionMode,
     event,
     context,
     callback,
-    eventSource = _eventSource
-  } = {}) {
-    return proxy({
-      server,
-      event,
-      context,
-      resolutionMode,
-      callback,
-      eventSource
-    })
-  }
-
-  const _handler = (event, context, callback) => _proxy({
+    eventSource = configureEventSource,
+    eventFns = configureEventFns
+  } = {}) => (proxy({
+    server,
+    event,
+    context,
+    resolutionMode,
+    callback,
+    eventSource,
+    eventFns
+  })),
+  handler: configureHhandler = (event, context, callback) => configureProxy({
     event,
     context,
     callback
   })
-
+} = {}) {
   return {
-    server: _server,
-    createServer: _createServer,
-    proxy: _proxy,
-    handler: _handler
+    server: configureServer,
+    createServer: configureCreateServer,
+    proxy: configureProxy,
+    handler: configureHhandler
   }
 }
 

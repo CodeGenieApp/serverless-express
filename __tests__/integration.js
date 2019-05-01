@@ -16,6 +16,7 @@ function makeEvent (eventOverrides) {
   const multiValueHeaders = Object.assign({}, baseEvent.multiValueHeaders, eventOverrides.multiValueHeaders)
   const root = Object.assign({}, baseEvent, eventOverrides)
   root.multiValueHeaders = multiValueHeaders
+  root.pathParameters.proxy = eventOverrides.path && eventOverrides.path.replace(/^\//, '')
   return root
 }
 
