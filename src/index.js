@@ -13,6 +13,7 @@
  * permissions and limitations under the License.
  */
 'use strict'
+const os = require('os')
 const http = require('http')
 const url = require('url')
 const binarycase = require('binary-case')
@@ -158,7 +159,8 @@ function getSocketPath (socketPathSuffix) {
     const path = require('path')
     return path.join('\\\\?\\pipe', process.cwd(), `server-${socketPathSuffix}`)
   } else {
-    return `/tmp/server-${socketPathSuffix}.sock`
+    const tmpDir = os.tmpdir()
+    return tmpDir + `/server-${socketPathSuffix}.sock`
   }
 }
 
