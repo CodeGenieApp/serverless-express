@@ -12,7 +12,6 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-'use strict'
 const http = require('http')
 const {
   forwardRequestToNodeServer,
@@ -56,7 +55,7 @@ function createServer ({
       server._socketPathSuffix = getRandomString()
       return server.close(() => startServer({ server }))
     } else {
-      console.log('ERROR: aws-serverless-express server error')
+      console.error('ERROR: aws-serverless-express server error')
       console.error(error)
     }
   })
@@ -74,42 +73,39 @@ function proxy ({
   eventFns = getEventFnsBasedOnEventSource({ eventSource })
 }) {
   setCurrentLambdaInvoke({ event, context })
-  return {
-    server,
-    promise: new Promise((resolve, reject) => {
-      const promise = {
-        resolve,
-        reject
-      }
-      const resolver = makeResolver({
-        context,
-        callback,
-        promise,
-        resolutionMode
-      })
+  return new Promise((resolve, reject) => {
+    const promise = {
+      resolve,
+      reject
+    }
+    const resolver = makeResolver({
+      context,
+      callback,
+      promise,
+      resolutionMode
+    })
 
-      if (server.listening) {
-        forwardRequestToNodeServer({
+    if (server.listening) {
+      forwardRequestToNodeServer({
+        server,
+        event,
+        context,
+        resolver,
+        eventSource,
+        eventFns
+      })
+    } else {
+      startServer({ server })
+        .on('listening', () => forwardRequestToNodeServer({
           server,
           event,
           context,
           resolver,
           eventSource,
           eventFns
-        })
-      } else {
-        startServer({ server })
-          .on('listening', () => forwardRequestToNodeServer({
-            server,
-            event,
-            context,
-            resolver,
-            eventSource,
-            eventFns
-          }))
-      }
-    })
-  }
+        }))
+    }
+  })
 }
 
 function configure ({
@@ -143,7 +139,7 @@ function configure ({
     eventSource,
     eventFns
   })),
-  handler: configureHhandler = (event, context, callback) => configureProxy({
+  handler: configureHandler = (event, context, callback) => configureProxy({
     event,
     context,
     callback
@@ -153,7 +149,7 @@ function configure ({
     server: configureServer,
     createServer: configureCreateServer,
     proxy: configureProxy,
-    handler: configureHhandler
+    handler: configureHandler
   }
 }
 

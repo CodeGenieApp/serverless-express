@@ -5,10 +5,15 @@ function mapEventToHttpRequest ({
   method = event.httpMethod,
   path = getPathWithQueryStringParams({ event }),
   socketPath,
-  headers = {
-    ...event.multiValueHeaders
-  }
+  headers
 }) {
+  if (!headers) {
+    headers = {}
+    Object.entries(event.multiValueHeaders).forEach(([headerKey, headerValue]) => {
+      headers[headerKey] = headerValue.join(',')
+    })
+  }
+
   return {
     method,
     path,

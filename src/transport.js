@@ -1,8 +1,7 @@
-'use strict'
 const http = require('http')
 const {
   getEventFnsBasedOnEventSource
-} = require('./event-mappings/utils')
+} = require('./event-mappings')
 const {
   getContentType,
   isContentTypeBinaryMimeType,
@@ -32,7 +31,6 @@ function forwardResponse ({ server, response, resolver, eventResponseMapperFn })
         headers,
         isBase64Encoded
       })
-
       resolver.succeed({
         response: successResponse
       })
@@ -40,7 +38,7 @@ function forwardResponse ({ server, response, resolver, eventResponseMapperFn })
 }
 
 function forwardConnectionErrorResponseToApiGateway ({ error, resolver }) {
-  console.log('ERROR: aws-serverless-express connection error')
+  console.error('ERROR: aws-serverless-express connection error')
   console.error(error)
   const errorResponse = {
     statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
@@ -54,7 +52,7 @@ function forwardConnectionErrorResponseToApiGateway ({ error, resolver }) {
 }
 
 function forwardLibraryErrorResponseToApiGateway ({ error, resolver }) {
-  console.log('ERROR: aws-serverless-express error')
+  console.error('ERROR: aws-serverless-express error')
   console.error(error)
   const errorResponse = {
     statusCode: 500,

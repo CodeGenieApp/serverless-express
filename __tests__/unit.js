@@ -1,5 +1,3 @@
-'use strict'
-
 const path = require('path')
 const awsServerlessExpressTransport = require('../src/transport')
 const awsServerlessExpressUtils = require('../src/utils')
@@ -61,7 +59,7 @@ test('getPathWithQueryStringParams: array param', () => {
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&bizz=buzz')
 })
 
-function mapApiGatewayEventToHttpRequest (multiValueHeaders) {
+function mapApiGatewayEventToHttpRequest (multiValueHeaders = {}) {
   const event = {
     path: '/foo',
     httpMethod: 'GET',
@@ -80,7 +78,7 @@ function mapApiGatewayEventToHttpRequest (multiValueHeaders) {
 }
 
 test('mapApiGatewayEventToHttpRequest: with headers', () => {
-  const r = mapApiGatewayEventToHttpRequest({'x-foo': 'foo'})
+  const r = mapApiGatewayEventToHttpRequest({'x-foo': ['foo']})
 
   expect(r.httpRequest).toEqual({
     method: 'GET',
@@ -116,18 +114,22 @@ test('getSocketPath', () => {
 const PassThrough = require('stream').PassThrough
 
 class MockResponse extends PassThrough {
-  constructor (statusCode, headers, body) {
+  constructor (statusCode, multiValueHeaders = {}, body) {
     super()
+    const headers = {}
+    Object.entries(multiValueHeaders).forEach(([headerKey, headerValue]) => {
+      headers[headerKey] = headerValue.join(',')
+    })
     this.statusCode = statusCode
-    this.headers = headers || {}
+    this.headers = headers
     this.write(body)
     this.end()
   }
 }
 
 class MockServer {
-  constructor (binaryMimeTypes) {
-    this._binaryMimeTypes = binaryMimeTypes || []
+  constructor (binaryMimeTypes = []) {
+    this._binaryMimeTypes = binaryMimeTypes
   }
 }
 
@@ -184,43 +186,13 @@ function getContextResolver (resolve) {
 
   return contextResolver
 }
-describe('forwardResponse: header handling', () => {
-  test('multiple headers with the same name get transformed', () => {
-    const server = new MockServer()
-    const headers = {
-      'foo': ['bizz', 'buzz'],
-      'Set-Cookie': ['bar', 'baz']
-    }
-    const body = 'hello world'
-    const response = new MockResponse(200, headers, body)
-    return new Promise(
-      (resolve) => {
-        const contextResolver = getContextResolver(resolve)
-        awsServerlessExpressTransport.forwardResponse({
-          server,
-          response,
-          resolver: contextResolver,
-          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway
-        })
-      }
-    ).then(successResponse => expect(successResponse).toEqual({
-      statusCode: 200,
-      body: body,
-      multiValueHeaders: {
-        foo: ['bizz', 'buzz'],
-        'Set-Cookie': ['bar', 'baz']
-      },
-      isBase64Encoded: false
-    }))
-  })
-})
 
 describe('forwardResponse: content-type encoding', () => {
   test('content-type header missing', () => {
     const server = new MockServer()
-    const headers = {'foo': 'bar'}
+    const multiValueHeaders = {'foo': ['bar']}
     const body = 'hello world'
-    const response = new MockResponse(200, headers, body)
+    const response = new MockResponse(200, multiValueHeaders, body)
     return new Promise(
       (resolve) => {
         const contextResolver = getContextResolver(resolve)
@@ -234,16 +206,16 @@ describe('forwardResponse: content-type encoding', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: body,
-      multiValueHeaders: headers,
+      multiValueHeaders,
       isBase64Encoded: false
     }))
   })
 
   test('content-type image/jpeg base64 encoded', () => {
     const server = new MockServer(['image/jpeg'])
-    const headers = {'content-type': 'image/jpeg'}
+    const multiValueHeaders = {'content-type': ['image/jpeg']}
     const body = 'hello world'
-    const response = new MockResponse(200, headers, body)
+    const response = new MockResponse(200, multiValueHeaders, body)
     return new Promise(
       (resolve) => {
         const contextResolver = getContextResolver(resolve)
@@ -257,16 +229,16 @@ describe('forwardResponse: content-type encoding', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: Buffer.from(body).toString('base64'),
-      multiValueHeaders: headers,
+      multiValueHeaders,
       isBase64Encoded: true
     }))
   })
 
   test('content-type application/json', () => {
     const server = new MockServer()
-    const headers = {'content-type': 'application/json'}
+    const multiValueHeaders = {'content-type': ['application/json']}
     const body = JSON.stringify({'hello': 'world'})
-    const response = new MockResponse(200, headers, body)
+    const response = new MockResponse(200, multiValueHeaders, body)
     return new Promise(
       (resolve) => {
         const contextResolver = getContextResolver(resolve)
@@ -280,16 +252,16 @@ describe('forwardResponse: content-type encoding', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: body,
-      multiValueHeaders: headers,
+      multiValueHeaders,
       isBase64Encoded: false
     }))
   })
 
   test('wildcards in binary types array', () => {
     const server = new MockServer(['image/*'])
-    const headers = {'content-type': 'image/jpeg'}
+    const multiValueHeaders = {'content-type': ['image/jpeg']}
     const body = 'hello world'
-    const response = new MockResponse(200, headers, body)
+    const response = new MockResponse(200, multiValueHeaders, body)
     return new Promise(
       (resolve) => {
         const contextResolver = getContextResolver(resolve)
@@ -303,16 +275,16 @@ describe('forwardResponse: content-type encoding', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: Buffer.from(body).toString('base64'),
-      multiValueHeaders: headers,
+      multiValueHeaders,
       isBase64Encoded: true
     }))
   })
 
   test('extensions in binary types array', () => {
     const server = new MockServer(['.png'])
-    const headers = {'content-type': 'image/png'}
+    const multiValueHeaders = {'content-type': ['image/png']}
     const body = 'hello world'
-    const response = new MockResponse(200, headers, body)
+    const response = new MockResponse(200, multiValueHeaders, body)
     return new Promise(
       (resolve) => {
         const contextResolver = getContextResolver(resolve)
@@ -326,7 +298,7 @@ describe('forwardResponse: content-type encoding', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: Buffer.from(body).toString('base64'),
-      multiValueHeaders: headers,
+      multiValueHeaders,
       isBase64Encoded: true
     }))
   })
