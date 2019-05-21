@@ -1,4 +1,3 @@
-'use strict'
 const awsServerlessExpress = require(process.env.NODE_ENV === 'test' ? '../../index' : 'aws-serverless-express')
 const app = require('./app')
 
@@ -25,9 +24,9 @@ const binaryMimeTypes = [
   'text/text',
   'text/xml'
 ]
-const ase = awsServerlessExpress({
+const ase = awsServerlessExpress.configure({
   app,
   binaryMimeTypes
+  // resolutionMode: 'PROMISE'
 })
-
 exports.handler = ase.handler

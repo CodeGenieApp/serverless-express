@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict'
 
 const modifyFiles = require('./utils').modifyFiles
 const packageJson = require('../package.json')

@@ -1,4 +1,3 @@
-'use strict'
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -28,7 +27,7 @@ app.set('views', path.join(__dirname, 'views'))
 router.get('/', (req, res) => {
   const currentLambdaInvoke = getCurrentLambdaInvoke()
   res.render('index', {
-    apiUrl: currentLambdaInvoke ? `https://${currentLambdaInvoke.event.multiValueHeaders.Host}/${currentLambdaInvoke.event.requestContext.stage}` : 'http://localhost:3000'
+    apiUrl: currentLambdaInvoke ? `https://${currentLambdaInvoke.event.multiValueHeaders.Host[0]}/${currentLambdaInvoke.event.requestContext.stage}` : 'http://localhost:3000'
   })
 })
 
@@ -73,6 +72,12 @@ router.delete('/users/:userId', (req, res) => {
 
   users.splice(userIndex, 1)
   res.json(users)
+})
+
+router.get('/cookie', (req, res) => {
+  res.cookie('Foo', 'bar')
+  res.cookie('Fizz', 'buzz')
+  res.json({})
 })
 
 const getUser = (userId) => users.find(u => u.id === parseInt(userId))

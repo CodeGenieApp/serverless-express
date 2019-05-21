@@ -29,9 +29,9 @@ function makeEvent (eventOverrides) {
 function expectedRootResponse () {
   return makeResponse({
     'multiValueHeaders': {
-      'content-length': ['3748'],
+      'content-length': ['3728'],
       'content-type': ['text/html; charset=utf-8'],
-      'etag': ['W/"ea4-ct1r5H/kBAj6dO7y//hr9wiNLls"']
+      'etag': ['W/"e90-ToQlyXvAkG0PJrs7lZqgVr+CrkI"']
     }
   })
 }
