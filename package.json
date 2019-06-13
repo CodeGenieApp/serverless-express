@@ -112,7 +112,7 @@
     "husky": "^0.15.0-rc.4",
     "jest": "^24.5.0",
     "lint-staged": "^7.2.0",
-    "semantic-release": "^15.13.12"
+    "semantic-release": "^15.13.16"
   },
   "scripts": {
     "test": "jest",
@@ -126,7 +126,8 @@
     "install-example-dependencies": "cd examples && npm install --prefix basic-starter basic-starter && cd .."
   },
   "dependencies": {
-    "type-is": "^1.6.16"
+    "type-is": "^1.6.16",
+    "winston": "^3.2.1"
   },
   "config": {
     "commitizen": {
