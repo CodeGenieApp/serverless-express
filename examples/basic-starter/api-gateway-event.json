@@ -56,7 +56,6 @@
     "proxy": "users"
   },
   "stageVariables": {
-    "ServerlessExpressLambdaFunctionName": "AwsServerlessExpressStack-svlsxprs-XXXXXXX"
   },
   "requestContext": {
     "resourceId": "xxxxx",

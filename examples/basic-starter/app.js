@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const compression = require('compression')
-const { getCurrentLambdaInvoke } = require(process.env.NODE_ENV === 'test' ? '../..' : 'aws-serverless-express')
+const { getCurrentLambdaInvoke } = require(process.env.NODE_ENV === 'test' ? '../../index' : 'aws-serverless-express')
 const app = express()
 const router = express.Router()
 

@@ -1,2 +1,3 @@
 lambda-invoke-response.json
-packaged-sam.yaml
+sam-template.packaged.yaml
+aws-serverless-express-*.tgz
