@@ -6,6 +6,7 @@ const app = require('../examples/basic-starter/app')
 
 const serverlessExpress = awsServerlessExpress.configure({ app })
 const server = serverlessExpress.server
+const nodeMajorVersion = process.version.split('.')[0].split('v')[1]
 
 function clone (json) {
   return JSON.parse(JSON.stringify(json))
@@ -508,10 +509,15 @@ describe('integration tests', () => {
   test('Multiple headers of the same name (set-cookie)', (done) => {
     const succeed = response => {
       delete response.multiValueHeaders.date
+
+      const expectedSetCookieHeaders = nodeMajorVersion >= 10 ? [
+        'Foo=bar; Path=/',
+        'Fizz=buzz; Path=/'
+      ] : ['Foo=bar; Path=/,Fizz=buzz; Path=/']
       expect(response).toEqual(makeResponse({
         body: '{}',
         'multiValueHeaders': {
-          'set-cookie': ['Foo=bar; Path=/,Fizz=buzz; Path=/'],
+          'set-cookie': expectedSetCookieHeaders,
           'content-length': ['2'],
           'etag': ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
         },
