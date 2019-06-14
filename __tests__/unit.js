@@ -2,6 +2,10 @@ const path = require('path')
 const awsServerlessExpressTransport = require('../src/transport')
 const awsServerlessExpressUtils = require('../src/utils')
 const awsServerlessExpressEventMappings = require('../src/event-mappings')
+const logger = {
+  debug: () => null,
+  error: () => null
+}
 
 test('getPathWithQueryStringParams: no params', () => {
   const event = {
@@ -150,7 +154,7 @@ describe('forwardConnectionErrorResponseToApiGateway', () => {
         const contextResolver = {
           succeed: (p) => context.succeed(p.response)
         }
-        awsServerlessExpressTransport.forwardConnectionErrorResponseToApiGateway({ error: 'ERROR', resolver: contextResolver })
+        awsServerlessExpressTransport.forwardConnectionErrorResponseToApiGateway({ error: 'ERROR', resolver: contextResolver, logger })
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 502,
@@ -168,7 +172,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
         const contextResolver = {
           succeed: (p) => context.succeed(p.response)
         }
-        awsServerlessExpressTransport.forwardLibraryErrorResponseToApiGateway({ error: 'ERROR', resolver: contextResolver })
+        awsServerlessExpressTransport.forwardLibraryErrorResponseToApiGateway({ error: 'ERROR', resolver: contextResolver, logger })
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 500,
@@ -200,7 +204,8 @@ describe('forwardResponse: content-type encoding', () => {
           server,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway
+          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway,
+          logger
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
@@ -223,7 +228,8 @@ describe('forwardResponse: content-type encoding', () => {
           server,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway
+          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway,
+          logger
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
@@ -246,7 +252,8 @@ describe('forwardResponse: content-type encoding', () => {
           server,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway
+          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway,
+          logger
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
@@ -269,7 +276,8 @@ describe('forwardResponse: content-type encoding', () => {
           server,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway
+          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway,
+          logger
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
@@ -292,7 +300,8 @@ describe('forwardResponse: content-type encoding', () => {
           server,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway
+          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway,
+          logger
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({

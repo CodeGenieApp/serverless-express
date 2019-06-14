@@ -8,7 +8,14 @@ const {
   getEventBody
 } = require('./utils')
 
-function forwardResponse ({ server, response, resolver, eventResponseMapperFn }) {
+function forwardResponse ({
+  server,
+  response,
+  resolver,
+  eventResponseMapperFn,
+  logger
+}) {
+  logger.debug('Forwarding response from application to API Gateway... HTTP response:', { response })
   let buf = []
 
   response
@@ -20,6 +27,7 @@ function forwardResponse ({ server, response, resolver, eventResponseMapperFn })
       const contentType = getContentType({
         contentTypeHeader: headers['content-type']
       })
+      logger.debug('contentType', { contentType })
       const isBase64Encoded = isContentTypeBinaryMimeType({
         contentType,
         binaryMimeTypes: server._binaryMimeTypes
@@ -31,38 +39,35 @@ function forwardResponse ({ server, response, resolver, eventResponseMapperFn })
         headers,
         isBase64Encoded
       })
+      logger.debug('Forwarding response from application to API Gateway... API Gateway response:', { successResponse })
       resolver.succeed({
         response: successResponse
       })
     })
 }
 
-function forwardConnectionErrorResponseToApiGateway ({ error, resolver }) {
-  console.error('ERROR: aws-serverless-express connection error')
-  console.error(error)
+function forwardConnectionErrorResponseToApiGateway ({ error, resolver, logger }) {
+  logger.error('aws-serverless-express connection error: ', error)
+  const body = logger.level === 'debug' ? error.message : ''
   const errorResponse = {
     statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
-    body: '',
+    body,
     multiValueHeaders: {}
   }
 
-  resolver.succeed({
-    response: errorResponse
-  })
+  resolver.succeed({ response: errorResponse })
 }
 
-function forwardLibraryErrorResponseToApiGateway ({ error, resolver }) {
-  console.error('ERROR: aws-serverless-express error')
-  console.error(error)
+function forwardLibraryErrorResponseToApiGateway ({ error, resolver, logger }) {
+  logger.error('aws-serverless-express error: ', error)
+  const body = logger.level === 'debug' ? error.message : ''
   const errorResponse = {
     statusCode: 500,
-    body: '',
+    body,
     multiValueHeaders: {}
   }
 
-  resolver.succeed({
-    response: errorResponse
-  })
+  resolver.succeed({ response: errorResponse })
 }
 
 function forwardRequestToNodeServer ({
@@ -71,25 +76,43 @@ function forwardRequestToNodeServer ({
   context,
   resolver,
   eventSource,
-  eventFns = getEventFnsBasedOnEventSource({ eventSource })
+  eventFns = getEventFnsBasedOnEventSource({ eventSource }),
+  logger
 }) {
+  logger.debug('Forwarding request to application...')
   try {
     const requestOptions = eventFns.request({
       event,
       socketPath: getSocketPath({ socketPathSuffix: server._socketPathSuffix })
     })
-    const req = http.request(requestOptions, (response) => forwardResponse({ server, response, resolver, eventResponseMapperFn: eventFns.response }))
+    logger.debug('requestOptions', requestOptions)
+    const req = http.request(requestOptions, (response) => forwardResponse({
+      server,
+      response,
+      resolver,
+      eventResponseMapperFn: eventFns.response,
+      logger
+    }))
 
     if (event.body) {
       const body = getEventBody({ event })
+      logger.debug('body', body)
       req.write(body)
     }
 
-    req.on('error', (error) => forwardConnectionErrorResponseToApiGateway({ error, resolver, eventResponseMapperFn: eventFns.response }))
+    req
+      .on('error', (error) => forwardConnectionErrorResponseToApiGateway({
+        error,
+        resolver,
+        logger
+      }))
       .end()
   } catch (error) {
-    forwardLibraryErrorResponseToApiGateway({ error, resolver })
-    return server
+    forwardLibraryErrorResponseToApiGateway({
+      error,
+      resolver,
+      logger
+    })
   }
 }
 
@@ -115,9 +138,7 @@ function makeResolver ({
   resolutionMode
 }) {
   return {
-    succeed: ({
-      response
-    }) => {
+    succeed: ({ response }) => {
       if (resolutionMode === 'CONTEXT_SUCCEED') return context.succeed(response)
       if (resolutionMode === 'CALLBACK') return callback(null, response)
       if (resolutionMode === 'PROMISE') return promise.resolve(response)

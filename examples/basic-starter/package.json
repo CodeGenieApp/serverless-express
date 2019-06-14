@@ -4,10 +4,10 @@
   "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
   "main": "lambda.js",
   "config": {
-    "s3BucketName": "YOUR_UNIQUE_BUCKET_NAME",
-    "region": "YOUR_AWS_REGION",
-    "cloudFormationStackName": "AwsServerlessExpressStack",
-    "functionName": "YOUR_SERVERLESS_EXPRESS_LAMBDA_FUNCTION_NAME"
+    "s3BucketName": "sls-xpress2",
+    "region": "us-east-1",
+    "cloudFormationStackName": "AwsServerlessExpressStackNew",
+    "functionName": "AwsServerlessExpressStackNew-ExpressLambdaFunction-GU4XXGPADJ0E"
   },
   "scripts": {
     "start": "node app.local.js",
@@ -23,7 +23,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "aws-serverless-express": "^3.3.3",
+    "aws-serverless-express": "file:aws-serverless-express-3.3.5.tgz",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
     "cors": "^2.8.3",
