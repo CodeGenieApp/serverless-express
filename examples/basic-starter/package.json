@@ -23,7 +23,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "aws-serverless-express": "file:aws-serverless-express-3.3.5.tgz",
+    "aws-serverless-express": "file:../..",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
     "cors": "^2.8.3",

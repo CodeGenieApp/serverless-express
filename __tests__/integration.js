@@ -136,7 +136,7 @@ describe('integration tests', () => {
       const expectedResponse = makeResponse({
         'multiValueHeaders': {
           'content-length': ['151'],
-          'content-security-policy': ["default-src 'self'"],
+          'content-security-policy': ["default-src 'none'"],
           'content-type': ['text/html; charset=utf-8'],
           'x-content-type-options': ['nosniff']
         },
