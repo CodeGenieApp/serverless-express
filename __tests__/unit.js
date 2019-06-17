@@ -162,6 +162,29 @@ describe('forwardConnectionErrorResponseToApiGateway', () => {
       multiValueHeaders: {}
     }))
   })
+  test('responds with 502 status and stack trace', () => {
+    return new Promise(
+      (resolve) => {
+        const context = new MockContext(resolve)
+        const contextResolver = {
+          succeed: (p) => context.succeed(p.response)
+        }
+        awsServerlessExpressTransport.forwardConnectionErrorResponseToApiGateway({
+          error: new Error('There was a connection error...'),
+          resolver: contextResolver,
+          logger,
+          respondWithErrors: true
+        })
+      }
+    ).then(successResponse => {
+      expect(successResponse).toEqual({
+        statusCode: 502,
+        body: successResponse.body,
+        multiValueHeaders: {}
+      })
+      expect(successResponse.body).toContain('Error: There was a connection error...\n    at ')
+    })
+  })
 })
 
 describe('forwardLibraryErrorResponseToApiGateway', () => {
@@ -179,6 +202,29 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
       body: '',
       multiValueHeaders: {}
     }))
+  })
+  test('responds with 500 status and stack trace', () => {
+    return new Promise(
+      (resolve) => {
+        const context = new MockContext(resolve)
+        const contextResolver = {
+          succeed: (p) => context.succeed(p.response)
+        }
+        awsServerlessExpressTransport.forwardLibraryErrorResponseToApiGateway({
+          error: new Error('There was an error...'),
+          resolver: contextResolver,
+          logger,
+          respondWithErrors: true
+        })
+      }
+    ).then(successResponse => {
+      expect(successResponse).toEqual({
+        statusCode: 500,
+        body: successResponse.body,
+        multiValueHeaders: {}
+      })
+      expect(successResponse.body).toContain('Error: There was an error...\n    at ')
+    })
   })
 })
 

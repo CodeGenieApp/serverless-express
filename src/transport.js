@@ -46,9 +46,9 @@ function forwardResponse ({
     })
 }
 
-function forwardConnectionErrorResponseToApiGateway ({ error, resolver, logger }) {
+function forwardConnectionErrorResponseToApiGateway ({ error, resolver, logger, respondWithErrors }) {
   logger.error('aws-serverless-express connection error: ', error)
-  const body = logger.level === 'debug' ? error.message : ''
+  const body = respondWithErrors ? error.stack : ''
   const errorResponse = {
     statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
     body,
@@ -58,9 +58,10 @@ function forwardConnectionErrorResponseToApiGateway ({ error, resolver, logger }
   resolver.succeed({ response: errorResponse })
 }
 
-function forwardLibraryErrorResponseToApiGateway ({ error, resolver, logger }) {
+function forwardLibraryErrorResponseToApiGateway ({ error, resolver, logger, respondWithErrors }) {
   logger.error('aws-serverless-express error: ', error)
-  const body = logger.level === 'debug' ? error.message : ''
+
+  const body = respondWithErrors ? error.stack : ''
   const errorResponse = {
     statusCode: 500,
     body,
@@ -77,7 +78,8 @@ function forwardRequestToNodeServer ({
   resolver,
   eventSource,
   eventFns = getEventFnsBasedOnEventSource({ eventSource }),
-  logger
+  logger,
+  respondWithErrors
 }) {
   logger.debug('Forwarding request to application...')
   try {
@@ -104,14 +106,16 @@ function forwardRequestToNodeServer ({
       .on('error', (error) => forwardConnectionErrorResponseToApiGateway({
         error,
         resolver,
-        logger
+        logger,
+        respondWithErrors
       }))
       .end()
   } catch (error) {
     forwardLibraryErrorResponseToApiGateway({
       error,
       resolver,
-      logger
+      logger,
+      respondWithErrors
     })
   }
 }

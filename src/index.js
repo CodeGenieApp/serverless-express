@@ -74,7 +74,8 @@ function proxy ({
   resolutionMode = 'CONTEXT_SUCCEED',
   eventSource = getEventSourceBasedOnEvent({ event }),
   eventFns = getEventFnsBasedOnEventSource({ eventSource }),
-  logger
+  logger,
+  respondWithErrors
 }) {
   logger.debug('Calling proxy', { event, context, resolutionMode, eventSource })
   setCurrentLambdaInvoke({ event, context })
@@ -99,7 +100,8 @@ function proxy ({
         resolver,
         eventSource,
         eventFns,
-        logger
+        logger,
+        respondWithErrors
       })
     } else {
       logger.debug('Server isn\'t listening... Starting server. This is likely a cold-start. If you see this message on every request, you may be calling `awsServerlessExpress.createServer` on every call inside the handler function. If this is the case, consider moving it outside of the handler function for imrpoved performance.')
@@ -113,7 +115,8 @@ function proxy ({
             resolver,
             eventSource,
             eventFns,
-            logger
+            logger,
+            respondWithErrors
           })
         })
     }
@@ -141,6 +144,7 @@ function configure ({
   resolutionMode: configureResolutionMode = 'CONTEXT_SUCCEED',
   eventSource: configureEventSource,
   eventFns: configureEventFns,
+  respondWithErrors: configureRespondWithErrors = false,
   loggerConfig: configureLoggerConfig = {},
   logger: configureLogger = createLogger({
     ...DEFAULT_LOGGER_CONFIG,
@@ -164,7 +168,8 @@ function configure ({
     callback,
     eventSource = configureEventSource,
     eventFns = configureEventFns,
-    logger = configureLogger
+    logger = configureLogger,
+    respondWithErrors = configureRespondWithErrors
   } = {}) => (proxy({
     server,
     event,
@@ -173,7 +178,8 @@ function configure ({
     callback,
     eventSource,
     eventFns,
-    logger
+    logger,
+    respondWithErrors
   })),
   handler: configureHandler = (event, context, callback) => configureProxy({
     event,
