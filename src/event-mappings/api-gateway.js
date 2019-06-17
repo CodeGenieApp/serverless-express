@@ -1,21 +1,6 @@
-'use-strict'
-const { mapEventToHttpRequest } = require('./utils')
-const { getEventBody } = require('../utils')
+const { mapEventToHttpRequest, mapResponseToService } = require('./utils')
 
-function mapApiGatewayEventToHttpRequest ({
-  event,
-  socketPath
-}) {
-  const httpRequest = mapEventToHttpRequest({ event, socketPath })
-
-  if (event.body) {
-    const body = getEventBody({ event })
-    const isBase64Encoded = event.isBase64Encoded
-    httpRequest.headers['Content-Length'] = Buffer.byteLength(body, isBase64Encoded ? 'base64' : 'utf8')
-  }
-
-  return httpRequest
-}
+const mapApiGatewayEventToHttpRequest = ({ event, socketPath }) => mapEventToHttpRequest({ event, socketPath })
 
 function mapResponseToApiGateway ({
   statusCode,
@@ -23,24 +8,20 @@ function mapResponseToApiGateway ({
   headers,
   isBase64Encoded
 }) {
-  const multiValueHeaders = {}
-
-  Object.entries(headers).forEach(([headerKey, headerValue]) => {
-    // chunked transfer not currently supported by API Gateway
-    /* istanbul ignore else */
-    if (headerKey === 'transfer-encoding' && headerValue === 'chunked') return
-
-    const headerArray = Array.isArray(headerValue) ? headerValue : [headerValue]
-
-    multiValueHeaders[headerKey] = headerArray
-  })
-
-  return {
+  const responseToService = mapResponseToService({
     statusCode,
     body,
-    multiValueHeaders,
+    headers,
     isBase64Encoded
+  })
+  const transferEncodingHeader = responseToService.multiValueHeaders['transfer-encoding']
+
+  // chunked transfer not currently supported by API Gateway
+  if (transferEncodingHeader && transferEncodingHeader.includes('chunked')) {
+    responseToService.multiValueHeaders['transfer-encoding'] = transferEncodingHeader.filter(headerValue => headerValue !== 'chunked')
   }
+
+  return responseToService
 }
 
 module.exports = {

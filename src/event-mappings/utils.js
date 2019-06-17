@@ -1,4 +1,4 @@
-const { getPathWithQueryStringParams } = require('../utils')
+const { getPathWithQueryStringParams, getEventBody } = require('../utils')
 
 function mapEventToHttpRequest ({
   event,
@@ -14,6 +14,12 @@ function mapEventToHttpRequest ({
     })
   }
 
+  if (event.body) {
+    const body = getEventBody({ event })
+    const isBase64Encoded = event.isBase64Encoded
+    headers['Content-Length'] = Buffer.byteLength(body, isBase64Encoded ? 'base64' : 'utf8')
+  }
+
   return {
     method,
     path,
@@ -23,6 +29,28 @@ function mapEventToHttpRequest ({
     // host: headers.Host,
     // hostname: headers.Host, // Alias for host
     // port: headers['X-Forwarded-Port']
+  }
+}
+
+function mapResponseToService ({
+  statusCode,
+  body,
+  headers,
+  isBase64Encoded
+}) {
+  const multiValueHeaders = {}
+
+  Object.entries(headers).forEach(([headerKey, headerValue]) => {
+    const headerArray = Array.isArray(headerValue) ? headerValue : [headerValue]
+
+    multiValueHeaders[headerKey] = headerArray
+  })
+
+  return {
+    statusCode,
+    body,
+    multiValueHeaders,
+    isBase64Encoded
   }
 }
 
@@ -38,5 +66,6 @@ function getEventSourceBasedOnEvent ({
 
 module.exports = {
   mapEventToHttpRequest,
+  mapResponseToService,
   getEventSourceBasedOnEvent
 }

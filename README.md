@@ -50,9 +50,9 @@ app.get('/', (req, res) => {
 1. ✅ Improved API - Simpler for end user to use and configure; extensible without breaking backwards compatibility or hurting API
 2. ✅ Node.js 8+ only - can upgrade dependencies to latest (Jest); can use latest syntax in source and tests; can use server.listening; future-proof for Node.js 10
 3. 🗓 Promise resolution mode by default? Requires benchmarking. Otherwise try callback with callbackWaitsForEventLoop=false (configurable by user); requires benchmarking. If context.succeed is still most performant, leave as default.
-4. 🗓 Additional event sources - currently only supports API Gateway Proxy; should also support Lambda@Edge (https://github.com/awslabs/aws-serverless-express/issues/152) and ALB; have had a customer request for DynamoDB; should make it easy to provide your own IO mapping function.
-   1. Added ALB; requires refactoring of common logic, additional tests, example refactor.
-   2. Need to add Lambda@Edge
+4. 🛠 Additional event sources - currently only supports API Gateway Proxy; should also support Lambda@Edge (https://github.com/awslabs/aws-serverless-express/issues/152) and ALB; have had a customer request for DynamoDB; should make it easy to provide your own IO mapping function.
+   1. Added ALB; requires example refactor.
+   2. Need to add Lambda@Edge and example
    3. Need to add example of doing custom resolver (DynamoDB)
 5. ✅ Multiple header values - can get rid of set-cookie hack
 6. ✅ Configure logging - default winston and allow customers to provide their own; include option to respond to 500s with the stack trace instead of empty string currently
