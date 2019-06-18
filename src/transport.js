@@ -46,27 +46,41 @@ function forwardResponse ({
     })
 }
 
-function forwardConnectionErrorResponseToApiGateway ({ error, resolver, logger, respondWithErrors }) {
+function forwardConnectionErrorResponseToApiGateway ({
+  error,
+  resolver,
+  logger,
+  respondWithErrors,
+  eventResponseMapperFn
+}) {
   logger.error('aws-serverless-express connection error: ', error)
   const body = respondWithErrors ? error.stack : ''
-  const errorResponse = {
+  const errorResponse = eventResponseMapperFn({
     statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
     body,
-    multiValueHeaders: {}
-  }
+    headers: {},
+    isBase64Encoded: false
+  })
 
   resolver.succeed({ response: errorResponse })
 }
 
-function forwardLibraryErrorResponseToApiGateway ({ error, resolver, logger, respondWithErrors }) {
+function forwardLibraryErrorResponseToApiGateway ({
+  error,
+  resolver,
+  logger,
+  respondWithErrors,
+  eventResponseMapperFn
+}) {
   logger.error('aws-serverless-express error: ', error)
 
   const body = respondWithErrors ? error.stack : ''
-  const errorResponse = {
+  const errorResponse = eventResponseMapperFn({
     statusCode: 500,
     body,
-    multiValueHeaders: {}
-  }
+    headers: {},
+    isBase64Encoded: false
+  })
 
   resolver.succeed({ response: errorResponse })
 }
@@ -82,6 +96,7 @@ function forwardRequestToNodeServer ({
   respondWithErrors
 }) {
   logger.debug('Forwarding request to application...')
+  const eventResponseMapperFn = eventFns.response
   try {
     const requestOptions = eventFns.request({
       event,
@@ -92,7 +107,7 @@ function forwardRequestToNodeServer ({
       server,
       response,
       resolver,
-      eventResponseMapperFn: eventFns.response,
+      eventResponseMapperFn,
       logger
     }))
 
@@ -107,7 +122,8 @@ function forwardRequestToNodeServer ({
         error,
         resolver,
         logger,
-        respondWithErrors
+        respondWithErrors,
+        eventResponseMapperFn
       }))
       .end()
   } catch (error) {
@@ -115,7 +131,8 @@ function forwardRequestToNodeServer ({
       error,
       resolver,
       logger,
-      respondWithErrors
+      respondWithErrors,
+      eventResponseMapperFn
     })
   }
 }
@@ -141,6 +158,10 @@ function makeResolver ({
   promise,
   resolutionMode
 }) {
+  // Lambda times out waiting for an empty event loop (which never empties since we have a running server)
+  // Setting `context.callbackWaitsForEmptyEventLoop = false` fixes for our use case
+  if (resolutionMode === 'CALLBACK') context.callbackWaitsForEmptyEventLoop = false
+
   return {
     succeed: ({ response }) => {
       if (resolutionMode === 'CONTEXT_SUCCEED') return context.succeed(response)

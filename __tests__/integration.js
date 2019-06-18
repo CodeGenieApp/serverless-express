@@ -62,117 +62,90 @@ function makeResponse (response) {
 }
 
 describe('integration tests', () => {
-  test('proxy returns object', (done) => {
-    const succeed = () => {
-      done()
-    }
-
+  test('proxy returns promise', () => {
     const response = serverlessExpress.handler(makeEvent({
       path: '/',
       httpMethod: 'GET'
-    }), {
-      succeed
-    })
+    }))
     expect(response.then).toBeTruthy()
   })
 
-  test('GET HTML (initial request)', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
-      const expectedResponse = expectedRootResponse()
-      delete response.body
-      delete expectedResponse.body
-      expect(response).toEqual(expectedResponse)
-      done()
-    }
-    serverlessExpress.handler(makeEvent({ path: '/', httpMethod: 'GET' }), {
-      succeed
-    })
+  test('GET HTML (initial request)', async () => {
+    const response = await serverlessExpress.handler(makeEvent({ path: '/', httpMethod: 'GET' }))
+
+    delete response.multiValueHeaders.date
+    expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
+    const expectedResponse = expectedRootResponse()
+    delete response.body
+    delete expectedResponse.body
+    expect(response).toEqual(expectedResponse)
   })
 
-  test('GET HTML (subsequent request)', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
-      const expectedResponse = expectedRootResponse()
-      delete response.body
-      delete expectedResponse.body
-      expect(response).toEqual(expectedResponse)
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test('GET HTML (subsequent request)', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/',
       httpMethod: 'GET'
-    }), {
-      succeed
-    })
+    }))
+    delete response.multiValueHeaders.date
+    expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
+    const expectedResponse = expectedRootResponse()
+    delete response.body
+    delete expectedResponse.body
+    expect(response).toEqual(expectedResponse)
   })
 
-  test('GET JSON collection', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual(makeResponse({
-        'body': '[{"id":1,"name":"Joe"},{"id":2,"name":"Jane"}]',
-        'multiValueHeaders': {
-          'content-length': ['46'],
-          'etag': ['W/"2e-Lu6qxFOQSPFulDAGUFiiK6QgREo"']
-        }
-      }))
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test('GET JSON collection', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/users',
       httpMethod: 'GET'
-    }), {
-      succeed
-    })
+    }))
+
+    delete response.multiValueHeaders.date
+    expect(response).toEqual(makeResponse({
+      'body': '[{"id":1,"name":"Joe"},{"id":2,"name":"Jane"}]',
+      'multiValueHeaders': {
+        'content-length': ['46'],
+        'etag': ['W/"2e-Lu6qxFOQSPFulDAGUFiiK6QgREo"']
+      }
+    }))
   })
 
-  test('GET missing route', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
-      const expectedResponse = makeResponse({
-        'multiValueHeaders': {
-          'content-length': ['151'],
-          'content-security-policy': ["default-src 'none'"],
-          'content-type': ['text/html; charset=utf-8'],
-          'x-content-type-options': ['nosniff']
-        },
-        statusCode: 404
-      })
-      delete response.body
-      delete expectedResponse.body
-      expect(response).toEqual(expectedResponse)
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test('GET missing route', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/nothing-here',
       httpMethod: 'GET'
-    }), {
-      succeed
+    }))
+
+    delete response.multiValueHeaders.date
+    expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
+    const expectedResponse = makeResponse({
+      'multiValueHeaders': {
+        'content-length': ['151'],
+        'content-security-policy': ["default-src 'none'"],
+        'content-type': ['text/html; charset=utf-8'],
+        'x-content-type-options': ['nosniff']
+      },
+      statusCode: 404
     })
+    delete response.body
+    delete expectedResponse.body
+    expect(response).toEqual(expectedResponse)
   })
 
-  test('GET JSON single', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual(makeResponse({
-        'body': '{"id":1,"name":"Joe"}',
-        'multiValueHeaders': {
-          'content-length': ['21'],
-          'etag': ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
-        }
-      }))
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test('GET JSON single', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/users/1',
       httpMethod: 'GET'
-    }), {
-      succeed
-    })
+    }))
+
+    delete response.multiValueHeaders.date
+    expect(response).toEqual(makeResponse({
+      'body': '{"id":1,"name":"Joe"}',
+      'multiValueHeaders': {
+        'content-length': ['21'],
+        'etag': ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
+      }
+    }))
   })
 
   test('GET JSON single (resolutionMode = CALLBACK)', (done) => {
@@ -197,93 +170,60 @@ describe('integration tests', () => {
     })
   })
 
-  test('GET JSON single (resolutionMode = PROMISE)', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual(makeResponse({
-        'body': '{"id":1,"name":"Joe"}',
-        'multiValueHeaders': {
-          'content-length': ['21'],
-          'etag': ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
-        }
-      }))
-      done()
-    }
-    serverlessExpress.proxy({
+  test('GET JSON single (resolutionMode = PROMISE)', async () => {
+    const response = await serverlessExpress.proxy({
       event: makeEvent({
         path: '/users/1',
         httpMethod: 'GET'
       }),
       resolutionMode: 'PROMISE'
     })
-      .then(succeed)
+
+    delete response.multiValueHeaders.date
+    expect(response).toEqual(makeResponse({
+      'body': '{"id":1,"name":"Joe"}',
+      'multiValueHeaders': {
+        'content-length': ['21'],
+        'etag': ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
+      }
+    }))
   })
 
-  test('GET JSON single (resolutionMode = PROMISE; new server)', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual(makeResponse({
-        'body': '{"id":1,"name":"Joe"}',
-        'multiValueHeaders': {
-          'content-length': ['21'],
-          'etag': ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
-        }
-      }))
-      newServererlessExpress.server.close()
-      done()
-    }
+  test('GET JSON single (resolutionMode = PROMISE; new server)', async () => {
     const newServererlessExpress = awsServerlessExpress.configure({ app, resolutionMode: 'PROMISE' })
     const event = makeEvent({
       path: '/users/1',
       httpMethod: 'GET'
     })
-    newServererlessExpress.handler(event).then(succeed)
+    const response = await newServererlessExpress.handler(event)
+    delete response.multiValueHeaders.date
+    expect(response).toEqual(makeResponse({
+      'body': '{"id":1,"name":"Joe"}',
+      'multiValueHeaders': {
+        'content-length': ['21'],
+        'etag': ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
+      }
+    }))
+    newServererlessExpress.server.close()
   })
 
-  test('GET JSON single 404', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual(makeResponse({
-        'body': '{}',
-        'multiValueHeaders': {
-          'content-length': ['2'],
-          'etag': ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
-        },
-        statusCode: 404
-      }))
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test('GET JSON single 404', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/users/3',
       httpMethod: 'GET'
-    }), {
-      succeed
-    })
+    }))
+    delete response.multiValueHeaders.date
+    expect(response).toEqual(makeResponse({
+      'body': '{}',
+      'multiValueHeaders': {
+        'content-length': ['2'],
+        'etag': ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
+      },
+      statusCode: 404
+    }))
   })
 
-  test('success - image response', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      delete response.multiValueHeaders.etag
-      delete response.multiValueHeaders['last-modified']
-
-      const samLogoPath = path.resolve(path.join(__dirname, '../examples/basic-starter/sam-logo.png'))
-      const samLogoImage = fs.readFileSync(samLogoPath)
-      const samLogoBase64 = Buffer.from(samLogoImage).toString('base64')
-
-      expect(response).toEqual(makeResponse({
-        'body': samLogoBase64,
-        'multiValueHeaders': {
-          'accept-ranges': ['bytes'],
-          'cache-control': ['public, max-age=0'],
-          'content-length': ['15933'],
-          'content-type': ['image/png']
-        },
-        'isBase64Encoded': true
-      }))
-      serverWithBinaryTypes.close()
-      done()
-    }
+  test('success - image response', async () => {
     const serverWithBinaryTypes = serverlessExpress.createServer({
       app,
       binaryMimeTypes: ['image/*']
@@ -292,164 +232,152 @@ describe('integration tests', () => {
       path: '/sam',
       httpMethod: 'GET'
     })
-    serverlessExpress.proxy({
+    const response = await serverlessExpress.proxy({
       server: serverWithBinaryTypes,
-      event,
-      context: {
-        succeed
-      }
+      event
     })
+    delete response.multiValueHeaders.date
+    delete response.multiValueHeaders.etag
+    delete response.multiValueHeaders['last-modified']
+
+    const samLogoPath = path.resolve(path.join(__dirname, '../examples/basic-starter/sam-logo.png'))
+    const samLogoImage = fs.readFileSync(samLogoPath)
+    const samLogoBase64 = Buffer.from(samLogoImage).toString('base64')
+
+    expect(response).toEqual(makeResponse({
+      'body': samLogoBase64,
+      'multiValueHeaders': {
+        'accept-ranges': ['bytes'],
+        'cache-control': ['public, max-age=0'],
+        'content-length': ['15933'],
+        'content-type': ['image/png']
+      },
+      'isBase64Encoded': true
+    }))
+    serverWithBinaryTypes.close()
   })
   const newName = 'Sandy Samantha Salamander'
 
-  test('POST JSON', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual(makeResponse({
-        'body': `{"id":3,"name":"${newName}"}`,
-        'multiValueHeaders': {
-          'content-length': ['43'],
-          'etag': ['W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"']
-        },
-        statusCode: 201
-      }))
-      done()
-    }
+  test('POST JSON', async () => {
     const event = makeEvent({
       path: '/users',
       httpMethod: 'POST',
       body: `{"name": "${newName}"}`
     })
-    serverlessExpress.handler(event, {
-      succeed
-    })
+    const response = await serverlessExpress.handler(event)
+
+    delete response.multiValueHeaders.date
+    expect(response).toEqual(makeResponse({
+      'body': `{"id":3,"name":"${newName}"}`,
+      'multiValueHeaders': {
+        'content-length': ['43'],
+        'etag': ['W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"']
+      },
+      statusCode: 201
+    }))
   })
 
-  test('GET JSON single (again; post-creation) 200', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual(makeResponse({
-        'body': `{"id":3,"name":"${newName}"}`,
-        'multiValueHeaders': {
-          'content-length': ['43'],
-          'etag': ['W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"']
-        },
-        statusCode: 200
-      }))
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test('GET JSON single (again; post-creation) 200', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/users/3',
       httpMethod: 'GET'
-    }), {
-      succeed
-    })
+    }))
+    delete response.multiValueHeaders.date
+    expect(response).toEqual(makeResponse({
+      'body': `{"id":3,"name":"${newName}"}`,
+      'multiValueHeaders': {
+        'content-length': ['43'],
+        'etag': ['W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"']
+      },
+      statusCode: 200
+    }))
   })
 
-  test('DELETE JSON', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual(makeResponse({
-        'body': `[{"id":2,"name":"Jane"},{"id":3,"name":"${newName}"}]`,
-        'multiValueHeaders': {
-          'content-length': ['68'],
-          'etag': ['W/"44-AtuxlvrIBL8NXP4gvEQTI77suNg"']
-        },
-        statusCode: 200
-      }))
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test('DELETE JSON', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/users/1',
       httpMethod: 'DELETE'
-    }), {
-      succeed
-    })
+    }))
+
+    delete response.multiValueHeaders.date
+    expect(response).toEqual(makeResponse({
+      'body': `[{"id":2,"name":"Jane"},{"id":3,"name":"${newName}"}]`,
+      'multiValueHeaders': {
+        'content-length': ['68'],
+        'etag': ['W/"44-AtuxlvrIBL8NXP4gvEQTI77suNg"']
+      },
+      statusCode: 200
+    }))
   })
 
-  test('PUT JSON', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual(makeResponse({
-        'body': '{"id":2,"name":"Samuel"}',
-        'multiValueHeaders': {
-          'content-length': ['24'],
-          'etag': ['W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"']
-        },
-        statusCode: 200
-      }))
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test('PUT JSON', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/users/2',
       httpMethod: 'PUT',
       body: '{"name": "Samuel"}'
-    }), {
-      succeed
-    })
+    }))
+    delete response.multiValueHeaders.date
+    expect(response).toEqual(makeResponse({
+      'body': '{"id":2,"name":"Samuel"}',
+      'multiValueHeaders': {
+        'content-length': ['24'],
+        'etag': ['W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"']
+      },
+      statusCode: 200
+    }))
   })
 
-  test('base64 encoded request', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual(makeResponse({
-        'body': '{"id":2,"name":"Samuel"}',
-        'multiValueHeaders': {
-          'access-control-allow-origin': [
-            '*'
-          ],
-          'connection': [
-            'close'
-          ],
-          'content-length': [
-            '24'
-          ],
-          'content-type': [
-            'application/json; charset=utf-8'
-          ],
-          'etag': [
-            'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"'
-          ],
-          'x-powered-by': [
-            'Express'
-          ]
-        },
-        statusCode: 200
-      }))
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test('base64 encoded request', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/users/2',
       httpMethod: 'PUT',
       body: global.btoa('{"name": "Samuel"}'),
       isBase64Encoded: true
-    }), {
-      succeed
-    })
+    }))
+    delete response.multiValueHeaders.date
+    expect(response).toEqual(makeResponse({
+      'body': '{"id":2,"name":"Samuel"}',
+      'multiValueHeaders': {
+        'access-control-allow-origin': [
+          '*'
+        ],
+        'connection': [
+          'close'
+        ],
+        'content-length': [
+          '24'
+        ],
+        'content-type': [
+          'application/json; charset=utf-8'
+        ],
+        'etag': [
+          'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"'
+        ],
+        'x-powered-by': [
+          'Express'
+        ]
+      },
+      statusCode: 200
+    }))
   })
 
   // TODO: This test is failing on Node.js 10 as this isn't forcing a connection error like earlier versions of Node do.
   // Need to determine a new way of forcing a connection error which works in both 8 and 10 before re-enabling this.
   // For now, we still have a unit test for forwardConnectionErrorResponseToApiGateway.
-  test.skip('forwardConnectionErrorResponseToApiGateway', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-      expect(response).toEqual({
-        'body': '',
-        'multiValueHeaders': {},
-        statusCode: 502
-      })
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test.skip('forwardConnectionErrorResponseToApiGateway', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/',
       httpMethod: 'GET',
       body: '{"name": "Sam502"}',
       multiValueHeaders: {
         'Content-Length': ['-1']
       }
-    }), {
-      succeed
+    }))
+    delete response.multiValueHeaders.date
+    expect(response).toEqual({
+      'body': '',
+      'multiValueHeaders': {},
+      statusCode: 502
     })
   })
 
@@ -457,94 +385,72 @@ describe('integration tests', () => {
     res.end('')
   }
 
-  test.skip('forwardLibraryErrorResponseToApiGateway', (done) => {
-    const succeed = response => {
-      expect(response).toEqual({
-        statusCode: 500,
-        body: '',
-        multiValueHeaders: {}
-      })
-      done()
-    }
-    serverlessExpress.handler(null, { succeed })
+  test.skip('forwardLibraryErrorResponseToApiGateway', async () => {
+    const response = await serverlessExpress.handler(null)
+    expect(response).toEqual({
+      statusCode: 500,
+      body: '',
+      multiValueHeaders: {}
+    })
   })
 
-  test('serverListenCallback', (done) => {
+  test('serverListenCallback', async () => {
     const serverListenCallback = jest.fn()
     const serverWithListenCallback = serverlessExpress.createServer({
       app: mockApp
     })
     serverWithListenCallback.on('listening', serverListenCallback)
-    const succeed = response => {
-      expect(response.statusCode).toBe(200)
-      expect(serverListenCallback).toHaveBeenCalled()
-      serverWithListenCallback.close()
-      done()
-    }
-    serverlessExpress.proxy({
+
+    const response = await serverlessExpress.proxy({
       server: serverWithListenCallback,
-      event: makeEvent({}),
-      context: {
-        succeed
-      }})
+      event: makeEvent({})
+    })
+
+    expect(response.statusCode).toBe(200)
+    expect(serverListenCallback).toHaveBeenCalled()
+    serverWithListenCallback.close()
   })
 
-  test('server.onError EADDRINUSE', (done) => {
+  test('server.onError EADDRINUSE', async () => {
     const serverWithSameSocketPath = serverlessExpress.createServer({ app: mockApp })
     serverWithSameSocketPath._socketPathSuffix = server._socketPathSuffix
-    const succeed = response => {
-      expect(response.statusCode).toBe(200)
-      done()
-      serverWithSameSocketPath.close()
-    }
-    serverlessExpress.proxy({
+
+    const response = await serverlessExpress.proxy({
       server: serverWithSameSocketPath,
-      event: makeEvent({}),
-      context: {
-        succeed
-      }
+      event: makeEvent({})
     })
+    expect(response.statusCode).toBe(200)
+    serverWithSameSocketPath.close()
   })
 
-  test('Multiple headers of the same name (set-cookie)', (done) => {
-    const succeed = response => {
-      delete response.multiValueHeaders.date
-
-      const expectedSetCookieHeaders = nodeMajorVersion >= 10 ? [
-        'Foo=bar; Path=/',
-        'Fizz=buzz; Path=/'
-      ] : ['Foo=bar; Path=/,Fizz=buzz; Path=/']
-      expect(response).toEqual(makeResponse({
-        body: '{}',
-        'multiValueHeaders': {
-          'set-cookie': expectedSetCookieHeaders,
-          'content-length': ['2'],
-          'etag': ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
-        },
-        statusCode: 200
-      }))
-      done()
-    }
-    serverlessExpress.handler(makeEvent({
+  test('Multiple headers of the same name (set-cookie)', async () => {
+    const response = await serverlessExpress.handler(makeEvent({
       path: '/cookie',
       httpMethod: 'GET'
-    }), {
-      succeed
-    })
+    }))
+    delete response.multiValueHeaders.date
+
+    const expectedSetCookieHeaders = nodeMajorVersion >= 10 ? [
+      'Foo=bar; Path=/',
+      'Fizz=buzz; Path=/'
+    ] : ['Foo=bar; Path=/,Fizz=buzz; Path=/']
+    expect(response).toEqual(makeResponse({
+      body: '{}',
+      'multiValueHeaders': {
+        'set-cookie': expectedSetCookieHeaders,
+        'content-length': ['2'],
+        'etag': ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
+      },
+      statusCode: 200
+    }))
   })
 
-  test('server.onClose', (done) => {
+  test('server.onClose', async () => {
     // NOTE: this must remain as the final test as it closes `server`
-    const succeed = response => {
-      server.on('close', () => {
-        expect(server.listening).toBe(false)
-        done()
-      })
-      server.close()
-    }
-
-    serverlessExpress.handler(makeEvent({}), {
-      succeed
+    await serverlessExpress.handler(makeEvent({}))
+    server.on('close', () => {
+      expect(server.listening).toBe(false)
     })
+    server.close()
   })
 })

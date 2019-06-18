@@ -11,10 +11,9 @@ const binaryMimeTypes = [
 const ase = awsServerlessExpress.configure({
   app,
   binaryMimeTypes,
-  respondWithErrors: true
-  // loggerConfig: {
-  //   level: 'debug'
-  // }
-  // resolutionMode: 'PROMISE'
+  respondWithErrors: true,
+  loggerConfig: {
+    level: 'debug'
+  }
 })
 exports.handler = ase.handler

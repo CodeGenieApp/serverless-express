@@ -41,7 +41,8 @@ This example was written against Node.js version 8.10
 
 To update this example against the latest local changes to aws-serverless-express:
 
-1. `npm pack ../..`
-2. `npm install ./aws-serverless-express-3.3.5.tgz`
-3. `npm install --prefix ./src ./`
-4. `node local.js`
+```bash
+npm pack ../..
+npm install ./aws-serverless-express-3.3.5.tgz
+npm run local
+```

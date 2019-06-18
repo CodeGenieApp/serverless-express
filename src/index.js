@@ -71,7 +71,7 @@ function proxy ({
   event = {},
   context = {},
   callback = null,
-  resolutionMode = 'CONTEXT_SUCCEED',
+  resolutionMode = 'PROMISE',
   eventSource = getEventSourceBasedOnEvent({ event }),
   eventFns = getEventFnsBasedOnEventSource({ eventSource }),
   logger,
@@ -141,7 +141,7 @@ const DEFAULT_LOGGER_CONFIG = {
 function configure ({
   app: configureApp,
   binaryMimeTypes: configureBinaryMimeTypes = [],
-  resolutionMode: configureResolutionMode = 'CONTEXT_SUCCEED',
+  resolutionMode: configureResolutionMode = 'PROMISE',
   eventSource: configureEventSource,
   eventFns: configureEventFns,
   respondWithErrors: configureRespondWithErrors = false,

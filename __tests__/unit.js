@@ -154,12 +154,18 @@ describe('forwardConnectionErrorResponseToApiGateway', () => {
         const contextResolver = {
           succeed: (p) => context.succeed(p.response)
         }
-        awsServerlessExpressTransport.forwardConnectionErrorResponseToApiGateway({ error: 'ERROR', resolver: contextResolver, logger })
+        awsServerlessExpressTransport.forwardConnectionErrorResponseToApiGateway({
+          error: new Error('ERROR'),
+          resolver: contextResolver,
+          logger,
+          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway
+        })
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 502,
       body: '',
-      multiValueHeaders: {}
+      multiValueHeaders: {},
+      isBase64Encoded: false
     }))
   })
   test('responds with 502 status and stack trace', () => {
@@ -173,14 +179,16 @@ describe('forwardConnectionErrorResponseToApiGateway', () => {
           error: new Error('There was a connection error...'),
           resolver: contextResolver,
           logger,
-          respondWithErrors: true
+          respondWithErrors: true,
+          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway
         })
       }
     ).then(successResponse => {
       expect(successResponse).toEqual({
         statusCode: 502,
         body: successResponse.body,
-        multiValueHeaders: {}
+        multiValueHeaders: {},
+        isBase64Encoded: false
       })
       expect(successResponse.body).toContain('Error: There was a connection error...\n    at ')
     })
@@ -195,12 +203,18 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
         const contextResolver = {
           succeed: (p) => context.succeed(p.response)
         }
-        awsServerlessExpressTransport.forwardLibraryErrorResponseToApiGateway({ error: 'ERROR', resolver: contextResolver, logger })
+        awsServerlessExpressTransport.forwardLibraryErrorResponseToApiGateway({
+          error: new Error('ERROR'),
+          resolver: contextResolver,
+          logger,
+          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway
+        })
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 500,
       body: '',
-      multiValueHeaders: {}
+      multiValueHeaders: {},
+      isBase64Encoded: false
     }))
   })
   test('responds with 500 status and stack trace', () => {
@@ -214,14 +228,16 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
           error: new Error('There was an error...'),
           resolver: contextResolver,
           logger,
-          respondWithErrors: true
+          respondWithErrors: true,
+          eventResponseMapperFn: awsServerlessExpressEventMappings.mapResponseToApiGateway
         })
       }
     ).then(successResponse => {
       expect(successResponse).toEqual({
         statusCode: 500,
         body: successResponse.body,
-        multiValueHeaders: {}
+        multiValueHeaders: {},
+        isBase64Encoded: false
       })
       expect(successResponse.body).toContain('Error: There was an error...\n    at ')
     })
@@ -379,7 +395,8 @@ describe('makeResolver', () => {
     const callback = (e, response) => response
     const callbackResolver = awsServerlessExpressTransport.makeResolver({
       callback,
-      resolutionMode: 'CALLBACK'
+      resolutionMode: 'CALLBACK',
+      context: {}
     })
     const successResponse = callbackResolver.succeed({
       response: 'success'

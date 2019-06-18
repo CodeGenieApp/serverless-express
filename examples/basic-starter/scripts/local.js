@@ -1,15 +1,18 @@
 const lambdaFunction = require('../lambda.js')
 const apiGatewayEvent = require('../api-gateway-event.json')
 
-const server = lambdaFunction.handler(apiGatewayEvent, {
+const context = {
   succeed: v => {
     console.info(v)
     process.exit(0)
   }
-}, (e, v) => {
-  console.error(v)
-  process.exit(1)
-})
+}
+const callback = (e, v) => {
+  if (e) console.error(e)
+  if (v) console.info(v)
+  process.exit(0)
+}
+const server = lambdaFunction.handler(apiGatewayEvent, context, callback)
 
 process.stdin.resume()
 

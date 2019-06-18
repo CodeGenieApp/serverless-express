@@ -32,7 +32,7 @@ Want to get up and running quickly? [Check out our basic starter example](exampl
 - [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model)/[CloudFormation](https://aws.amazon.com/cloudformation/aws-cloudformation-templates/) template
 - Helper scripts to configure, deploy, and manage your application
 
-### Accessing the event and context objects
+## Accessing the event and context objects
 
 This package exposes a function to easily get the `event` and `context` objects Lambda receives from the event source.
 
@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
 
 1. ✅ Improved API - Simpler for end user to use and configure; extensible without breaking backwards compatibility or hurting API
 2. ✅ Node.js 8+ only - can upgrade dependencies to latest (Jest); can use latest syntax in source and tests; can use server.listening; future-proof for Node.js 10
-3. 🗓 Promise resolution mode by default? Requires benchmarking. Otherwise try callback with callbackWaitsForEventLoop=false (configurable by user); requires benchmarking. If context.succeed is still most performant, leave as default.
+3. ✅ Promise resolution mode by default
 4. 🛠 Additional event sources - currently only supports API Gateway Proxy; should also support Lambda@Edge (https://github.com/awslabs/aws-serverless-express/issues/152) and ALB; have had a customer request for DynamoDB; should make it easy to provide your own IO mapping function.
    1. Added ALB; requires example refactor.
    2. Need to add Lambda@Edge and example
@@ -58,11 +58,11 @@ app.get('/', (req, res) => {
 6. ✅ Configure logging - default winston and allow customers to provide their own; include option to respond to 500s with the stack trace instead of empty string currently
 7. 🗓Improved documentation
 8. ✅ Option to strip base path for custom domains (https://github.com/awslabs/aws-serverless-express/issues/86).
-9.  🗓 Update example to include optional parameter for setting up custom domain
+9. 🗓 Update example to include optional parameter for setting up custom domain
 
-### Is AWS serverless right for my app?
+## Is AWS serverless right for my app?
 
-#### Benefits
+### Benefits
 
 - Pay for what you use
 - No infrastructure to manage
@@ -76,9 +76,13 @@ app.get('/', (req, res) => {
 - [Request Validation](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html)
 - [Documentation](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-documenting-api.html)
 
-#### Considerations
+### Considerations
 
 - For apps that may not see traffic for several minutes at a time, you could see [cold starts](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)
 - Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
 - Stateless only
 - API Gateway has a timeout of 30 seconds, and Lambda has a maximum execution time of 15 minutes.
+
+## Loadtesting
+
+`npx loadtest --rps 100 -k -n 1500 -c 50 https://xxxx.execute-api.us-east-1.amazonaws.com/prod/users`
