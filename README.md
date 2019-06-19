@@ -13,15 +13,13 @@ npm install aws-serverless-express
 
 ```js
 // lambda.js
-const awsServerlessExpress = require('aws-serverless-express')
+const { configure } = require('aws-serverless-express')
 const app = require('./app')
-const servererlessExpress = awsServerlessExpress.configure({
-})
-
-exports.handler = (event, context) => { awsServerlessExpress.proxy(server, event, context) }
+const servererlessExpress = configure({ app })
+exports.handler = servererlessExpress.handler
 ```
 
-[Package and create your Lambda function](http://docs.aws.amazon.com/lambda/latest/dg/nodejs-create-deployment-pkg.html), then configure a simple proxy API using Amazon API Gateway and integrate it with your Lambda function.
+[Package and create your Lambda function](http://docs.aws.amazon.com/lambda/latest/dg/nodejs-create-deployment-pkg.html), then configure a simple proxy API using Amazon API Gateway and integrate it with your Lambda function. See the [basic starter example](examples/basic-starter) to get started.
 
 ## Quick Start/Example
 
@@ -32,7 +30,60 @@ Want to get up and running quickly? [Check out our basic starter example](exampl
 - [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model)/[CloudFormation](https://aws.amazon.com/cloudformation/aws-cloudformation-templates/) template
 - Helper scripts to configure, deploy, and manage your application
 
-## Accessing the event and context objects
+## API
+
+## resolutionMode
+
+Lambda supports three methods to end the execution and return a result: context, callback, and promise. By default, aws-serverless-express uses promise resolution, but you can specify 'CONTEXT' or 'CALLBACK' ('PROMISE' by default) if you need to change this. If you specify 'CALLBACK', then `context.callbackWaitsForEmptyEventLoop = false` is also set for you.
+
+```js
+configure({
+  app,
+  resolutionMode: 'CALLBACK'
+})
+```
+
+## eventFns
+
+aws-serverless-express natively supports API Gateway, ALB, and Lambda@Edge. If you want to use Express with other AWS Services which can invoke a Lambda Function you can provide your own custom request/response mappings via `eventFns`. See the [custom-mapper-dynamodb example](examples/custom-mapper-dynamodb).
+
+```js
+function requestMapper ({ event }) {
+  // Your logic here...
+
+  return {
+    method,
+    path,
+    headers
+  }
+}
+
+function responseMapper ({
+  statusCode,
+  body,
+  headers,
+  isBase64Encoded
+}) {
+  // Your logic here...
+
+  return {
+    statusCode,
+    body,
+    headers,
+    isBase64Encoded
+  }
+}
+
+configure({
+  app,
+  eventFns: {
+    request: requestMapper,
+    response: responseMapper
+  }
+})
+```
+
+### Accessing the event and context objects
 
 This package exposes a function to easily get the `event` and `context` objects Lambda receives from the event source.
 

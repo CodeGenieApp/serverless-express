@@ -1,6 +1,6 @@
 const { mapEventToHttpRequest, mapResponseToService } = require('./utils')
 
-const mapApiGatewayEventToHttpRequest = ({ event, socketPath }) => mapEventToHttpRequest({ event, socketPath })
+const mapApiGatewayEventToHttpRequest = ({ event }) => mapEventToHttpRequest({ event })
 
 function mapResponseToApiGateway ({
   statusCode,

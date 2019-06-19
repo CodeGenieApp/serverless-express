@@ -1,6 +1,6 @@
 const { mapEventToHttpRequest, mapResponseToService } = require('./utils')
 
-const mapAlbEventToHttpRequest = ({ event, socketPath }) => mapEventToHttpRequest({ event, socketPath })
+const mapAlbEventToHttpRequest = ({ event }) => mapEventToHttpRequest({ event })
 const mapResponseToAlb = ({
   statusCode,
   body,

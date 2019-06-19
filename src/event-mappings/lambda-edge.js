@@ -1,6 +1,6 @@
 const { mapEventToHttpRequest, mapResponseToService } = require('./utils')
 
-const mapLambdaEdgeEventToHttpRequest = ({ event, socketPath }) => mapEventToHttpRequest({ event, socketPath })
+const mapLambdaEdgeEventToHttpRequest = ({ event }) => mapEventToHttpRequest({ event })
 const mapResponseToLambdaEdge = ({
   statusCode,
   body,

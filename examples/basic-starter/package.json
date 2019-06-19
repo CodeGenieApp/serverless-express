@@ -6,7 +6,7 @@
   "config": {
     "s3BucketName": "sls-xpress2",
     "region": "us-east-1",
-    "cloudFormationStackName": "AwsServerlessExpressStackNew",
+    "cloudFormationStackName": "ServerlessExpress",
     "functionName": "AwsServerlessExpressStackNew-ExpressLambdaFunction-GU4XXGPADJ0E"
   },
   "scripts": {

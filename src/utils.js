@@ -2,14 +2,6 @@
 const url = require('url')
 const isType = require('type-is')
 
-function getEventBody ({
-  event,
-  body = event.body,
-  isBase64Encoded = event.isBase64Encoded
-}) {
-  return Buffer.from(body, isBase64Encoded ? 'base64' : 'utf8')
-}
-
 function getContentType ({ contentTypeHeader }) {
   // only compare mime type; ignore encoding part
   return contentTypeHeader ? contentTypeHeader.split(';')[0] : ''
@@ -40,7 +32,6 @@ function getRandomString () {
 
 module.exports = {
   getPathWithQueryStringParams,
-  getEventBody,
   isContentTypeBinaryMimeType,
   getContentType,
   getRandomString

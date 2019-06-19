@@ -4,8 +4,7 @@ const {
 } = require('./event-mappings')
 const {
   getContentType,
-  isContentTypeBinaryMimeType,
-  getEventBody
+  isContentTypeBinaryMimeType
 } = require('./utils')
 
 function forwardResponse ({
@@ -98,12 +97,10 @@ function forwardRequestToNodeServer ({
   logger.debug('Forwarding request to application...')
   const eventResponseMapperFn = eventFns.response
   try {
-    const requestOptions = eventFns.request({
-      event,
-      socketPath: getSocketPath({ socketPathSuffix: server._socketPathSuffix })
-    })
+    const socketPath = getSocketPath({ socketPathSuffix: server._socketPathSuffix })
+    const { body, ...requestOptions } = eventFns.request({ event })
     logger.debug('requestOptions', requestOptions)
-    const req = http.request(requestOptions, (response) => forwardResponse({
+    const req = http.request({ socketPath, ...requestOptions }, (response) => forwardResponse({
       server,
       response,
       resolver,
@@ -111,8 +108,7 @@ function forwardRequestToNodeServer ({
       logger
     }))
 
-    if (event.body) {
-      const body = getEventBody({ event })
+    if (body) {
       logger.debug('body', body)
       req.write(body)
     }
@@ -164,7 +160,7 @@ function makeResolver ({
 
   return {
     succeed: ({ response }) => {
-      if (resolutionMode === 'CONTEXT_SUCCEED') return context.succeed(response)
+      if (resolutionMode === 'CONTEXT') return context.succeed(response)
       if (resolutionMode === 'CALLBACK') return callback(null, response)
       if (resolutionMode === 'PROMISE') return promise.resolve(response)
     }

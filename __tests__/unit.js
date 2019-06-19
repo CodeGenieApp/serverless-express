@@ -75,36 +75,35 @@ function mapApiGatewayEventToHttpRequest (multiValueHeaders = {}) {
   const context = {
     'foo': 'bar'
   }
-  const socketPath = '/tmp/server0.sock'
-  const httpRequest = awsServerlessExpressEventMappings.mapApiGatewayEventToHttpRequest({ event, context, socketPath })
+  const httpRequest = awsServerlessExpressEventMappings.mapApiGatewayEventToHttpRequest({ event, context })
 
   return {httpRequest, eventClone, context}
 }
 
 test('mapApiGatewayEventToHttpRequest: with headers', () => {
   const r = mapApiGatewayEventToHttpRequest({'x-foo': ['foo']})
-
+  expect(r.httpRequest.body).toBeInstanceOf(Buffer)
+  delete r.httpRequest.body
   expect(r.httpRequest).toEqual({
     method: 'GET',
     path: '/foo',
     headers: {
       'x-foo': 'foo',
       'Content-Length': Buffer.byteLength('Hello serverless!')
-    },
-    socketPath: '/tmp/server0.sock'
+    }
   })
 })
 
 test('mapApiGatewayEventToHttpRequest: without headers', () => {
   const r = mapApiGatewayEventToHttpRequest()
-
+  expect(r.httpRequest.body).toBeInstanceOf(Buffer)
+  delete r.httpRequest.body
   expect(r.httpRequest).toEqual({
     method: 'GET',
     path: '/foo',
     headers: {
       'Content-Length': Buffer.byteLength('Hello serverless!')
-    },
-    socketPath: '/tmp/server0.sock'
+    }
   })
 })
 
@@ -376,13 +375,13 @@ describe('forwardResponse: content-type encoding', () => {
 })
 
 describe('makeResolver', () => {
-  test('CONTEXT_SUCCEED (specified)', () => {
+  test('CONTEXT (specified)', () => {
     return new Promise(
       (resolve) => {
         const context = new MockContext(resolve)
         const contextResolver = awsServerlessExpressTransport.makeResolver({
           context,
-          resolutionMode: 'CONTEXT_SUCCEED'
+          resolutionMode: 'CONTEXT'
         })
 
         return contextResolver.succeed({

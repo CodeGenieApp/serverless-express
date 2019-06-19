@@ -1,10 +1,17 @@
-const { getPathWithQueryStringParams, getEventBody } = require('../utils')
+const { getPathWithQueryStringParams } = require('../utils')
+
+function getEventBody ({
+  event,
+  body = event.body,
+  isBase64Encoded = event.isBase64Encoded
+}) {
+  return Buffer.from(body, isBase64Encoded ? 'base64' : 'utf8')
+}
 
 function mapEventToHttpRequest ({
   event,
   method = event.httpMethod,
   path = getPathWithQueryStringParams({ event }),
-  socketPath,
   headers
 }) {
   if (!headers) {
@@ -14,8 +21,10 @@ function mapEventToHttpRequest ({
     })
   }
 
+  let body
+
   if (event.body) {
-    const body = getEventBody({ event })
+    body = getEventBody({ event })
     const isBase64Encoded = event.isBase64Encoded
     headers['Content-Length'] = Buffer.byteLength(body, isBase64Encoded ? 'base64' : 'utf8')
   }
@@ -24,7 +33,7 @@ function mapEventToHttpRequest ({
     method,
     path,
     headers,
-    socketPath
+    body
     // protocol: `${headers['X-Forwarded-Proto']}:`,
     // host: headers.Host,
     // hostname: headers.Host, // Alias for host
