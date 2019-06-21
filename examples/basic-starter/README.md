@@ -44,5 +44,6 @@ To update this example against the latest local changes to aws-serverless-expres
 ```bash
 npm pack ../..
 npm install ./aws-serverless-express-3.3.5.tgz
+npm install --prefix ./src ./
 npm run local
 ```

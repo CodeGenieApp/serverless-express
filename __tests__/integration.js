@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const awsServerlessExpress = require('../index')
 const apiGatewayEvent = require('../examples/basic-starter/api-gateway-event.json')
-const app = require('../examples/basic-starter/app')
+const app = require('../examples/basic-starter/src/app')
 
 const serverlessExpress = awsServerlessExpress.configure({ app })
 const server = serverlessExpress.server
@@ -240,7 +240,7 @@ describe('integration tests', () => {
     delete response.multiValueHeaders.etag
     delete response.multiValueHeaders['last-modified']
 
-    const samLogoPath = path.resolve(path.join(__dirname, '../examples/basic-starter/sam-logo.png'))
+    const samLogoPath = path.resolve(path.join(__dirname, '../examples/basic-starter/src/sam-logo.png'))
     const samLogoImage = fs.readFileSync(samLogoPath)
     const samLogoBase64 = Buffer.from(samLogoImage).toString('base64')
 
