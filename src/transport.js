@@ -1,11 +1,6 @@
 const http = require('http')
-const {
-  getEventFnsBasedOnEventSource
-} = require('./event-mappings')
-const {
-  getContentType,
-  isContentTypeBinaryMimeType
-} = require('./utils')
+const { getEventFnsBasedOnEventSource } = require('./event-mappings')
+const { getContentType, isContentTypeBinaryMimeType } = require('./utils')
 
 function forwardResponse ({
   server,
@@ -29,7 +24,7 @@ function forwardResponse ({
       logger.debug('contentType', { contentType })
       const isBase64Encoded = isContentTypeBinaryMimeType({
         contentType,
-        binaryMimeTypes: server._binaryMimeTypes
+        binaryMimeTypes: server._awsServerlessExpress.binaryMimeTypes
       })
       const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
       const successResponse = eventResponseMapperFn({
@@ -97,10 +92,9 @@ function forwardRequestToNodeServer ({
   logger.debug('Forwarding request to application...')
   const eventResponseMapperFn = eventFns.response
   try {
-    const socketPath = getSocketPath({ socketPathSuffix: server._socketPathSuffix })
     const { body, ...requestOptions } = eventFns.request({ event })
     logger.debug('requestOptions', requestOptions)
-    const req = http.request({ socketPath, ...requestOptions }, (response) => forwardResponse({
+    const req = http.request({ socketPath: server._awsServerlessExpress.socketPath, ...requestOptions }, (response) => forwardResponse({
       server,
       response,
       resolver,
@@ -134,7 +128,7 @@ function forwardRequestToNodeServer ({
 }
 
 function startServer ({ server }) {
-  return server.listen(getSocketPath({ socketPathSuffix: server._socketPathSuffix }))
+  return server.listen(server._awsServerlessExpress.socketPath)
 }
 
 function getSocketPath ({ socketPathSuffix }) {

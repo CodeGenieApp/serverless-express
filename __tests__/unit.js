@@ -132,7 +132,9 @@ class MockResponse extends PassThrough {
 
 class MockServer {
   constructor (binaryMimeTypes = []) {
-    this._binaryMimeTypes = binaryMimeTypes
+    this._awsServerlessExpress = {
+      binaryMimeTypes
+    }
   }
 }
 

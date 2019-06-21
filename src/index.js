@@ -12,6 +12,7 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+const fs = require('fs')
 const http = require('http')
 const { createLogger, format, transports } = require('winston')
 const {
@@ -20,15 +21,9 @@ const {
   makeResolver,
   getSocketPath
 } = require('./transport')
-const {
-  getRandomString
-} = require('./utils')
-const {
-  getEventFnsBasedOnEventSource
-} = require('./event-mappings')
-const {
-  getEventSourceBasedOnEvent
-} = require('./event-mappings/utils')
+const { getRandomString } = require('./utils')
+const { getEventFnsBasedOnEventSource } = require('./event-mappings')
+const { getEventSourceBasedOnEvent } = require('./event-mappings/utils')
 
 const currentLambdaInvoke = {}
 
@@ -48,16 +43,24 @@ function createServer ({
 }) {
   logger.debug('Creating HTTP server based on app...', { app, binaryMimeTypes })
   const server = http.createServer(app)
+  const socketPathSuffix = getRandomString()
+  const socketPath = getSocketPath({ socketPathSuffix })
+  server._awsServerlessExpress = {
+    socketPath,
+    binaryMimeTypes: binaryMimeTypes ? [...binaryMimeTypes] : []
+  }
 
-  server._socketPathSuffix = getRandomString()
-  server._binaryMimeTypes = binaryMimeTypes ? [...binaryMimeTypes] : []
   logger.debug('Created HTTP server', { server })
   server.on('error', (error) => {
     /* istanbul ignore else */
     if (error.code === 'EADDRINUSE') {
-      logger.warn(`Attempting to listen on socket ${getSocketPath({ socketPathSuffix: server._socketPathSuffix })}, but it's already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause. If this is purely as a result of a timeout, consider increasing the function timeout and/or cpu/memory allocation. aws-serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
-      server._socketPathSuffix = getRandomString()
-      return server.close(() => startServer({ server }))
+      logger.warn(`Attempting to listen on socket ${socketPath}, but it's already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause. If this is purely as a result of a timeout, consider increasing the function timeout and/or cpu/memory allocation. aws-serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
+      server._awsServerlessExpress.socketPath = getSocketPath({ socketPathSuffix: getRandomString() })
+
+      return server.close(() => {
+        fs.unlinkSync(error.address)
+        startServer({ server })
+      })
     } else {
       logger.error('aws-serverless-express server error: ', error)
     }

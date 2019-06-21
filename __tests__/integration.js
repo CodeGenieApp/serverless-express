@@ -12,7 +12,7 @@ function clone (json) {
   return JSON.parse(JSON.stringify(json))
 }
 
-function makeEvent (eventOverrides) {
+function makeEvent (eventOverrides = {}) {
   const baseEvent = clone(apiGatewayEvent)
   const multiValueHeaders = {
     ...baseEvent.multiValueHeaders,
@@ -403,24 +403,12 @@ describe('integration tests', () => {
 
     const response = await serverlessExpress.proxy({
       server: serverWithListenCallback,
-      event: makeEvent({})
+      event: makeEvent()
     })
 
     expect(response.statusCode).toBe(200)
     expect(serverListenCallback).toHaveBeenCalled()
     serverWithListenCallback.close()
-  })
-
-  test('server.onError EADDRINUSE', async () => {
-    const serverWithSameSocketPath = serverlessExpress.createServer({ app: mockApp })
-    serverWithSameSocketPath._socketPathSuffix = server._socketPathSuffix
-
-    const response = await serverlessExpress.proxy({
-      server: serverWithSameSocketPath,
-      event: makeEvent({})
-    })
-    expect(response.statusCode).toBe(200)
-    serverWithSameSocketPath.close()
   })
 
   test('Multiple headers of the same name (set-cookie)', async () => {
@@ -445,9 +433,23 @@ describe('integration tests', () => {
     }))
   })
 
+  // NOTE: These must remain as the final tests as the EADDRINUSE test breaks
+  // the main `server` used by tests since the socket is deleted
+  // and the server.onClose also closes `server`
+  test('server.onError EADDRINUSE', async () => {
+    const serverWithSameSocketPath = serverlessExpress.createServer({ app: mockApp })
+    serverWithSameSocketPath._awsServerlessExpress.socketPath = server._awsServerlessExpress.socketPath
+
+    const response = await serverlessExpress.proxy({
+      server: serverWithSameSocketPath,
+      event: makeEvent()
+    })
+    expect(response.statusCode).toBe(200)
+    expect(serverWithSameSocketPath._awsServerlessExpress.socketPath).not.toBe(server._awsServerlessExpress.socketPath)
+    serverWithSameSocketPath.close()
+  })
+
   test('server.onClose', async () => {
-    // NOTE: this must remain as the final test as it closes `server`
-    await serverlessExpress.handler(makeEvent({}))
     server.on('close', () => {
       expect(server.listening).toBe(false)
     })
