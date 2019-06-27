@@ -1,6 +1,6 @@
 const { mapApiGatewayEventToHttpRequest, mapResponseToApiGateway } = require('./api-gateway')
 const { mapAlbEventToHttpRequest, mapResponseToAlb } = require('./alb')
-const { mapLambdaEdgeEventToHttpRequest, mapResponseToLambdaEdge } = require('./alb')
+const { mapLambdaEdgeEventToHttpRequest, mapResponseToLambdaEdge } = require('./lambda-edge')
 const { mapEventToHttpRequest, mapResponseToService } = require('./utils')
 
 function getEventFnsBasedOnEventSource ({ eventSource }) {

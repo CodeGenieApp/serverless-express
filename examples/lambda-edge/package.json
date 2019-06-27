@@ -1,0 +1,43 @@
+{
+  "name": "aws-serverless-express-example",
+  "version": "2.1.1",
+  "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
+  "main": "lambda.js",
+  "config": {
+    "s3BucketName": "sls-xpress2",
+    "region": "us-east-1",
+    "cloudFormationStackName": "ServerlessExpressEdge",
+    "functionName": "AwsServerlessExpressStackNew-ExpressLambdaFunction-GU4XXGPADJ0E"
+  },
+  "scripts": {
+    "start": "node app.local.js",
+    "local": "node scripts/local",
+    "invoke-lambda": "cross-var aws lambda invoke --function-name $npm_package_config_functionName --region $npm_package_config_region --payload file://api-gateway-event.json lambda-invoke-response.json && cat lambda-invoke-response.json",
+    "create-bucket": "cross-var aws s3 mb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
+    "delete-bucket": "cross-var aws s3 rb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
+    "package": "cross-var aws cloudformation package --template ./sam-template.yaml --s3-bucket $npm_package_config_s3BucketName --output-template sam-template.packaged.yaml --region $npm_package_config_region",
+    "deploy": "cross-var aws cloudformation deploy --template-file sam-template.packaged.yaml --stack-name $npm_package_config_cloudFormationStackName --capabilities CAPABILITY_IAM --region $npm_package_config_region",
+    "package-deploy": "npm run build && npm run package && npm run deploy",
+    "delete-stack": "cross-var aws cloudformation delete-stack --stack-name $npm_package_config_cloudFormationStackName --region $npm_package_config_region",
+    "setup": "npm install && (cross-var aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket) && npm run package-deploy",
+    "build": "webpack-cli"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "aws-serverless-express": "file:aws-serverless-express-3.3.5.tgz",
+    "body-parser": "^1.17.1",
+    "compression": "^1.6.2",
+    "cors": "^2.8.3",
+    "express": "^4.15.2",
+    "pug": "^2.0.0-rc.1"
+  },
+  "devDependencies": {
+    "cross-var": "^1.1.0",
+    "install": "^0.12.2",
+    "npm": "^6.9.0",
+    "source-map-support": "^0.5.12",
+    "webpack": "^4.35.0",
+    "webpack-cli": "^3.3.5",
+    "webpack-node-externals": "^1.7.2"
+  }
+}

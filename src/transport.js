@@ -9,7 +9,7 @@ function forwardResponse ({
   eventResponseMapperFn,
   logger
 }) {
-  logger.debug('Forwarding response from application to API Gateway... HTTP response:', { response })
+  logger.debug('Forwarding response from application to API Gateway... HTTP response:', { headers: response.headers, statusCode: response.statusCode })
   let buf = []
 
   response

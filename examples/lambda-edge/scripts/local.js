@@ -1,5 +1,5 @@
-const lambdaFunction = require('../src/lambda.js')
-const apiGatewayEvent = require('../api-gateway-event.json')
+const lambdaFunction = require('../dist/lambda.js')
+const apiGatewayEvent = require('../lambda-edge-event.json')
 
 const context = {
   succeed: v => {
