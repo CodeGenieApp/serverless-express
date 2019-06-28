@@ -16,7 +16,7 @@ function mapEventToHttpRequest ({
 }) {
   if (!headers) {
     headers = {}
-    Object.entries(event.multiValueHeaders).forEach(([headerKey, headerValue]) => {
+    Object.entries(event.multiValueHeaders || {}).forEach(([headerKey, headerValue]) => {
       headers[headerKey] = headerValue.join(',')
     })
   }
