@@ -4,10 +4,11 @@
   "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
   "main": "lambda.js",
   "config": {
-    "s3BucketName": "sls-xpress2",
+    "s3BucketName": "",
     "region": "us-east-1",
     "cloudFormationStackName": "ServerlessExpress",
-    "functionName": "AwsServerlessExpressStackNew-ExpressLambdaFunction-GU4XXGPADJ0E"
+    "functionName": "",
+    "domain": ""
   },
   "scripts": {
     "start": "node app.local.js",
@@ -16,14 +17,14 @@
     "create-bucket": "cross-var aws s3 mb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
     "delete-bucket": "cross-var aws s3 rb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
     "package": "cross-var aws cloudformation package --template ./sam-template.yaml --s3-bucket $npm_package_config_s3BucketName --output-template sam-template.packaged.yaml --region $npm_package_config_region",
-    "deploy": "cross-var aws cloudformation deploy --template-file sam-template.packaged.yaml --stack-name $npm_package_config_cloudFormationStackName --capabilities CAPABILITY_IAM --region $npm_package_config_region",
+    "deploy": "cross-var aws cloudformation deploy --template-file sam-template.packaged.yaml --stack-name $npm_package_config_cloudFormationStackName --capabilities CAPABILITY_IAM --region $npm_package_config_region --parameter-overrides DomainName=$npm_package_config_domain",
     "package-deploy": "npm run package && npm run deploy",
     "delete-stack": "cross-var aws cloudformation delete-stack --stack-name $npm_package_config_cloudFormationStackName --region $npm_package_config_region",
-    "setup": "npm install && (cross-var aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket) && npm run package-deploy"
+    "setup": "npm install && npm install --prefix ./src ./ && (cross-var aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket) && npm run package-deploy"
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "aws-serverless-express": "file:../..",
+    "aws-serverless-express": "file:aws-serverless-express-3.3.5.tgz",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
     "cors": "^2.8.3",
