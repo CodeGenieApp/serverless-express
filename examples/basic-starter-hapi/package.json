@@ -1,0 +1,33 @@
+{
+  "name": "aws-serverless-express-example",
+  "version": "2.1.1",
+  "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
+  "main": "lambda.js",
+  "config": {
+    "s3BucketName": "",
+    "region": "us-east-1",
+    "cloudFormationStackName": "ServerlessExpress",
+    "functionName": "",
+    "domain": ""
+  },
+  "scripts": {
+    "start": "node app.local.js",
+    "local": "node scripts/local",
+    "invoke-lambda": "cross-var aws lambda invoke --function-name $npm_package_config_functionName --region $npm_package_config_region --payload file://api-gateway-event.json lambda-invoke-response.json && cat lambda-invoke-response.json",
+    "create-bucket": "cross-var aws s3 mb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
+    "delete-bucket": "cross-var aws s3 rb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
+    "package": "cross-var aws cloudformation package --template ./sam-template.yaml --s3-bucket $npm_package_config_s3BucketName --output-template sam-template.packaged.yaml --region $npm_package_config_region",
+    "deploy": "cross-var aws cloudformation deploy --template-file sam-template.packaged.yaml --stack-name $npm_package_config_cloudFormationStackName --capabilities CAPABILITY_IAM --region $npm_package_config_region --parameter-overrides DomainName=$npm_package_config_domain",
+    "package-deploy": "npm run package && npm run deploy",
+    "delete-stack": "cross-var aws cloudformation delete-stack --stack-name $npm_package_config_cloudFormationStackName --region $npm_package_config_region",
+    "setup": "npm install && npm install --prefix ./src ./ && (cross-var aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket) && npm run package-deploy"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@hapi/hapi": "^18.3.1",
+    "aws-serverless-express": "file:../.."
+  },
+  "devDependencies": {
+    "cross-var": "^1.1.0"
+  }
+}
