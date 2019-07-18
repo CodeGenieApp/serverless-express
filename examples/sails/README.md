@@ -2,6 +2,27 @@
 
 a [Sails v1](https://sailsjs.com) application
 
+### aws-serverless-express WIP
+
+This example is a WIP which works locally by simulating a Lambda handler invocation, however, in production we're receiving 404 'Cannot GET /'.
+
+This example was created by:
+
+1. Running `npx sails new sails` to generate a starter app
+2. Updating `app.js` with:
+
+```js
+const appPromise = new Promise((resolve) => {
+  sails.lift(rc('sails'), () => {
+    resolve(sails.hooks.http.app)
+  })
+})
+
+module.exports = appPromise
+```
+1. Adding `lambda.js`, `scripts/local.js`, `api-gateway-event.json`, and `sam-template.yaml`
+2. Updating `package.json` with `config` and `scripts`
+
 
 ### Links
 
