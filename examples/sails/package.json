@@ -1,0 +1,54 @@
+{
+  "name": "sails",
+  "private": true,
+  "version": "0.0.0",
+  "description": "a Sails application",
+  "keywords": [],
+  "config": {
+    "s3BucketName": "artifacts-123nsef",
+    "region": "us-east-1",
+    "cloudFormationStackName": "ServerlessExpressSails",
+    "functionName": "",
+    "domain": ""
+  },
+  "dependencies": {
+    "@sailshq/connect-redis": "^3.2.1",
+    "@sailshq/lodash": "^3.10.3",
+    "@sailshq/socket.io-redis": "^5.2.0",
+    "aws-serverless-express": "file:aws-serverless-express-3.3.5.tgz",
+    "grunt": "1.0.4",
+    "sails": "^1.2.3",
+    "sails-hook-grunt": "^4.0.0",
+    "sails-hook-orm": "^2.1.1",
+    "sails-hook-sockets": "^2.0.0"
+  },
+  "devDependencies": {
+    "cross-var": "^1.1.0",
+    "eslint": "5.16.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node app.js",
+    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "lint": "./node_modules/eslint/bin/eslint.js . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
+    "custom-tests": "echo \"(No other custom tests yet.)\" && echo",
+    "local": "node scripts/local",
+    "invoke-lambda": "cross-var aws lambda invoke --function-name $npm_package_config_functionName --region $npm_package_config_region --payload file://api-gateway-event.json lambda-invoke-response.json && cat lambda-invoke-response.json",
+    "create-bucket": "cross-var aws s3 mb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
+    "delete-bucket": "cross-var aws s3 rb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
+    "package": "cross-var aws cloudformation package --template ./sam-template.yaml --s3-bucket $npm_package_config_s3BucketName --output-template sam-template.packaged.yaml --region $npm_package_config_region",
+    "deploy": "cross-var aws cloudformation deploy --template-file sam-template.packaged.yaml --stack-name $npm_package_config_cloudFormationStackName --capabilities CAPABILITY_IAM --region $npm_package_config_region --parameter-overrides DomainName=$npm_package_config_domain",
+    "package-deploy": "npm run package && npm run deploy",
+    "delete-stack": "cross-var aws cloudformation delete-stack --stack-name $npm_package_config_cloudFormationStackName --region $npm_package_config_region",
+    "setup": "npm install && npm install --prefix ./src ./ && (cross-var aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket) && npm run package-deploy"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brett/sails.git"
+  },
+  "author": "brett",
+  "license": "",
+  "engines": {
+    "node": "^12.4"
+  }
+}
