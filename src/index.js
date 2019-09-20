@@ -25,18 +25,33 @@ function getPathWithQueryStringParams (event) {
 function getEventBody (event) {
   return Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
 }
-
-function clone (json) {
-  return JSON.parse(JSON.stringify(json))
-}
-
 function getContentType (params) {
   // only compare mime type; ignore encoding part
   return params.contentTypeHeader ? params.contentTypeHeader.split(';')[0] : ''
 }
-
 function isContentTypeBinaryMimeType (params) {
   return params.binaryMimeTypes.length > 0 && !!isType.is(params.contentType, params.binaryMimeTypes)
+}
+function mapResponseHeaders (originalHeaders) {
+  const headers = {}
+
+  Object.entries(originalHeaders)
+    .forEach(([header, value]) => {
+      if (Array.isArray(value)) {
+        if (header.toLowerCase() === 'set-cookie') {
+          // HACK: modifies header casing to get around API Gateway's limitation of not allowing multiple
+          // headers with the same name, as discussed on the AWS Forum https://forums.aws.amazon.com/message.jspa?messageID=725953#725953
+          value.forEach((v, i) => { headers[binarycase(header, i)] = v })
+        } else {
+          headers[header] = value.join(',')
+        }
+      } else if (!(header === 'transfer-encoding' && value === 'chunked')) {
+        // chunked transfer not currently supported by API Gateway
+        headers[header] = value
+      }
+    })
+
+  return headers
 }
 
 function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
@@ -48,10 +63,7 @@ function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
     headers['Content-Length'] = Buffer.byteLength(body)
   }
 
-  const clonedEventWithoutBody = clone(event)
-  delete clonedEventWithoutBody.body
-
-  headers['x-apigateway-event'] = encodeURIComponent(JSON.stringify(clonedEventWithoutBody))
+  headers['x-apigateway-event'] = encodeURIComponent(JSON.stringify(event, (k, v) => k === 'body' ? undefined : v))
   headers['x-apigateway-context'] = encodeURIComponent(JSON.stringify(context))
 
   return {
@@ -74,30 +86,7 @@ function forwardResponseToApiGateway (server, response, resolver) {
     .on('end', () => {
       const bodyBuffer = Buffer.concat(buf)
       const statusCode = response.statusCode
-      const headers = response.headers
-
-      // chunked transfer not currently supported by API Gateway
-      /* istanbul ignore else */
-      if (headers['transfer-encoding'] === 'chunked') {
-        delete headers['transfer-encoding']
-      }
-
-      // HACK: modifies header casing to get around API Gateway's limitation of not allowing multiple
-      // headers with the same name, as discussed on the AWS Forum https://forums.aws.amazon.com/message.jspa?messageID=725953#725953
-      Object.keys(headers)
-        .forEach(h => {
-          if (Array.isArray(headers[h])) {
-            if (h.toLowerCase() === 'set-cookie') {
-              headers[h].forEach((value, i) => {
-                headers[binarycase(h, i + 1)] = value
-              })
-              delete headers[h]
-            } else {
-              headers[h] = headers[h].join(',')
-            }
-          }
-        })
-
+      const headers = mapResponseHeaders(response.headers)
       const contentType = getContentType({ contentTypeHeader: headers['content-type'] })
       const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes })
       const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
@@ -254,6 +243,7 @@ exports.proxy = proxy
 
 /* istanbul ignore else */
 if (process.env.NODE_ENV === 'test') {
+  exports.mapResponseHeaders = mapResponseHeaders
   exports.getPathWithQueryStringParams = getPathWithQueryStringParams
   exports.mapApiGatewayEventToHttpRequest = mapApiGatewayEventToHttpRequest
   exports.forwardResponseToApiGateway = forwardResponseToApiGateway

@@ -1,8 +1,20 @@
 'use strict'
 
 const path = require('path')
+const os = require('os')
 
 const awsServerlessExpress = require('../index')
+
+test('mapResponseHeaders', () => {
+  const headers = {'content-type': 'text/plain', 'transfer-encoding': 'chunked', 'foo': ['bar', 'baz'], 'Set-Cookie': ['bar', 'baz']}
+  const mappedHeaders = awsServerlessExpress.mapResponseHeaders(headers)
+  expect(mappedHeaders).toEqual({
+    foo: 'bar,baz',
+    'Set-Cookie': 'bar',
+    'set-Cookie': 'baz',
+    'content-type': 'text/plain'
+  })
+})
 
 test('getPathWithQueryStringParams: no params', () => {
   const event = {
@@ -98,7 +110,7 @@ test('mapApiGatewayEventToHttpRequest: without headers', () => {
 test('getSocketPath', () => {
   const socketPath = awsServerlessExpress.getSocketPath('12345abcdef')
   const isWin = process.platform === 'win32'
-  const expectedSocketPath = isWin ? path.join('\\\\?\\\\pipe\\\\', process.cwd(), 'server-12345abcdef') : '/tmp/server-12345abcdef.sock'
+  const expectedSocketPath = isWin ? path.join('\\\\?\\\\pipe\\\\', process.cwd(), 'server-12345abcdef') : path.join(os.tmpdir(), 'server-12345abcdef.sock')
   expect(socketPath).toBe(expectedSocketPath)
 })
 
@@ -187,7 +199,7 @@ describe('forwardResponseToApiGateway: header handling', () => {
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
       body: body,
-      headers: { foo: 'bar,baz', 'SEt-Cookie': 'baz', 'set-Cookie': 'bar' },
+      headers: { foo: 'bar,baz', 'Set-Cookie': 'bar', 'set-Cookie': 'baz' },
       isBase64Encoded: false
     }))
   })
