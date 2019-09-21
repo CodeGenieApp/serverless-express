@@ -8,6 +8,7 @@ const server = awsServerlessExpress.createServer(app)
 const lambdaFunction = {
   handler: (event, context, resolutionMode, callback, _server) => awsServerlessExpress.proxy(_server || server, event, context, resolutionMode, callback)
 }
+const kSocketPath = awsServerlessExpress.kSocketPath
 
 function clone (json) {
   return JSON.parse(JSON.stringify(json))
@@ -394,16 +395,14 @@ describe('integration tests', () => {
       })
       done()
     }
-    lambdaFunction.handler(makeEvent({
+    const event = {
       path: '/',
       httpMethod: 'GET',
       body: '{"name": "Sam502"}',
-      headers: {
-        'Content-Length': '-1'
-      }
-    }), {
-      succeed
-    })
+      headers: { },
+    }
+    event[kSocketPath] = 'bogus'
+    lambdaFunction.handler(event, { succeed })
   })
 
   const mockApp = function (req, res) {

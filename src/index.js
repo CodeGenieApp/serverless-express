@@ -19,6 +19,8 @@ const url = require('url')
 const binarycase = require('binary-case')
 const isType = require('type-is')
 
+const kSocketPath = Symbol('kSocketPath')
+
 function getPathWithQueryStringParams (event) {
   return url.format({ pathname: event.path, query: event.queryStringParameters })
 }
@@ -133,7 +135,8 @@ function forwardLibraryErrorResponseToApiGateway (error, resolver) {
 
 function forwardRequestToNodeServer (server, event, context, resolver) {
   try {
-    const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
+    const socketPath = event[kSocketPath] || getSocketPath(server._socketPathSuffix)
+    const requestOptions = mapApiGatewayEventToHttpRequest(event, context, socketPath)
     const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, resolver))
     if (event.body) {
       const body = getEventBody(event)
@@ -254,6 +257,7 @@ exports.proxy = proxy
 
 /* istanbul ignore else */
 if (process.env.NODE_ENV === 'test') {
+  exports.kSocketPath = kSocketPath
   exports.getPathWithQueryStringParams = getPathWithQueryStringParams
   exports.mapApiGatewayEventToHttpRequest = mapApiGatewayEventToHttpRequest
   exports.forwardResponseToApiGateway = forwardResponseToApiGateway
