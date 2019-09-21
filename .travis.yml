@@ -1,8 +1,8 @@
 language: node_js
 
 node_js:
-  - 6
   - 8
+  - 10
   # - node # runs tests against latest version of Node.js for future-proofing
 
 before_install:
@@ -26,7 +26,7 @@ jobs:
         - npm run lint
     - stage: deploy
       script: skip
-      node_js: 8 # semantic-release requires Node >= 8.3
+      node_js: 10 # semantic-release requires Node >= 8.3
       # NOTE: Pull Request builds do not run deploy
       deploy:
         provider: script
