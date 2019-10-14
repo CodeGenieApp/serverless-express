@@ -5,6 +5,8 @@
 
 Run serverless applications and REST APIs using your existing [Node.js](https://nodejs.org/) application framework, on top of [AWS Lambda](https://aws.amazon.com/lambda/) and [Amazon API Gateway](https://aws.amazon.com/api-gateway/). The sample provided allows you to easily build serverless web applications/services and RESTful APIs using the [Express](https://expressjs.com/) framework.
 
+An experimental version with improved API, bug fixes, and features is available on the [v4 branch](https://github.com/awslabs/aws-serverless-express/tree/v4).
+
 ## Getting Started
 
 ```bash
