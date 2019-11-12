@@ -31,5 +31,6 @@ function getEventFnsBasedOnEventSource ({ eventSource }) {
 module.exports = {
   mapApiGatewayEventToHttpRequest,
   mapResponseToApiGateway,
+  mapAlbEventToHttpRequest,
   getEventFnsBasedOnEventSource
 }

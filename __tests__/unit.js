@@ -63,6 +63,50 @@ test('getPathWithQueryStringParams: array param', () => {
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&bizz=buzz')
 })
 
+function mapAlbEventToHttpRequest (multiValueHeaders = {}) {
+  const event = {
+    path: '/foo',
+    httpMethod: 'GET',
+    body: 'Hello serverless!',
+    multiValueHeaders
+  }
+  const eventClone = JSON.parse(JSON.stringify(event))
+  delete eventClone.body
+  const context = {
+    'foo': 'bar'
+  }
+  const httpRequest = awsServerlessExpressEventMappings.mapAlbEventToHttpRequest({ event, context })
+
+  return {httpRequest, eventClone, context}
+}
+
+test('mapAlbEventToHttpRequest: with headers', () => {
+  const r = mapAlbEventToHttpRequest({'x-foo': ['foo']})
+  expect(r.httpRequest.body).toBeInstanceOf(Buffer)
+  delete r.httpRequest.body
+  expect(r.httpRequest).toEqual({
+    method: 'GET',
+    path: '/foo',
+    headers: {
+      'x-foo': 'foo',
+      'Content-Length': Buffer.byteLength('Hello serverless!')
+    }
+  })
+})
+
+test('mapAlbEventToHttpRequest: without headers', () => {
+  const r = mapAlbEventToHttpRequest()
+  expect(r.httpRequest.body).toBeInstanceOf(Buffer)
+  delete r.httpRequest.body
+  expect(r.httpRequest).toEqual({
+    method: 'GET',
+    path: '/foo',
+    headers: {
+      'Content-Length': Buffer.byteLength('Hello serverless!')
+    }
+  })
+})
+
 function mapApiGatewayEventToHttpRequest (multiValueHeaders = {}) {
   const event = {
     path: '/foo',
