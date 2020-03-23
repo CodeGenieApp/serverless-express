@@ -17,7 +17,9 @@
   "license": "Apache-2.0",
   "files": [
     "index.js",
+    "index.d.ts",
     "middleware.js",
+    "middleware.d.ts",
     "src/"
   ],
   "main": "index.js",
@@ -89,6 +91,7 @@
     "@semantic-release/changelog": "^1.0.1",
     "@semantic-release/git": "^3.0.1",
     "@semantic-release/npm": "^3.0.2",
+    "@types/aws-lambda": "^8.10.34",
     "commitizen": "^3.0.7",
     "commitlint": "^6.1.0",
     "cz-conventional-changelog": "^2.1.0",

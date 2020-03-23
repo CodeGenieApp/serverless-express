@@ -1,0 +1,1 @@
+export declare function eventContext(options?: {reqPropKey: string; deleteHeaders: boolean}): (req, res, next) => void;
