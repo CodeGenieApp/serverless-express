@@ -23,7 +23,7 @@ exports.handler = (event, context) => { awsServerlessExpress.proxy(server, event
 
 [Package and create your Lambda function](http://docs.aws.amazon.com/lambda/latest/dg/nodejs-create-deployment-pkg.html), then configure a simple proxy API using Amazon API Gateway and integrate it with your Lambda function.
 
-## Quick Start/Example
+## Quick Start
 
 Want to get up and running quickly? [Check out our basic starter example](examples/basic-starter) which includes:
 
@@ -32,6 +32,8 @@ Want to get up and running quickly? [Check out our basic starter example](exampl
  [Swagger file](http://swagger.io/specification/)
  - [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model)/[CloudFormation](https://aws.amazon.com/cloudformation/aws-cloudformation-templates/) template
  - Helper scripts to configure, deploy, and manage your application
+
+## Examples
 
 ### Getting the API Gateway event object
 This package includes middleware to easily get the event object Lambda receives from API Gateway
@@ -42,6 +44,39 @@ app.use(awsServerlessExpressMiddleware.eventContext())
 app.get('/', (req, res) => {
   res.json(req.apiGateway.event)
 })
+```
+
+### Using resolveMode `PROMISE` with async handler
+
+```js
+// lambda.js
+'use strict'
+const awsServerlessExpress = require('aws-serverless-express')
+const app = require('./app')
+const server = awsServerlessExpress.createServer(app)
+
+// note that callback the promise is always resolved
+// i.e. errors still lead to a resolved promise
+// The resolved promise has a a statusCode property that can be checked for error codes
+
+exports.handler = async (event, context) => { return awsServerlessExpress.proxy(server, event, context, 'PROMISE') }
+```
+
+### Using resolveMode `CALLBACK` with callback function
+
+```js
+// lambda.js
+'use strict'
+const awsServerlessExpress = require('aws-serverless-express')
+const app = require('./app')
+const server = awsServerlessExpress.createServer(app)
+
+exports.handler = (event, context, callback) => {
+  // note that callback is always called with (null, responseObject)
+  // i.e. errors still lead to a "successful" callback.
+  // The responseObject has a a statusCode property that can be checked for error codes
+  awsServerlessExpress.proxy(server, event, context, 'CALLBACK', callback)
+}
 ```
 
 ### Is AWS serverless right for my app?
