@@ -1,3 +1,11 @@
+## [3.3.7](https://github.com/awslabs/aws-serverless-express/compare/v3.3.6...v3.3.7) (2020-03-25)
+
+
+### Bug Fixes
+
+* Bump travis Node versions to the latest LTS supported by Lambda (10 and 12) ([9905d18](https://github.com/awslabs/aws-serverless-express/commit/9905d18))
+* Disabled failing integration test ([cab6cef](https://github.com/awslabs/aws-serverless-express/commit/cab6cef))
+
 ## [3.3.6](https://github.com/awslabs/aws-serverless-express/compare/v3.3.5...v3.3.6) (2019-03-26)
 
 
