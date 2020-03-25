@@ -1,7 +1,5 @@
-const url = require('url')
-
 const app = function (req, res) {
-  const parsedUrl = url.parse(req.url, true)
+  const parsedUrl = new URL(req.url)
 
   res.writeHead(200, {
     'Content-Type': 'text/plain charset=UTF-8'
