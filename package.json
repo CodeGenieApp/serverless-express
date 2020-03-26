@@ -35,15 +35,15 @@
       "@semantic-release/git",
       "@semantic-release/github"
     ],
-    "publish": [
-      "@semantic-release/changelog",
-      {
-        "path": "@semantic-release/npm",
+    "plugins": [
+      ["@semantic-release/changelog", {
+        "changelogFile": "CHANGELOG.md"
+      }],
+      ["@semantic-release/npm", {
         "npmPublish": true,
         "tarballDir": "dist"
-      },
-      {
-        "path": "@semantic-release/git",
+      }],
+      ["@semantic-release/git", {
         "assets": [
           "package.json",
           "package-lock.json",
@@ -51,11 +51,10 @@
           "dist/**/*.{js|css}"
         ],
         "message": "chore(release): version ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      },
-      {
-        "path": "@semantic-release/github",
+      }],
+      ["@semantic-release/github", {
         "assets": "dist/*.tgz"
-      }
+      }]
     ]
   },
   "husky": {
