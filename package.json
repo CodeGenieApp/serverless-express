@@ -1,6 +1,6 @@
 {
   "name": "aws-serverless-express",
-  "version": "3.3.7",
+  "version": "3.3.8",
   "description": "This library enables you to utilize AWS Lambda and Amazon API Gateway to respond to web and API requests using your existing Node.js application framework.",
   "keywords": [
     "aws",
@@ -36,25 +36,37 @@
       "@semantic-release/github"
     ],
     "plugins": [
-      ["@semantic-release/changelog", {
-        "changelogFile": "CHANGELOG.md"
-      }],
-      ["@semantic-release/npm", {
-        "npmPublish": true,
-        "tarballDir": "dist"
-      }],
-      ["@semantic-release/git", {
-        "assets": [
-          "package.json",
-          "package-lock.json",
-          "CHANGELOG.md",
-          "dist/**/*.{js|css}"
-        ],
-        "message": "chore(release): version ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }],
-      ["@semantic-release/github", {
-        "assets": "dist/*.tgz"
-      }]
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": true,
+          "tarballDir": "dist"
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json",
+            "package-lock.json",
+            "CHANGELOG.md",
+            "dist/**/*.{js|css}"
+          ],
+          "message": "chore(release): version ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": "dist/*.tgz"
+        }
+      ]
     ]
   },
   "husky": {
