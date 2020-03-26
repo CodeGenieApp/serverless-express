@@ -66,7 +66,7 @@ function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
 }
 
 function forwardResponseToApiGateway (server, response, resolver) {
-  let buf = []
+  const buf = []
 
   response
     .on('data', (chunk) => buf.push(chunk))
@@ -100,7 +100,7 @@ function forwardResponseToApiGateway (server, response, resolver) {
       const contentType = getContentType({ contentTypeHeader: headers['content-type'] })
       const isBase64Encoded = isContentTypeBinaryMimeType({ contentType, binaryMimeTypes: server._binaryTypes })
       const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
-      const successResponse = {statusCode, body, headers, isBase64Encoded}
+      const successResponse = { statusCode, body, headers, isBase64Encoded }
 
       resolver.succeed({ response: successResponse })
     })
