@@ -18,8 +18,24 @@ const url = require('url')
 const binarycase = require('binary-case')
 const isType = require('type-is')
 
+function getRequestMethod(event) {
+  if (event.version === '2.0') {
+    return event.requestContext.http.method;
+  }
+  return event.httpMethod;
+}
+
 function getPathWithQueryStringParams (event) {
-  return url.format({ pathname: event.path, query: event.queryStringParameters })
+  if (event.version === '2.0') {
+    return url.format({
+      pathname: event.rawPath,
+      search: event.rawQueryString,
+    });
+  }
+  return url.format({
+    pathname: event.path,
+    query: event.multiValueQueryStringParameters || event.queryStringParameters,
+  });
 }
 function getEventBody (event) {
   return Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
@@ -39,7 +55,11 @@ function isContentTypeBinaryMimeType (params) {
 }
 
 function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
-  const headers = Object.assign({}, event.headers)
+  const initialHeader = event.version === '2.0' && Array.isArray(event.cookies)
+    ? { cookie: event.cookies.join('; ') }
+    : {};
+
+  const headers = Object.assign(initialHeader, event.headers)
 
   // NOTE: API Gateway is not setting Content-Length header on requests even when they have a body
   if (event.body && !headers['Content-Length']) {
@@ -54,7 +74,7 @@ function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
   headers['x-apigateway-context'] = encodeURIComponent(JSON.stringify(context))
 
   return {
-    method: event.httpMethod,
+    method: getRequestMethod(event),
     path: getPathWithQueryStringParams(event),
     headers,
     socketPath
