@@ -97,9 +97,13 @@ test('mapApiGatewayEventToHttpRequest: without headers', () => {
 
 test('getSocketPath', () => {
   const socketPath = awsServerlessExpress.getSocketPath('12345abcdef')
-  const isWin = process.platform === 'win32'
-  const expectedSocketPath = isWin ? path.join('\\\\?\\\\pipe\\\\', process.cwd(), 'server-12345abcdef') : '/tmp/server-12345abcdef.sock'
-  expect(socketPath).toBe(expectedSocketPath)
+  if (process.platform === 'win32') {
+    expect(socketPath).toBe(path.join('\\\\?\\\\pipe\\\\', process.cwd(), 'server-12345abcdef'))
+  } else if (process.platform === 'darwin') {
+    expect(socketPath).toMatch(/\/var\/folders\/nz\/\w+\/T\/server-12345abcdef.sock/)
+  } else {
+    expect(socketPath).toBe('/tmp/server-12345abcdef.sock')
+  }
 })
 
 const PassThrough = require('stream').PassThrough
