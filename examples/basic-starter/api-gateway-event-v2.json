@@ -1,11 +1,11 @@
 {
-    "version": "1.0",
+    "version": "2.0",
     "//body": "{\"name\": \"Sam\"}",
     "path": "/users",
     "rawPath": "/users",
     "resource": "/{proxy+}",
     "queryStringParameters": {},
-    "rawQueryString": "",
+    "rawQueryString": {},
     "pathParameters": {
         "proxy": "users"
     },

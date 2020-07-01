@@ -79,14 +79,19 @@ const getUser = (userId) => users.find(u => u.id === parseInt(userId))
 const getUserIndex = (userId) => users.findIndex(u => u.id === parseInt(userId))
 
 // Ephemeral in-memory data store
-const users = [{
-  id: 1,
-  name: 'Joe'
-}, {
-  id: 2,
-  name: 'Jane'
-}]
-let userIdCounter = users.length
+let users = []
+let userIdCounter = 0
+
+app.loadTestData = function () {
+  users = [{
+    id: 1,
+    name: 'Joe'
+  }, {
+    id: 2,
+    name: 'Jane'
+  }]
+  userIdCounter = users.length
+}
 
 // The aws-serverless-express library creates a server and listens on a Unix
 // Domain Socket for you, so you can remove the usual call to app.listen.
