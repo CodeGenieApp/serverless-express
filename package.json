@@ -96,12 +96,12 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
-    "@commitlint/travis-cli": "^8.3.5",
+    "@commitlint/travis-cli": "^9.1.2",
     "@semantic-release/changelog": "^5.0.0",
     "@semantic-release/git": "^9.0.0",
     "@semantic-release/npm": "^7.0.5",
-    "commitizen": "^3.0.7",
-    "commitlint": "^8.3.5",
+    "commitizen": "^4.1.2",
+    "commitlint": "^9.1.2",
     "cz-conventional-changelog": "^2.1.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
@@ -112,6 +112,7 @@
     "husky": "^0.15.0-rc.4",
     "jest": "^24.5.0",
     "lint-staged": "^7.2.0",
+    "lodash": ">=4.17.19",
     "semantic-release": "^17.0.4"
   },
   "scripts": {
