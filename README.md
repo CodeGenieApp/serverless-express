@@ -59,7 +59,7 @@ const server = awsServerlessExpress.createServer(app)
 // i.e. errors still lead to a resolved promise
 // The resolved promise has a a statusCode property that can be checked for error codes
 
-exports.handler = async (event, context) => { return awsServerlessExpress.proxy(server, event, context, 'PROMISE') }
+exports.handler = async (event, context) => { return awsServerlessExpress.proxy(server, event, context, 'PROMISE').promise }
 ```
 
 ### Using resolveMode `CALLBACK` with callback function
