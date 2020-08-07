@@ -43,6 +43,15 @@ app.get('/', (req, res) => {
   res.json(req.apiGateway.event)
 })
 ```
+### Returning binary responses
+If your lambda function can return binary responses you need to tell aws-serverless-express which mime types should be treated as binary. Responses from the lambda with these mime types will cause aws-serverless-express to base64 encode the response and set the isBase64Encoded flag which tells API gateway to decode the response back to binary.
+
+The third parameter to the createServer function is a an array of mime types.
+```
+const server = awsServerlessExpress.createServer(app.app, null,
+    // binary mime types - this will cause the lambda to base64 encode the response body and return isBase64Encoded=true
+    ['application/pdf', 'application/jpg', 'application/zip']);
+```
 
 ### Is AWS serverless right for my app?
 
