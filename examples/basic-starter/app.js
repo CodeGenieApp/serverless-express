@@ -13,9 +13,9 @@ app.set('view engine', 'pug')
 if (process.env.NODE_ENV === 'test') {
   // NOTE: aws-serverless-express uses this app for its integration tests
   // and only applies compression to the /sam endpoint during testing.
-  router.use('/sam', compression())
+  router.use('/sam', compression({ threshold: 0 }))
 } else {
-  router.use(compression())
+  router.use(compression({ threshold: 0 }))
 }
 
 router.use(cors())
