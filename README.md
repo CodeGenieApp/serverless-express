@@ -14,7 +14,8 @@ Best,
 # AWS Serverless Express
 
 [![Join the chat at https://gitter.im/awslabs/aws-serverless-express](https://badges.gitter.im/awslabs/aws-serverless-express.svg)](https://gitter.im/awslabs/aws-serverless-express?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/awslabs/aws-serverless-express.svg?branch=master)](https://travis-ci.org/awslabs/aws-serverless-express) [![npm](https://img.shields.io/npm/v/aws-serverless-express.svg)]() [![npm](https://img.shields.io/npm/dm/aws-serverless-express.svg)]() [![dependencies Status](https://david-dm.org/awslabs/aws-serverless-express/status.svg)](https://david-dm.org/awslabs/aws-serverless-express) [![devDependencies Status](https://david-dm.org/awslabs/aws-serverless-express/dev-status.svg)](https://david-dm.org/awslabs/aws-serverless-express?type=dev)
+[![Build Status](https://travis-ci.org/awslabs/aws-serverless-express.svg?branch=master)](https://travis-ci.org/awslabs/aws-serverless-express) [![npm](https://img.shields.io/npm/v/aws-serverless-express.svg)]() [![npm](https://img.shields.io/npm/dm/aws-serverless-express.svg)]() [![dependencies Status](https://david-dm.org/awslabs/aws-serverless-express/status.svg)](https://david-dm.org/awslabs/aws-serverless-express) [![devDependencies Status](https://david-dm.org/awslabs/aws-serverless-express/dev-status.svg)](https://david-dm.org/awslabs/aws-serverless-express?type=dev) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
+
 
 Run serverless applications and REST APIs using your existing [Node.js](https://nodejs.org/) application framework, on top of [AWS Lambda](https://aws.amazon.com/lambda/) and [Amazon API Gateway](https://aws.amazon.com/api-gateway/). The sample provided allows you to easily build serverless web applications/services and RESTful APIs using the [Express](https://expressjs.com/) framework.
 
