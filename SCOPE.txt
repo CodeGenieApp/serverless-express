@@ -16,9 +16,9 @@ directory which allows developers to quickly deploy a running application using 
 
 This repository should contain:
 
-- The aws-serverless-express library.
-- Documentation on using aws-serverless-express
-- Examples of using the aws-serverless-express library.
+- The @vendia/serverless-express library.
+- Documentation on using @vendia/serverless-express
+- Examples of using the @vendia/serverless-express library.
 
 This repository does not contain:
 

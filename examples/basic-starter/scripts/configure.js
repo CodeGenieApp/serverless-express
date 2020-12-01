@@ -21,7 +21,7 @@ const args = require('minimist')(process.argv.slice(2), {
   ],
   default: {
     region: 'us-east-1',
-    'function-name': 'AwsServerlessExpressFunction'
+    'function-name': 'ServerlessExpressFunction'
   }
 })
 
