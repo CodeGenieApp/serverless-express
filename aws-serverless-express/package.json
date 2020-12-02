@@ -1,19 +1,18 @@
 {
-  "name": "@vendia/serverless-express",
-  "version": "3.3.8",
+  "name": "aws-serverless-express",
+  "version": "3.4.0",
   "description": "This library enables you to utilize AWS Lambda and Amazon API Gateway to respond to web and API requests using your existing Node.js application framework.",
   "keywords": [
     "aws",
     "serverless",
     "api",
-    "api gateway",
+    "gateway",
     "lambda",
-    "express",
-    "http"
+    "express"
   ],
-  "homepage": "https://github.com/vendia/serverless-express",
+  "homepage": "https://github.com/awslabs/aws-serverless-express",
   "bugs": {
-    "url": "https://github.com/vendia/serverless-express/issues"
+    "url": "https://github.com/awslabs/aws-serverless-express/issues"
   },
   "license": "Apache-2.0",
   "files": [
@@ -24,7 +23,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vendia/serverless-express.git"
+    "url": "https://github.com/awslabs/aws-serverless-express.git"
   },
   "engines": {
     "node": ">=6"
@@ -85,14 +84,7 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
-    ],
-    "rules": {
-      "body-max-line-length": [
-        2,
-        "always",
-        240
-      ]
-    }
+    ]
   },
   "eslintIgnore": [
     "examples/*/node_modules"
