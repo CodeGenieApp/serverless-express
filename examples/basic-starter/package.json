@@ -1,12 +1,12 @@
 {
-  "name": "aws-serverless-express-example",
+  "name": "@vendia/serverless-express-example",
   "version": "2.1.1",
   "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
   "main": "lambda.js",
   "config": {
     "s3BucketName": "YOUR_UNIQUE_BUCKET_NAME",
     "region": "YOUR_AWS_REGION",
-    "cloudFormationStackName": "AwsServerlessExpressStack",
+    "cloudFormationStackName": "ServerlessExpressStack",
     "functionName": "YOUR_SERVERLESS_EXPRESS_LAMBDA_FUNCTION_NAME",
     "accountId": "YOUR_ACCOUNT_ID"
   },
@@ -37,7 +37,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "aws-serverless-express": "^3.3.8",
+    "@vendia/serverless-express": "^3.3.8",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
     "cors": "^2.8.3",

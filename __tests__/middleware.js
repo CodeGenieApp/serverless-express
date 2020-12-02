@@ -1,6 +1,6 @@
 'use strict'
-const awsServerlessExpressMiddleware = require('../middleware')
-const eventContextMiddleware = awsServerlessExpressMiddleware.eventContext
+const serverlessExpressMiddleware = require('../middleware')
+const eventContextMiddleware = serverlessExpressMiddleware.eventContext
 const mockNext = () => true
 const generateMockReq = () => {
   return {

@@ -2,13 +2,13 @@
 
 const path = require('path')
 
-const awsServerlessExpress = require('../index')
+const serverlessExpress = require('../index')
 
 test('getPathWithQueryStringParams: no params', () => {
   const event = {
     path: '/foo/bar'
   }
-  const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams(event)
+  const pathWithQueryStringParams = serverlessExpress.getPathWithQueryStringParams(event)
   expect(pathWithQueryStringParams).toEqual('/foo/bar')
 })
 
@@ -19,7 +19,7 @@ test('getPathWithQueryStringParams: 1 param', () => {
       'bizz': 'bazz'
     }
   }
-  const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams(event)
+  const pathWithQueryStringParams = serverlessExpress.getPathWithQueryStringParams(event)
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz')
 })
 
@@ -30,7 +30,7 @@ test('getPathWithQueryStringParams: to be url-encoded param', () => {
       'redirect_uri': 'http://lvh.me:3000/cb'
     }
   }
-  const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams(event)
+  const pathWithQueryStringParams = serverlessExpress.getPathWithQueryStringParams(event)
   expect(pathWithQueryStringParams).toEqual('/foo/bar?redirect_uri=http%3A%2F%2Flvh.me%3A3000%2Fcb')
 })
 
@@ -42,7 +42,7 @@ test('getPathWithQueryStringParams: 2 params', () => {
       'buzz': 'bozz'
     }
   }
-  const pathWithQueryStringParams = awsServerlessExpress.getPathWithQueryStringParams(event)
+  const pathWithQueryStringParams = serverlessExpress.getPathWithQueryStringParams(event)
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&buzz=bozz')
 })
 
@@ -59,7 +59,7 @@ function mapApiGatewayEventToHttpRequest (headers) {
     'foo': 'bar'
   }
   const socketPath = '/tmp/server0.sock'
-  const httpRequest = awsServerlessExpress.mapApiGatewayEventToHttpRequest(event, context, socketPath)
+  const httpRequest = serverlessExpress.mapApiGatewayEventToHttpRequest(event, context, socketPath)
 
   return {httpRequest, eventClone, context}
 }
@@ -96,7 +96,7 @@ test('mapApiGatewayEventToHttpRequest: without headers', () => {
 })
 
 test('getSocketPath', () => {
-  const socketPath = awsServerlessExpress.getSocketPath('12345abcdef')
+  const socketPath = serverlessExpress.getSocketPath('12345abcdef')
   const isWin = process.platform === 'win32'
   const expectedSocketPath = isWin ? path.join('\\\\?\\\\pipe\\\\', process.cwd(), 'server-12345abcdef') : '/tmp/server-12345abcdef.sock'
   expect(socketPath).toBe(expectedSocketPath)
@@ -137,7 +137,7 @@ describe('forwardConnectionErrorResponseToApiGateway', () => {
         const contextResolver = {
           succeed: (p) => context.succeed(p.response)
         }
-        awsServerlessExpress.forwardConnectionErrorResponseToApiGateway('ERROR', contextResolver)
+        serverlessExpress.forwardConnectionErrorResponseToApiGateway('ERROR', contextResolver)
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 502,
@@ -155,7 +155,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
         const contextResolver = {
           succeed: (p) => context.succeed(p.response)
         }
-        awsServerlessExpress.forwardLibraryErrorResponseToApiGateway('ERROR', contextResolver)
+        serverlessExpress.forwardLibraryErrorResponseToApiGateway('ERROR', contextResolver)
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 500,
@@ -182,7 +182,7 @@ describe('forwardResponseToApiGateway: header handling', () => {
     return new Promise(
       (resolve, reject) => {
         const contextResolver = getContextResolver(resolve)
-        awsServerlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
+        serverlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
@@ -202,7 +202,7 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
     return new Promise(
       (resolve, reject) => {
         const contextResolver = getContextResolver(resolve)
-        awsServerlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
+        serverlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
@@ -220,7 +220,7 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
     return new Promise(
       (resolve, reject) => {
         const contextResolver = getContextResolver(resolve)
-        awsServerlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
+        serverlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
@@ -238,7 +238,7 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
     return new Promise(
       (resolve, reject) => {
         const contextResolver = getContextResolver(resolve)
-        awsServerlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
+        serverlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
@@ -256,7 +256,7 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
     return new Promise(
       (resolve, reject) => {
         const contextResolver = getContextResolver(resolve)
-        awsServerlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
+        serverlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
@@ -274,7 +274,7 @@ describe('forwardResponseToApiGateway: content-type encoding', () => {
     return new Promise(
       (resolve, reject) => {
         const contextResolver = getContextResolver(resolve)
-        awsServerlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
+        serverlessExpress.forwardResponseToApiGateway(server, response, contextResolver)
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
@@ -290,7 +290,7 @@ describe('makeResolver', () => {
     return new Promise(
       (resolve, reject) => {
         const context = new MockContext(resolve)
-        const contextResolver = awsServerlessExpress.makeResolver({
+        const contextResolver = serverlessExpress.makeResolver({
           context,
           resolutionMode: 'CONTEXT_SUCCEED'
         })
@@ -303,7 +303,7 @@ describe('makeResolver', () => {
 
   test('CALLBACK', () => {
     const callback = (e, response) => response
-    const callbackResolver = awsServerlessExpress.makeResolver({
+    const callbackResolver = serverlessExpress.makeResolver({
       callback,
       resolutionMode: 'CALLBACK'
     })
@@ -320,7 +320,7 @@ describe('makeResolver', () => {
         resolve,
         reject
       }
-      const promiseResolver = awsServerlessExpress.makeResolver({
+      const promiseResolver = serverlessExpress.makeResolver({
         promise,
         resolutionMode: 'PROMISE'
       })

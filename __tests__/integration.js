@@ -1,12 +1,12 @@
 const path = require('path')
 const fs = require('fs')
-const awsServerlessExpress = require('../index')
+const serverlessExpress = require('../index')
 const apiGatewayEvent = require('../examples/basic-starter/api-gateway-event.json')
 const app = require('../examples/basic-starter/app')
 
-const server = awsServerlessExpress.createServer(app)
+const server = serverlessExpress.createServer(app)
 const lambdaFunction = {
-  handler: (event, context, resolutionMode, callback, _server) => awsServerlessExpress.proxy(_server || server, event, context, resolutionMode, callback)
+  handler: (event, context, resolutionMode, callback, _server) => serverlessExpress.proxy(_server || server, event, context, resolutionMode, callback)
 }
 
 function clone (json) {
@@ -213,7 +213,7 @@ describe('integration tests', () => {
       newServer.close()
       done()
     }
-    const newServer = awsServerlessExpress.createServer(app)
+    const newServer = serverlessExpress.createServer(app)
     lambdaFunction.handler(makeEvent({
       path: '/users/1',
       httpMethod: 'GET'
@@ -265,8 +265,8 @@ describe('integration tests', () => {
       serverWithBinaryTypes.close()
       done()
     }
-    const serverWithBinaryTypes = awsServerlessExpress.createServer(app, null, ['image/*'])
-    awsServerlessExpress.proxy(serverWithBinaryTypes, makeEvent({
+    const serverWithBinaryTypes = serverlessExpress.createServer(app, null, ['image/*'])
+    serverlessExpress.proxy(serverWithBinaryTypes, makeEvent({
       path: '/sam',
       httpMethod: 'GET'
     }), {
@@ -423,34 +423,34 @@ describe('integration tests', () => {
       })
       done()
     }
-    awsServerlessExpress.proxy(server, null, {
+    serverlessExpress.proxy(server, null, {
       succeed
     })
   })
 
   test('serverListenCallback', (done) => {
     const serverListenCallback = jest.fn()
-    const serverWithCallback = awsServerlessExpress.createServer(mockApp, serverListenCallback)
+    const serverWithCallback = serverlessExpress.createServer(mockApp, serverListenCallback)
     const succeed = response => {
       expect(response.statusCode).toBe(200)
       expect(serverListenCallback).toHaveBeenCalled()
       serverWithCallback.close()
       done()
     }
-    awsServerlessExpress.proxy(serverWithCallback, makeEvent({}), {
+    serverlessExpress.proxy(serverWithCallback, makeEvent({}), {
       succeed
     })
   })
 
   test('server.onError EADDRINUSE', (done) => {
-    const serverWithSameSocketPath = awsServerlessExpress.createServer(mockApp)
+    const serverWithSameSocketPath = serverlessExpress.createServer(mockApp)
     serverWithSameSocketPath._socketPathSuffix = server._socketPathSuffix
     const succeed = response => {
       expect(response.statusCode).toBe(200)
       done()
       serverWithSameSocketPath.close()
     }
-    awsServerlessExpress.proxy(serverWithSameSocketPath, makeEvent({}), {
+    serverlessExpress.proxy(serverWithSameSocketPath, makeEvent({}), {
       succeed
     })
   })
