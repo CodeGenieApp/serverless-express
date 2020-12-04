@@ -128,7 +128,7 @@
     "install-example-dependencies": "cd examples && npm install --prefix basic-starter basic-starter && cd .."
   },
   "dependencies": {
-    "@vendia/serverless-express": "^3.4.0-rc2",
+    "@vendia/serverless-express": "^3.4.0",
     "binary-case": "^1.0.0",
     "type-is": "^1.6.16"
   },
