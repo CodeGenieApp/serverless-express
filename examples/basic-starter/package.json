@@ -37,12 +37,12 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "aws-serverless-express": "^3.3.8",
+    "aws-serverless-express": "^3.4.0-rc1",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
     "cors": "^2.8.3",
     "express": "^4.15.2",
-    "pug": "^2.0.4",
-    "lodash": ">=4.17.19"
+    "lodash": ">=4.17.19",
+    "pug": "^2.0.4"
   }
 }
