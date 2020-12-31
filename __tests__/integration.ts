@@ -1,19 +1,22 @@
-const path = require('path')
-const fs = require('fs')
-const serverlessExpress = require('../index')
-const apiGatewayEvent = require('../examples/basic-starter/api-gateway-event.json')
-const app = require('../examples/basic-starter/app')
+import fs from 'fs'
+import path from 'path'
+import app from '../examples/typescript-starter/src/app'
+import { createServer, proxy } from '../src/index'
 
-const server = serverlessExpress.createServer(app)
+// tslint:disable-next-line:no-var-requires
+const apiGatewayEvent = require('../examples/basic-starter/api-gateway-event.json')
+
+
+const server = createServer(app)
 const lambdaFunction = {
-  handler: (event, context, resolutionMode, callback, _server) => serverlessExpress.proxy(_server || server, event, context, resolutionMode, callback)
+  handler: (event: any, context: any, resolutionMode?: any, callback?: any, _server?: any) => proxy(_server || server, event, context, resolutionMode, callback),
 }
 
-function clone (json) {
+function clone (json: string) {
   return JSON.parse(JSON.stringify(json))
 }
 
-function makeEvent (eventOverrides) {
+function makeEvent (eventOverrides: any) {
   const baseEvent = clone(apiGatewayEvent)
   const headers = Object.assign({}, baseEvent.headers, eventOverrides.headers)
   const root = Object.assign({}, baseEvent, eventOverrides)
@@ -26,22 +29,22 @@ function expectedRootResponse () {
     'headers': {
       'content-length': '3747',
       'content-type': 'text/html; charset=utf-8',
-      'etag': 'W/"ea3-WawLnWdlaCO/ODv9DBVcX0ZTchw"'
-    }
+      'etag': 'W/"ea3-WawLnWdlaCO/ODv9DBVcX0ZTchw"',
+    },
   })
 }
 
-function makeResponse (response) {
+function makeResponse (response: any) {
   const baseResponse = {
     'body': '',
     'isBase64Encoded': false,
-    'statusCode': 200
+    'statusCode': 200,
   }
   const baseHeaders = {
     'access-control-allow-origin': '*',
     'connection': 'close',
     'content-type': 'application/json; charset=utf-8',
-    'x-powered-by': 'Express'
+    'x-powered-by': 'Express',
   }
   const headers = Object.assign({}, baseHeaders, response.headers)
   const finalResponse = Object.assign({}, baseResponse, response)
@@ -55,17 +58,17 @@ describe('integration tests', () => {
       done()
     }
 
-    const server = lambdaFunction.handler(makeEvent({
+    const curServer = lambdaFunction.handler(makeEvent({
       path: '/',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {
-      succeed
+      succeed,
     })
-    expect(server._socketPathSuffix).toBeTruthy()
+    expect(curServer._socketPathSuffix).toBeTruthy()
   })
 
   test('GET HTML (initial request)', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
       const expectedResponse = expectedRootResponse()
@@ -75,12 +78,12 @@ describe('integration tests', () => {
       done()
     }
     lambdaFunction.handler(makeEvent({ path: '/', httpMethod: 'GET' }), {
-      succeed
+      succeed,
     })
   })
 
   test('GET HTML (subsequent request)', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
       const expectedResponse = expectedRootResponse()
@@ -91,44 +94,44 @@ describe('integration tests', () => {
     }
     lambdaFunction.handler(makeEvent({
       path: '/',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {
-      succeed
+      succeed,
     })
   })
 
   test('GET JSON collection', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': '[{"id":1,"name":"Joe"},{"id":2,"name":"Jane"}]',
         'headers': {
           'content-length': '46',
-          'etag': 'W/"2e-Lu6qxFOQSPFulDAGUFiiK6QgREo"'
-        }
+          'etag': 'W/"2e-Lu6qxFOQSPFulDAGUFiiK6QgREo"',
+        },
       }))
       done()
     }
     lambdaFunction.handler(makeEvent({
       path: '/users',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {
-      succeed
+      succeed,
     })
   })
 
   test('GET missing route', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
       const expectedResponse = makeResponse({
         'headers': {
           'content-length': '151',
-          'content-security-policy': "default-src 'self'",
+          'content-security-policy': 'default-src \'self\'',
           'content-type': 'text/html; charset=utf-8',
-          'x-content-type-options': 'nosniff'
+          'x-content-type-options': 'nosniff',
         },
-        statusCode: 404
+        statusCode: 404,
       })
       delete response.body
       delete expectedResponse.body
@@ -137,113 +140,113 @@ describe('integration tests', () => {
     }
     lambdaFunction.handler(makeEvent({
       path: '/nothing-here',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {
-      succeed
+      succeed,
     })
   })
 
   test('GET JSON single', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":1,"name":"Joe"}',
         'headers': {
           'content-length': '21',
-          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
-        }
+          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"',
+        },
       }))
       done()
     }
     lambdaFunction.handler(makeEvent({
       path: '/users/1',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {
-      succeed
+      succeed,
     })
   })
 
   test('GET JSON single (resolutionMode = CALLBACK)', (done) => {
-    const callback = (e, response) => {
+    const callback = (_e: any, response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":1,"name":"Joe"}',
         'headers': {
           'content-length': '21',
-          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
-        }
+          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"',
+        },
       }))
       done()
     }
     lambdaFunction.handler(makeEvent({
       path: '/users/1',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {}, 'CALLBACK', callback)
   })
 
   test('GET JSON single (resolutionMode = PROMISE)', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":1,"name":"Joe"}',
         'headers': {
           'content-length': '21',
-          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
-        }
+          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"',
+        },
       }))
       done()
     }
     lambdaFunction.handler(makeEvent({
       path: '/users/1',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {}, 'PROMISE')
       .promise.then(succeed)
   })
 
   test('GET JSON single (resolutionMode = PROMISE; new server)', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":1,"name":"Joe"}',
         'headers': {
           'content-length': '21',
-          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"'
-        }
+          'etag': 'W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"',
+        },
       }))
       newServer.close()
       done()
     }
-    const newServer = serverlessExpress.createServer(app)
+    const newServer = createServer(app)
     lambdaFunction.handler(makeEvent({
       path: '/users/1',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {}, 'PROMISE', null, newServer)
       .promise.then(succeed)
   })
 
   test('GET JSON single 404', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': '{}',
         'headers': {
           'content-length': '2',
-          'etag': 'W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"'
+          'etag': 'W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"',
         },
-        statusCode: 404
+        statusCode: 404,
       }))
       done()
     }
     lambdaFunction.handler(makeEvent({
       path: '/users/3',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {
-      succeed
+      succeed,
     })
   })
 
   test('success - image response', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       delete response.headers.etag
       delete response.headers['last-modified']
@@ -258,119 +261,119 @@ describe('integration tests', () => {
           'accept-ranges': 'bytes',
           'cache-control': 'public, max-age=0',
           'content-length': '15933',
-          'content-type': 'image/png'
+          'content-type': 'image/png',
         },
-        'isBase64Encoded': true
+        'isBase64Encoded': true,
       }))
       serverWithBinaryTypes.close()
       done()
     }
-    const serverWithBinaryTypes = serverlessExpress.createServer(app, null, ['image/*'])
-    serverlessExpress.proxy(serverWithBinaryTypes, makeEvent({
+    const serverWithBinaryTypes = createServer(app, null, ['image/*'])
+    proxy(serverWithBinaryTypes, makeEvent({
       path: '/sam',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {
-      succeed
+      succeed,
     })
   })
   const newName = 'Sandy Samantha Salamander'
 
   test('POST JSON', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': `{"id":3,"name":"${newName}"}`,
         'headers': {
           'content-length': '43',
-          'etag': 'W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"'
+          'etag': 'W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"',
         },
-        statusCode: 201
+        statusCode: 201,
       }))
       done()
     }
     lambdaFunction.handler(makeEvent({
       path: '/users',
       httpMethod: 'POST',
-      body: `{"name": "${newName}"}`
+      body: `{"name": "${newName}"}`,
     }), {
-      succeed
+      succeed,
     })
   })
 
   test('GET JSON single (again; post-creation) 200', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': `{"id":3,"name":"${newName}"}`,
         'headers': {
           'content-length': '43',
-          'etag': 'W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"'
+          'etag': 'W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"',
         },
-        statusCode: 200
+        statusCode: 200,
       }))
       done()
     }
     lambdaFunction.handler(makeEvent({
       path: '/users/3',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
     }), {
-      succeed
+      succeed,
     })
   })
 
   test('DELETE JSON', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': `[{"id":2,"name":"Jane"},{"id":3,"name":"${newName}"}]`,
         'headers': {
           'content-length': '68',
-          'etag': 'W/"44-AtuxlvrIBL8NXP4gvEQTI77suNg"'
+          'etag': 'W/"44-AtuxlvrIBL8NXP4gvEQTI77suNg"',
         },
-        statusCode: 200
+        statusCode: 200,
       }))
       done()
     }
     lambdaFunction.handler(makeEvent({
       path: '/users/1',
-      httpMethod: 'DELETE'
+      httpMethod: 'DELETE',
     }), {
-      succeed
+      succeed,
     })
   })
 
   test('PUT JSON', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":2,"name":"Samuel"}',
         'headers': {
           'content-length': '24',
-          'etag': 'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"'
+          'etag': 'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"',
         },
-        statusCode: 200
+        statusCode: 200,
       }))
       done()
     }
     lambdaFunction.handler(makeEvent({
       path: '/users/2',
       httpMethod: 'PUT',
-      body: '{"name": "Samuel"}'
+      body: '{"name": "Samuel"}',
     }), {
-      succeed
+      succeed,
     })
   })
 
   test('base64 encoded request', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual(makeResponse({
         'body': '{"id":2,"name":"Samuel"}',
         'headers': {
           'content-length': '24',
-          'etag': 'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"'
+          'etag': 'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"',
         },
-        statusCode: 200
+        statusCode: 200,
       }))
       done()
     }
@@ -378,9 +381,9 @@ describe('integration tests', () => {
       path: '/users/2',
       httpMethod: 'PUT',
       body: global.btoa('{"name": "Samuel"}'),
-      isBase64Encoded: true
+      isBase64Encoded: true,
     }), {
-      succeed
+      succeed,
     })
   })
 
@@ -389,12 +392,12 @@ describe('integration tests', () => {
   // structure of the 502 response and we'll need to find a new way to test an express
   // failure
   test.skip('forwardConnectionErrorResponseToApiGateway', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       delete response.headers.date
       expect(response).toEqual({
         'body': '',
         'headers': {},
-        statusCode: 502
+        statusCode: 502,
       })
       done()
     }
@@ -403,55 +406,55 @@ describe('integration tests', () => {
       httpMethod: 'GET',
       body: '{"name": "Sam502"}',
       headers: {
-        'Content-Length': '-1'
-      }
+        'Content-Length': '-1',
+      },
     }), {
-      succeed
+      succeed,
     })
   })
 
-  const mockApp = function (req, res) {
+  const mockApp = (_req: any, res: any) => {
     res.end('')
   }
 
   test('forwardLibraryErrorResponseToApiGateway', (done) => {
-    const succeed = response => {
+    const succeed = (response: any) => {
       expect(response).toEqual({
         statusCode: 500,
         body: '',
-        headers: {}
+        headers: {},
       })
       done()
     }
-    serverlessExpress.proxy(server, null, {
-      succeed
+    proxy(server, null, {
+      succeed,
     })
   })
 
   test('serverListenCallback', (done) => {
     const serverListenCallback = jest.fn()
-    const serverWithCallback = serverlessExpress.createServer(mockApp, serverListenCallback)
-    const succeed = response => {
+    const serverWithCallback = createServer(mockApp, serverListenCallback)
+    const succeed = (response: any) => {
       expect(response.statusCode).toBe(200)
       expect(serverListenCallback).toHaveBeenCalled()
       serverWithCallback.close()
       done()
     }
-    serverlessExpress.proxy(serverWithCallback, makeEvent({}), {
-      succeed
+    proxy(serverWithCallback, makeEvent({}), {
+      succeed,
     })
   })
 
   test('server.onError EADDRINUSE', (done) => {
-    const serverWithSameSocketPath = serverlessExpress.createServer(mockApp)
+    const serverWithSameSocketPath = createServer(mockApp)
     serverWithSameSocketPath._socketPathSuffix = server._socketPathSuffix
-    const succeed = response => {
+    const succeed = (response: any) => {
       expect(response.statusCode).toBe(200)
       done()
       serverWithSameSocketPath.close()
     }
-    serverlessExpress.proxy(serverWithSameSocketPath, makeEvent({}), {
-      succeed
+    proxy(serverWithSameSocketPath, makeEvent({}), {
+      succeed,
     })
   })
 
@@ -459,15 +462,16 @@ describe('integration tests', () => {
 
   test('server.onClose', (done) => {
     // NOTE: this must remain as the final test as it closes `server`
-    const succeed = response => {
+    const succeed = (_response: any) => {
       server.on('close', () => {
         expect(server._isListening).toBe(false)
         done()
       })
       server.close()
     }
+    // tslint:disable-next-line:no-shadowed-variable
     const server = lambdaFunction.handler(makeEvent({}), {
-      succeed
+      succeed,
     })
   })
 })

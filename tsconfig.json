@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowUnreachableCode": false,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "dom"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "moduleResolution": "node",
+    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "module": "commonJS",
+    "esModuleInterop": true,
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "target": "es6",
+    "outDir": "./lib",
+    "baseUrl": "./src",
+    "typeRoots" : ["./node_modules/@types"],
+    "paths": {
+      "@src/*": ["./*"],
+      "typings/*": ["../typings/*"],
+      "common": ["../typings/common.d"]
+    },
+    "declaration": true
+  },
+  "include": [
+    "../typings/*",
+    "../__tests__/*",
+    "src/**/*"
+  ],
+  "exclude": [
+    "../lib",
+    "node_modules",
+    "../examples/**/*"
+  ]
+}

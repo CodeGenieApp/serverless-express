@@ -1,6 +1,6 @@
-'use strict'
-const serverlessExpressMiddleware = require('../middleware')
-const eventContextMiddleware = serverlessExpressMiddleware.eventContext
+import { eventContext } from '../src/middleware'
+
+const eventContextMiddleware = eventContext
 const mockNext = () => true
 const generateMockReq = () => {
   return {
@@ -9,17 +9,17 @@ const generateMockReq = () => {
         path: '/foo/bar',
         queryStringParameters: {
           foo: '🖖',
-          bar: '~!@#$%^&*()_+`-=;\':",./<>?`'
-        }
+          bar: '~!@#$%^&*()_+`-=;\':",./<>?`',
+        },
       })),
-      'x-apigateway-context': encodeURIComponent(JSON.stringify({foo: 'bar'}))
-    }
+      'x-apigateway-context': encodeURIComponent(JSON.stringify({ foo: 'bar' })),
+    },
   }
 }
 const mockRes = {}
 
 test('defaults', () => {
-  const req = generateMockReq()
+  const req: any = generateMockReq()
   const originalHeaders = Object.assign({}, req.headers)
 
   eventContextMiddleware()(req, mockRes, mockNext)
@@ -31,7 +31,7 @@ test('defaults', () => {
 })
 
 test('options.reqPropKey', () => {
-  const req = generateMockReq()
+  const req: any = generateMockReq()
   const originalHeaders = Object.assign({}, req.headers)
 
   eventContextMiddleware({ reqPropKey: '_apiGateway' })(req, mockRes, mockNext)
@@ -43,7 +43,7 @@ test('options.reqPropKey', () => {
 })
 
 test('options.deleteHeaders = false', () => {
-  const req = generateMockReq()
+  const req: any = generateMockReq()
   const originalHeaders = Object.assign({}, req.headers)
 
   eventContextMiddleware({ deleteHeaders: false })(req, mockRes, mockNext)
@@ -55,7 +55,7 @@ test('options.deleteHeaders = false', () => {
 })
 
 test('Missing x-apigateway-event', () => {
-  const req = generateMockReq()
+  const req: any = generateMockReq()
   delete req.headers['x-apigateway-event']
 
   eventContextMiddleware({ deleteHeaders: false })(req, mockRes, mockNext)
@@ -64,7 +64,7 @@ test('Missing x-apigateway-event', () => {
 })
 
 test('Missing x-apigateway-context', () => {
-  const req = generateMockReq()
+  const req: any = generateMockReq()
   delete req.headers['x-apigateway-context']
 
   eventContextMiddleware({ deleteHeaders: false })(req, mockRes, mockNext)

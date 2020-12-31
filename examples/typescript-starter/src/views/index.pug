@@ -1,0 +1,122 @@
+doctype html
+html
+  head
+    title My Serverless Application
+    style.
+      body {
+        width: 650px;
+        margin: auto;
+      }
+      h1 {
+        text-align: center;
+      }
+      .resources > h2 {
+        margin-bottom: 0;
+      }
+      .resource > h3, .resource > p {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+      }
+      .resource > code {
+        display: block;
+        background-color: #eff0f1;
+        color: #393318;
+        padding: 5px;
+        font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,sans-serif;
+        white-space: nowrap;
+        overflow-x: auto;
+      }
+      .sam-logo {
+        display: block;
+        width: 10rem;
+        margin: auto;
+      }
+      form {
+        margin-bottom: 1rem;
+      }
+      .form-group {
+        padding-bottom: 1rem;
+      }
+      label {
+        display: block;
+      }
+  body
+    h1 My Serverless Application
+    img.sam-logo(src='sam')
+    p
+      | Welcome to your AWS serverless application. This example application has several resources configured for you to explore. State is stored in memory in a given container, and is therfore ephemeral - see 
+      a(href='https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/', target='_blank') Understanding Container Reuse in AWS Lambda
+      | &nbsp;for more information.
+    section.resources
+      h2 Resources
+      section.resource
+        h3
+          a.resource-example-link(href='users') GET /users
+        p  &nbsp;Returns a list of all users.
+        code
+          | curl 
+          span= apiUrl
+          | /users -H 'accept: application/json'
+      section.resource
+        h3 POST /users
+        p  &nbsp;Creates a new user.
+        code
+          | curl 
+          span= apiUrl
+          | /users -X POST -d '{"name":"Sam"}' -H 'accept: application/json'
+      section.resource
+        h3
+          a.resource-example-link(href='users/1') GET /users/:userId
+        p  &nbsp;Returns a single user.
+        code
+          | curl 
+          span= apiUrl
+          | /users/1 -H 'accept: application/json'
+      section.resource
+        h3 PUT /users/:userId
+        p  &nbsp;Updates an existing user.
+        code
+          | curl 
+          span= apiUrl
+          | /users/1 -X PUT -d '{"name":"Samantha"}' -H 'accept: application/json'
+      section.resource
+        h3 DELETE /users/:userId
+        p  &nbsp;Deletes an existing user.
+        code
+          | curl 
+          span= apiUrl
+          | /users/1 -X DELETE -H 'accept: application/json'
+    
+    section.form
+      h2 Form
+      p Experiment with POST and PUT via the form below. Leave the id empty to create a new user (POST) or enter an id to update a user's name (PUT).
+      form
+        div.form-group
+          label(for='idField') user id
+          input(type='text' name='id' id='idField' placeholder='optional')
+        div.form-group
+          label(for='nameField') name
+          input(type='text' name='name' id='nameField')
+        input(type='submit')
+            
+          
+    script.
+      var form = document.querySelector('form')
+      form.addEventListener('submit', function(event) {
+        event.preventDefault()
+        var id = document.getElementById('idField').value
+        var name = document.getElementById('nameField').value
+        var endpoint = id ? 'users/' + id : 'users'
+        
+        if (!window.fetch) {
+          alert('Your browser does not have fetch support, which this demo uses. Try again in a modern browser (https://caniuse.com/fetch) or modify the example to use an alternate approach (e.g. XMLHttpRequest or your library of choice.)')  
+        }
+        
+        return fetch(endpoint, {
+          method: id ? 'PUT' : 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({ name: name })
+        })
+      })

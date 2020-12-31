@@ -1,30 +1,31 @@
-'use strict'
-const http = require('http')
-const url = require('url')
-const binarycase = require('binary-case')
-const isType = require('type-is')
+import http from 'http'
+import url from 'url'
+import { binaryCase } from '@src/helpers/binaryCase'
+// import IsType from 'type-is'
+// const isType: any = IsType
 
-function getPathWithQueryStringParams (event) {
+const getPathWithQueryStringParams = (event: any) => {
   return url.format({ pathname: event.path, query: event.queryStringParameters })
 }
-function getEventBody (event) {
+const getEventBody = (event: any) => {
   return Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
 }
 
-function clone (json) {
+const clone = (json: string) => {
   return JSON.parse(JSON.stringify(json))
 }
 
-function getContentType (params) {
+const getContentType = (params: any) => {
   // only compare mime type; ignore encoding part
   return params.contentTypeHeader ? params.contentTypeHeader.split(';')[0] : ''
 }
 
-function isContentTypeBinaryMimeType (params) {
-  return params.binaryMimeTypes.length > 0 && !!isType.is(params.contentType, params.binaryMimeTypes)
+const isContentTypeBinaryMimeType = (params: any) => {
+  // return params.binaryMimeTypes.length > 0 && !!isType.is(params.contentType, params.binaryMimeTypes)
+  return params.binaryMimeTypes.length > 0
 }
 
-function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
+const mapApiGatewayEventToHttpRequest = (event: any, context: any, socketPath: any) => {
   const headers = Object.assign({}, event.headers)
 
   // NOTE: API Gateway is not setting Content-Length header on requests even when they have a body
@@ -51,11 +52,11 @@ function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
   }
 }
 
-function forwardResponseToApiGateway (server, response, resolver) {
-  const buf = []
+const forwardResponseToApiGateway = (server: any, response: any, resolver: any) => {
+  const buf = [] as any[]
 
   response
-    .on('data', (chunk) => buf.push(chunk))
+    .on('data', (chunk: any) => buf.push(chunk))
     .on('end', () => {
       const bodyBuffer = Buffer.concat(buf)
       const statusCode = response.statusCode
@@ -73,8 +74,11 @@ function forwardResponseToApiGateway (server, response, resolver) {
         .forEach(h => {
           if (Array.isArray(headers[h])) {
             if (h.toLowerCase() === 'set-cookie') {
-              headers[h].forEach((value, i) => {
-                headers[binarycase(h, i + 1)] = value
+              headers[h].forEach((value: any, i: number) => {
+                const binarCaseResponse = binaryCase(h, i + 1)
+                if (typeof binarCaseResponse === 'string') {
+                  headers[binarCaseResponse] = value
+                }
               })
               delete headers[h]
             } else {
@@ -92,7 +96,7 @@ function forwardResponseToApiGateway (server, response, resolver) {
     })
 }
 
-function forwardConnectionErrorResponseToApiGateway (error, resolver) {
+function forwardConnectionErrorResponseToApiGateway (error: any, resolver: any) {
   console.log('ERROR: @vendia/serverless-express connection error')
   console.error(error)
   const errorResponse = {
@@ -104,7 +108,7 @@ function forwardConnectionErrorResponseToApiGateway (error, resolver) {
   resolver.succeed({ response: errorResponse })
 }
 
-function forwardLibraryErrorResponseToApiGateway (error, resolver) {
+function forwardLibraryErrorResponseToApiGateway (error: any, resolver: any) {
   console.log('ERROR: @vendia/serverless-express error')
   console.error(error)
   const errorResponse = {
@@ -116,7 +120,7 @@ function forwardLibraryErrorResponseToApiGateway (error, resolver) {
   resolver.succeed({ response: errorResponse })
 }
 
-function forwardRequestToNodeServer (server, event, context, resolver) {
+function forwardRequestToNodeServer (server: any, event: any, context: any, resolver: any) {
   try {
     const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
     const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, resolver))
@@ -134,11 +138,11 @@ function forwardRequestToNodeServer (server, event, context, resolver) {
   }
 }
 
-function startServer (server) {
+function startServer (server: any) {
   return server.listen(getSocketPath(server._socketPathSuffix))
 }
 
-function getSocketPath (socketPathSuffix) {
+function getSocketPath (socketPathSuffix: any) {
   /* istanbul ignore if */ /* only running tests on Linux; Window support is for local dev only */
   if (/^win/.test(process.platform)) {
     const path = require('path')
@@ -152,8 +156,8 @@ function getRandomString () {
   return Math.random().toString(36).substring(2, 15)
 }
 
-function createServer (requestListener, serverListenCallback, binaryTypes) {
-  const server = http.createServer(requestListener)
+export const createServer = (requestListener: any, serverListenCallback?: any, binaryTypes?: any) => {
+  const server: any = http.createServer(requestListener)
 
   server._socketPathSuffix = getRandomString()
   server._binaryTypes = binaryTypes ? binaryTypes.slice() : []
@@ -165,7 +169,7 @@ function createServer (requestListener, serverListenCallback, binaryTypes) {
   server.on('close', () => {
     server._isListening = false
   })
-    .on('error', (error) => {
+    .on('error', (error: any) => {
       /* istanbul ignore else */
       if (error.code === 'EADDRINUSE') {
         console.warn(`WARNING: Attempting to listen on socket ${getSocketPath(server._socketPathSuffix)}, but it is already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause, and consider increasing the timeout and/or cpu/memory allocation if this is purely as a result of a timeout. @vendia/serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
@@ -180,7 +184,7 @@ function createServer (requestListener, serverListenCallback, binaryTypes) {
   return server
 }
 
-function proxy (server, event, context, resolutionMode, callback) {
+export const proxy = (server: any, event: any, context: any, resolutionMode?: any, callback?: any) => {
   // DEPRECATED: Legacy support
   if (!resolutionMode) {
     const resolver = makeResolver({ context, resolutionMode: 'CONTEXT_SUCCEED' })
@@ -216,14 +220,14 @@ function proxy (server, event, context, resolutionMode, callback) {
   }
 }
 
-function makeResolver (params/* {
+function makeResolver (params: any/* {
   context,
   callback,
   promise,
   resolutionMode
 } */) {
   return {
-    succeed: (params2/* {
+    succeed: (params2: any/* {
       response
     } */) => {
       if (params.resolutionMode === 'CONTEXT_SUCCEED') return params.context.succeed(params2.response)
@@ -233,18 +237,26 @@ function makeResolver (params/* {
   }
 }
 
-exports.createServer = createServer
-exports.proxy = proxy
-
 /* istanbul ignore else */
-if (process.env.NODE_ENV === 'test') {
-  exports.getPathWithQueryStringParams = getPathWithQueryStringParams
-  exports.mapApiGatewayEventToHttpRequest = mapApiGatewayEventToHttpRequest
-  exports.forwardResponseToApiGateway = forwardResponseToApiGateway
-  exports.forwardConnectionErrorResponseToApiGateway = forwardConnectionErrorResponseToApiGateway
-  exports.forwardLibraryErrorResponseToApiGateway = forwardLibraryErrorResponseToApiGateway
-  exports.forwardRequestToNodeServer = forwardRequestToNodeServer
-  exports.startServer = startServer
-  exports.getSocketPath = getSocketPath
-  exports.makeResolver = makeResolver
+// export const serverlessExpress = process.env.NODE_ENV === 'test' ? {
+//   getPathWithQueryStringParams,
+//   mapApiGatewayEventToHttpRequest,
+//   forwardResponseToApiGateway,
+//   forwardConnectionErrorResponseToApiGateway,
+//   forwardLibraryErrorResponseToApiGateway,
+//   forwardRequestToNodeServer,
+//   startServer,
+//   getSocketPath,
+//   makeResolver,
+// } : {}
+export const serverlessExpress = {
+  getPathWithQueryStringParams,
+  mapApiGatewayEventToHttpRequest,
+  forwardResponseToApiGateway,
+  forwardConnectionErrorResponseToApiGateway,
+  forwardLibraryErrorResponseToApiGateway,
+  forwardRequestToNodeServer,
+  startServer,
+  getSocketPath,
+  makeResolver,
 }

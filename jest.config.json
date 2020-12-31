@@ -1,0 +1,35 @@
+{
+  "preset": "ts-jest",
+  "verbose": true,
+  "transform": {
+    ".(ts|tsx)": "ts-jest"
+  },
+  "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$",
+  "moduleFileExtensions": [
+    "js",
+    "ts",
+    "tsx"
+  ],
+  "moduleNameMapper": {
+    "^@src/(.*)$": "<rootDir>/src/$1",
+    "^typings/(.*)$": "<rootDir>/typings/$1"
+  },
+  "globals": {
+    "window": {},
+    "ts-jest": {
+      "tsConfig": "./tsconfig.json"
+    }
+  },
+  "setupFiles": [
+    "./jest.stubs.js"
+  ],
+  "setupFilesAfterEnv": [
+    "./jest.tests.js"
+  ],
+  "testMatch": null,
+  "coverageReporters": [
+    "json-summary",
+    "text",
+    "lcov"
+  ]
+}

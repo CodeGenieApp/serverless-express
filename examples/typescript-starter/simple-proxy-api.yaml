@@ -1,0 +1,105 @@
+---
+swagger: 2.0
+info:
+  title: ServerlessExpressApi
+basePath: /prod
+schemes:
+- https
+paths:
+  /:
+    x-amazon-apigateway-any-method:
+      produces:
+      - application/json
+      responses:
+        200:
+          description: 200 response
+          schema:
+            $ref: "#/definitions/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: 200
+        uri: arn:aws:apigateway:YOUR_AWS_REGION:lambda:path/2015-03-31/functions/arn:aws:lambda:YOUR_AWS_REGION:YOUR_ACCOUNT_ID:function:${stageVariables.ServerlessExpressLambdaFunctionName}/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+    options:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: 200 response
+          schema:
+            $ref: "#/definitions/Empty"
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Headers:
+              type: string
+      x-amazon-apigateway-integration:
+        contentHandling: CONVERT_TO_TEXT
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'https://example.com'"
+        passthroughBehavior: when_no_match
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: mock
+  /{proxy+}:
+    x-amazon-apigateway-any-method:
+      produces:
+      - application/json
+      parameters:
+      - name: proxy
+        in: path
+        required: true
+        type: string
+      responses: {}
+      x-amazon-apigateway-integration:
+        uri: arn:aws:apigateway:YOUR_AWS_REGION:lambda:path/2015-03-31/functions/arn:aws:lambda:YOUR_AWS_REGION:YOUR_ACCOUNT_ID:function:${stageVariables.ServerlessExpressLambdaFunctionName}/invocations
+        httpMethod: POST
+        type: aws_proxy
+    options:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: 200 response
+          schema:
+            $ref: "#/definitions/Empty"
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Headers:
+              type: string
+      x-amazon-apigateway-integration:
+        contentHandling: CONVERT_TO_TEXT
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'https://example.com'"
+        passthroughBehavior: when_no_match
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: mock
+x-amazon-apigateway-binary-media-types:
+  - '*/*'
+definitions:
+  Empty:
+    type: object
+    title: Empty Schema

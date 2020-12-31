@@ -1,0 +1,71 @@
+{
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "rulesDirectory": ["tslint-plugin-prettier"],
+  "rules": {
+    "quotemark": [true, "single"],
+    "semicolon": [true, "never"],
+    "arrow-parens": false,
+    "arrow-return-shorthand": [false],
+    "comment-format": [true, "check-space"],
+    "import-blacklist": [true],
+    "interface-over-type-literal": false,
+    "interface-name": false,
+    // "max-line-length": [true, 120],
+    "member-access": false,
+    "member-ordering": [true, { "order": "fields-first" }],
+    "newline-before-return": false,
+    "no-any": false,
+    "no-empty-interface": false,
+    "no-import-side-effect": [true],
+    "no-inferrable-types": [true, "ignore-params", "ignore-properties"],
+    "no-invalid-this": [true, "check-function-in-method"],
+    "no-namespace": false,
+    "no-null-keyword": false,
+    "no-require-imports": false,
+    "no-submodule-imports": [false, "@src", "rxjs"],
+    "no-this-assignment": [true, { "allow-destructuring": true }],
+    "no-trailing-whitespace": true,
+    "object-literal-sort-keys": false,
+    "object-literal-shorthand": false,
+    "one-variable-per-declaration": [false],
+    "only-arrow-functions": [true, "allow-declarations"],
+    "ordered-imports": [true],
+    "prefer-method-signature": false,
+    "prefer-template": [true, "allow-single-concat"],
+    "trailing-comma": [
+      true,
+      {
+        "singleline": "never",
+        "multiline": {
+          "objects": "always",
+          "arrays": "always",
+          "functions": "ignore",
+          "typeLiterals": "ignore"
+        },
+        "esSpecCompliant": true
+      }
+    ],
+    "triple-equals": [true, "allow-null-check"],
+    "type-literal-delimiter": false,
+    "typedef": [true, "parameter", "property-declaration"],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-pascal-case",
+      "allow-leading-underscore"
+    ],
+    "jsx-no-lambda": false
+  },
+  "emitErrors": true,
+  "failOnHint": true,
+  "typeCheck": false,
+  "fix": true,
+  "cliOptions": {
+    "exclude": [
+      "__tests__/*.js",
+      "node_modules/**/*.ts",
+      "examples/**/*.ts"
+    ]
+  }
+}
