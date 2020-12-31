@@ -109,6 +109,7 @@
     "@types/jest": "^26.0.13",
     "@types/media-typer": "^1.1.0",
     "@types/mime-types": "^2.1.0",
+    "@types/type-is": "^1.6.3",
     "commitizen": "^4.2.2",
     "commitlint": "^11.0.0",
     "cz-conventional-changelog": "^2.1.0",

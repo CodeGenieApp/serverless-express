@@ -1,8 +1,7 @@
 import http from 'http'
 import url from 'url'
 import { binaryCase } from '@src/helpers/binaryCase'
-// import IsType from 'type-is'
-// const isType: any = IsType
+import isType from 'type-is'
 
 const getPathWithQueryStringParams = (event: any) => {
   return url.format({ pathname: event.path, query: event.queryStringParameters })
@@ -21,8 +20,7 @@ const getContentType = (params: any) => {
 }
 
 const isContentTypeBinaryMimeType = (params: any) => {
-  // return params.binaryMimeTypes.length > 0 && !!isType.is(params.contentType, params.binaryMimeTypes)
-  return params.binaryMimeTypes.length > 0
+  return params.binaryMimeTypes.length > 0 && !!isType.is(params.contentType, params.binaryMimeTypes)
 }
 
 const mapApiGatewayEventToHttpRequest = (event: any, context: any, socketPath: any) => {
@@ -96,7 +94,7 @@ const forwardResponseToApiGateway = (server: any, response: any, resolver: any) 
     })
 }
 
-function forwardConnectionErrorResponseToApiGateway (error: any, resolver: any) {
+const forwardConnectionErrorResponseToApiGateway = (error: any, resolver: any) => {
   console.log('ERROR: @vendia/serverless-express connection error')
   console.error(error)
   const errorResponse = {
@@ -108,7 +106,7 @@ function forwardConnectionErrorResponseToApiGateway (error: any, resolver: any) 
   resolver.succeed({ response: errorResponse })
 }
 
-function forwardLibraryErrorResponseToApiGateway (error: any, resolver: any) {
+const forwardLibraryErrorResponseToApiGateway = (error: any, resolver: any) => {
   console.log('ERROR: @vendia/serverless-express error')
   console.error(error)
   const errorResponse = {
@@ -120,7 +118,7 @@ function forwardLibraryErrorResponseToApiGateway (error: any, resolver: any) {
   resolver.succeed({ response: errorResponse })
 }
 
-function forwardRequestToNodeServer (server: any, event: any, context: any, resolver: any) {
+const forwardRequestToNodeServer = (server: any, event: any, context: any, resolver: any) => {
   try {
     const requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
     const req = http.request(requestOptions, (response) => forwardResponseToApiGateway(server, response, resolver))
@@ -138,11 +136,11 @@ function forwardRequestToNodeServer (server: any, event: any, context: any, reso
   }
 }
 
-function startServer (server: any) {
+const startServer = (server: any) => {
   return server.listen(getSocketPath(server._socketPathSuffix))
 }
 
-function getSocketPath (socketPathSuffix: any) {
+const getSocketPath = (socketPathSuffix: any) => {
   /* istanbul ignore if */ /* only running tests on Linux; Window support is for local dev only */
   if (/^win/.test(process.platform)) {
     const path = require('path')
@@ -152,7 +150,7 @@ function getSocketPath (socketPathSuffix: any) {
   }
 }
 
-function getRandomString () {
+const getRandomString = () => {
   return Math.random().toString(36).substring(2, 15)
 }
 
@@ -220,12 +218,12 @@ export const proxy = (server: any, event: any, context: any, resolutionMode?: an
   }
 }
 
-function makeResolver (params: any/* {
+const makeResolver = (params: any/* {
   context,
   callback,
   promise,
   resolutionMode
-} */) {
+} */) => {
   return {
     succeed: (params2: any/* {
       response
@@ -238,17 +236,6 @@ function makeResolver (params: any/* {
 }
 
 /* istanbul ignore else */
-// export const serverlessExpress = process.env.NODE_ENV === 'test' ? {
-//   getPathWithQueryStringParams,
-//   mapApiGatewayEventToHttpRequest,
-//   forwardResponseToApiGateway,
-//   forwardConnectionErrorResponseToApiGateway,
-//   forwardLibraryErrorResponseToApiGateway,
-//   forwardRequestToNodeServer,
-//   startServer,
-//   getSocketPath,
-//   makeResolver,
-// } : {}
 export const serverlessExpress = {
   getPathWithQueryStringParams,
   mapApiGatewayEventToHttpRequest,
