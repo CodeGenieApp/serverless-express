@@ -10,7 +10,7 @@ function forwardResponse ({
   logger
 }) {
   logger.debug('Forwarding response from application to API Gateway... HTTP response:', { headers: response.headers, statusCode: response.statusCode })
-  let buf = []
+  const buf = []
 
   response
     .on('data', (chunk) => buf.push(chunk))
@@ -24,7 +24,7 @@ function forwardResponse ({
       logger.debug('contentType', { contentType })
       const isBase64Encoded = isContentTypeBinaryMimeType({
         contentType,
-        binaryMimeTypes: server._awsServerlessExpress.binaryMimeTypes
+        binaryMimeTypes: server._serverlessExpress.binaryMimeTypes
       })
       const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
       const successResponse = eventResponseMapperFn({
@@ -47,7 +47,7 @@ function forwardConnectionErrorResponseToApiGateway ({
   respondWithErrors,
   eventResponseMapperFn
 }) {
-  logger.error('aws-serverless-express connection error: ', error)
+  logger.error('serverless-express connection error: ', error)
   const body = respondWithErrors ? error.stack : ''
   const errorResponse = eventResponseMapperFn({
     statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
@@ -66,7 +66,7 @@ function forwardLibraryErrorResponseToApiGateway ({
   respondWithErrors,
   eventResponseMapperFn
 }) {
-  logger.error('aws-serverless-express error: ', error)
+  logger.error('serverless-express error: ', error)
 
   const body = respondWithErrors ? error.stack : ''
   const errorResponse = eventResponseMapperFn({
@@ -94,7 +94,7 @@ function forwardRequestToNodeServer ({
   try {
     const { body, ...requestOptions } = eventFns.request({ event })
     logger.debug('requestOptions', requestOptions)
-    const req = http.request({ socketPath: server._awsServerlessExpress.socketPath, ...requestOptions }, (response) => forwardResponse({
+    const req = http.request({ socketPath: server._serverlessExpress.socketPath, ...requestOptions }, (response) => forwardResponse({
       server,
       response,
       resolver,
@@ -128,7 +128,7 @@ function forwardRequestToNodeServer ({
 }
 
 function startServer ({ server }) {
-  return server.listen(server._awsServerlessExpress.socketPath)
+  return server.listen(server._serverlessExpress.socketPath)
 }
 
 function getSocketPath ({ socketPathSuffix }) {

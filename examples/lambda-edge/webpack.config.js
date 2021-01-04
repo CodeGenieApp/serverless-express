@@ -8,7 +8,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'lambda.js',
-    library: 'awsServerlessExpressEdge',
+    library: 'serverlessExpressEdge',
     libraryTarget: 'commonjs2'
   }
 }

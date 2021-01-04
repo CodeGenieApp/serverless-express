@@ -1,4 +1,4 @@
-# Lambda@Edge + aws-serverless-express Example
+# Lambda@Edge + serverless-express Example
 
 In addition to a basic Lambda function and Express server, this example includes a [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model) template, and helper scripts to help you set up and manage your application.
 
@@ -6,7 +6,7 @@ In addition to a basic Lambda function and Express server, this example includes
 
 This guide assumes you have already [set up an AWS account](http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/AboutAWSAccounts.html) and have the latest version of the [AWS CLI](https://aws.amazon.com/cli/) installed.
 
-1. From your preferred project directory: `git clone https://github.com/awslabs/aws-serverless-express.git && cd aws-serverless-express/examples/basic-starter`.
+1. From your preferred project directory: `git clone https://github.com/vendia/serverless-express.git && cd serverless-express/examples/basic-starter`.
 2. Update the `config` section of `package.json` with your `s3BucketName` and `region` (optionally, change the `cloudFormationStackName`). If the bucket you specify does not yet exist, the next step will create it for you.
 3. Run `npm run setup` - this installs the node dependencies, creates an S3 bucket (if it does not already exist), packages and deploys your serverless Express application to AWS Lambda, and creates an API Gateway proxy API.
 4. After the setup command completes, open the AWS CloudFormation console https://console.aws.amazon.com/cloudformation/home and switch to the region you specified. Select the `ServerlessExpressEdge` stack (or the stack name you specified for `cloudFormationStackName`), then click the `ApiUrl` value under the __Outputs__ section - this will open a new page with your running API. The API index lists the resources available in the example Express server (`app.js`), along with example `curl` commands.
@@ -27,11 +27,11 @@ Lambda@Edge has several limitations that you should be aware of. These include:
 
 ## Development
 
-To update this example against the latest local changes to aws-serverless-express:
+To update this example against the latest local changes to serverless-express:
 
 ```bash
 npm pack ../..
-npm install ./aws-serverless-express-3.3.5.tgz
+npm install ./@vendia/serverless-express-3.3.5.tgz
 npm install
 npm run build
 npm run local

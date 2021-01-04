@@ -1,10 +1,10 @@
 const path = require('path')
 const fs = require('fs')
-const awsServerlessExpress = require('../index')
+const vendiaServerlessExpress = require('../index')
 const apiGatewayEvent = require('../examples/basic-starter/api-gateway-event.json')
 const app = require('../examples/basic-starter/src/app')
 
-const serverlessExpress = awsServerlessExpress.configure({ app })
+const serverlessExpress = vendiaServerlessExpress.configure({ app })
 const server = serverlessExpress.server
 const nodeMajorVersion = process.version.split('.')[0].split('v')[1]
 
@@ -29,23 +29,23 @@ function makeEvent (eventOverrides = {}) {
 
 function expectedRootResponse () {
   return makeResponse({
-    'multiValueHeaders': {
+    multiValueHeaders: {
       'content-length': ['3728'],
       'content-type': ['text/html; charset=utf-8'],
-      'etag': ['W/"e90-ToQlyXvAkG0PJrs7lZqgVr+CrkI"']
+      etag: ['W/"e90-ToQlyXvAkG0PJrs7lZqgVr+CrkI"']
     }
   })
 }
 
 function makeResponse (response) {
   const baseResponse = {
-    'body': '',
-    'isBase64Encoded': false,
-    'statusCode': 200
+    body: '',
+    isBase64Encoded: false,
+    statusCode: 200
   }
   const baseHeaders = {
     'access-control-allow-origin': ['*'],
-    'connection': ['close'],
+    connection: ['close'],
     'content-type': ['application/json; charset=utf-8'],
     'x-powered-by': ['Express']
   }
@@ -102,10 +102,10 @@ describe('integration tests', () => {
 
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
-      'body': '[{"id":1,"name":"Joe"},{"id":2,"name":"Jane"}]',
-      'multiValueHeaders': {
+      body: '[{"id":1,"name":"Joe"},{"id":2,"name":"Jane"}]',
+      multiValueHeaders: {
         'content-length': ['46'],
-        'etag': ['W/"2e-Lu6qxFOQSPFulDAGUFiiK6QgREo"']
+        etag: ['W/"2e-Lu6qxFOQSPFulDAGUFiiK6QgREo"']
       }
     }))
   })
@@ -119,7 +119,7 @@ describe('integration tests', () => {
     delete response.multiValueHeaders.date
     expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
     const expectedResponse = makeResponse({
-      'multiValueHeaders': {
+      multiValueHeaders: {
         'content-length': ['151'],
         'content-security-policy': ["default-src 'none'"],
         'content-type': ['text/html; charset=utf-8'],
@@ -140,10 +140,10 @@ describe('integration tests', () => {
 
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
-      'body': '{"id":1,"name":"Joe"}',
-      'multiValueHeaders': {
+      body: '{"id":1,"name":"Joe"}',
+      multiValueHeaders: {
         'content-length': ['21'],
-        'etag': ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
+        etag: ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
       }
     }))
   })
@@ -152,10 +152,10 @@ describe('integration tests', () => {
     const callback = (e, response) => {
       delete response.multiValueHeaders.date
       expect(response).toEqual(makeResponse({
-        'body': '{"id":1,"name":"Joe"}',
-        'multiValueHeaders': {
+        body: '{"id":1,"name":"Joe"}',
+        multiValueHeaders: {
           'content-length': ['21'],
-          'etag': ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
+          etag: ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
         }
       }))
       done()
@@ -181,16 +181,16 @@ describe('integration tests', () => {
 
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
-      'body': '{"id":1,"name":"Joe"}',
-      'multiValueHeaders': {
+      body: '{"id":1,"name":"Joe"}',
+      multiValueHeaders: {
         'content-length': ['21'],
-        'etag': ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
+        etag: ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
       }
     }))
   })
 
   test('GET JSON single (resolutionMode = PROMISE; new server)', async () => {
-    const newServererlessExpress = awsServerlessExpress.configure({ app, resolutionMode: 'PROMISE' })
+    const newServererlessExpress = vendiaServerlessExpress.configure({ app, resolutionMode: 'PROMISE' })
     const event = makeEvent({
       path: '/users/1',
       httpMethod: 'GET'
@@ -198,10 +198,10 @@ describe('integration tests', () => {
     const response = await newServererlessExpress.handler(event)
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
-      'body': '{"id":1,"name":"Joe"}',
-      'multiValueHeaders': {
+      body: '{"id":1,"name":"Joe"}',
+      multiValueHeaders: {
         'content-length': ['21'],
-        'etag': ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
+        etag: ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
       }
     }))
     newServererlessExpress.server.close()
@@ -214,10 +214,10 @@ describe('integration tests', () => {
     }))
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
-      'body': '{}',
-      'multiValueHeaders': {
+      body: '{}',
+      multiValueHeaders: {
         'content-length': ['2'],
-        'etag': ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
+        etag: ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
       },
       statusCode: 404
     }))
@@ -245,14 +245,14 @@ describe('integration tests', () => {
     const samLogoBase64 = Buffer.from(samLogoImage).toString('base64')
 
     expect(response).toEqual(makeResponse({
-      'body': samLogoBase64,
-      'multiValueHeaders': {
+      body: samLogoBase64,
+      multiValueHeaders: {
         'accept-ranges': ['bytes'],
         'cache-control': ['public, max-age=0'],
         'content-length': ['15933'],
         'content-type': ['image/png']
       },
-      'isBase64Encoded': true
+      isBase64Encoded: true
     }))
     serverWithBinaryTypes.close()
   })
@@ -268,10 +268,10 @@ describe('integration tests', () => {
 
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
-      'body': `{"id":3,"name":"${newName}"}`,
-      'multiValueHeaders': {
+      body: `{"id":3,"name":"${newName}"}`,
+      multiValueHeaders: {
         'content-length': ['43'],
-        'etag': ['W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"']
+        etag: ['W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"']
       },
       statusCode: 201
     }))
@@ -284,10 +284,10 @@ describe('integration tests', () => {
     }))
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
-      'body': `{"id":3,"name":"${newName}"}`,
-      'multiValueHeaders': {
+      body: `{"id":3,"name":"${newName}"}`,
+      multiValueHeaders: {
         'content-length': ['43'],
-        'etag': ['W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"']
+        etag: ['W/"2b-ksYHypm1DmDdjEzhtyiv73Bluqk"']
       },
       statusCode: 200
     }))
@@ -301,10 +301,10 @@ describe('integration tests', () => {
 
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
-      'body': `[{"id":2,"name":"Jane"},{"id":3,"name":"${newName}"}]`,
-      'multiValueHeaders': {
+      body: `[{"id":2,"name":"Jane"},{"id":3,"name":"${newName}"}]`,
+      multiValueHeaders: {
         'content-length': ['68'],
-        'etag': ['W/"44-AtuxlvrIBL8NXP4gvEQTI77suNg"']
+        etag: ['W/"44-AtuxlvrIBL8NXP4gvEQTI77suNg"']
       },
       statusCode: 200
     }))
@@ -318,10 +318,10 @@ describe('integration tests', () => {
     }))
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
-      'body': '{"id":2,"name":"Samuel"}',
-      'multiValueHeaders': {
+      body: '{"id":2,"name":"Samuel"}',
+      multiValueHeaders: {
         'content-length': ['24'],
-        'etag': ['W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"']
+        etag: ['W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"']
       },
       statusCode: 200
     }))
@@ -336,12 +336,12 @@ describe('integration tests', () => {
     }))
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
-      'body': '{"id":2,"name":"Samuel"}',
-      'multiValueHeaders': {
+      body: '{"id":2,"name":"Samuel"}',
+      multiValueHeaders: {
         'access-control-allow-origin': [
           '*'
         ],
-        'connection': [
+        connection: [
           'close'
         ],
         'content-length': [
@@ -350,7 +350,7 @@ describe('integration tests', () => {
         'content-type': [
           'application/json; charset=utf-8'
         ],
-        'etag': [
+        etag: [
           'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"'
         ],
         'x-powered-by': [
@@ -375,8 +375,8 @@ describe('integration tests', () => {
     }))
     delete response.multiValueHeaders.date
     expect(response).toEqual({
-      'body': '',
-      'multiValueHeaders': {},
+      body: '',
+      multiValueHeaders: {},
       statusCode: 502
     })
   })
@@ -424,10 +424,10 @@ describe('integration tests', () => {
     ] : ['Foo=bar; Path=/,Fizz=buzz; Path=/']
     expect(response).toEqual(makeResponse({
       body: '{}',
-      'multiValueHeaders': {
+      multiValueHeaders: {
         'set-cookie': expectedSetCookieHeaders,
         'content-length': ['2'],
-        'etag': ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
+        etag: ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
       },
       statusCode: 200
     }))
@@ -438,14 +438,14 @@ describe('integration tests', () => {
   // and the server.onClose also closes `server`
   test('server.onError EADDRINUSE', async () => {
     const serverWithSameSocketPath = serverlessExpress.createServer({ app: mockApp })
-    serverWithSameSocketPath._awsServerlessExpress.socketPath = server._awsServerlessExpress.socketPath
+    serverWithSameSocketPath._serverlessExpress.socketPath = server._serverlessExpress.socketPath
 
     const response = await serverlessExpress.proxy({
       server: serverWithSameSocketPath,
       event: makeEvent()
     })
     expect(response.statusCode).toBe(200)
-    expect(serverWithSameSocketPath._awsServerlessExpress.socketPath).not.toBe(server._awsServerlessExpress.socketPath)
+    expect(serverWithSameSocketPath._serverlessExpress.socketPath).not.toBe(server._serverlessExpress.socketPath)
     serverWithSameSocketPath.close()
   })
 

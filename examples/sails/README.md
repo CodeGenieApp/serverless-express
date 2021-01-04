@@ -2,7 +2,7 @@
 
 a [Sails v1](https://sailsjs.com) application
 
-### aws-serverless-express WIP
+### serverless-express WIP
 
 This example is a WIP which works locally by simulating a Lambda handler invocation, however, in production we're receiving 404 'Cannot GET /'.
 

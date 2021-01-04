@@ -1,17 +1,3 @@
-/*
- * Copyright 2016-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License").
- * You may not use this file except in compliance with the License.
- * A copy of the License is located at
- *
- *     http://aws.amazon.com/apache2.0/
- *
- * or in the "license" file accompanying this file.
- * This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- */
 const fs = require('fs')
 const http = require('http')
 const { createLogger, format, transports } = require('winston')
@@ -45,7 +31,7 @@ function createServer ({
   const server = http.createServer(app)
   const socketPathSuffix = getRandomString()
   const socketPath = getSocketPath({ socketPathSuffix })
-  server._awsServerlessExpress = {
+  server._serverlessExpress = {
     socketPath,
     binaryMimeTypes: binaryMimeTypes ? [...binaryMimeTypes] : []
   }
@@ -54,15 +40,15 @@ function createServer ({
   server.on('error', (error) => {
     /* istanbul ignore else */
     if (error.code === 'EADDRINUSE') {
-      logger.warn(`Attempting to listen on socket ${socketPath}, but it's already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause. If this is purely as a result of a timeout, consider increasing the function timeout and/or cpu/memory allocation. aws-serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
-      server._awsServerlessExpress.socketPath = getSocketPath({ socketPathSuffix: getRandomString() })
+      logger.warn(`Attempting to listen on socket ${socketPath}, but it's already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause. If this is purely as a result of a timeout, consider increasing the function timeout and/or cpu/memory allocation. serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
+      server._serverlessExpress.socketPath = getSocketPath({ socketPathSuffix: getRandomString() })
 
       return server.close(() => {
         fs.unlinkSync(error.address)
         startServer({ server })
       })
     } else {
-      logger.error('aws-serverless-express server error: ', error)
+      logger.error('serverless-express server error: ', error)
     }
   })
 
@@ -107,7 +93,7 @@ function proxy ({
         respondWithErrors
       })
     } else {
-      logger.debug('Server isn\'t listening... Starting server. This is likely a cold-start. If you see this message on every request, you may be calling `awsServerlessExpress.createServer` on every call inside the handler function. If this is the case, consider moving it outside of the handler function for imrpoved performance.')
+      logger.debug('Server isn\'t listening... Starting server. This is likely a cold-start. If you see this message on every request, you may be calling `serverlessExpress.createServer` on every call inside the handler function. If this is the case, consider moving it outside of the handler function for imrpoved performance.')
       startServer({ server })
         .on('listening', () => {
           logger.debug('Server started...')
@@ -147,7 +133,7 @@ function configure ({
   resolutionMode: configureResolutionMode = 'PROMISE',
   eventSource: configureEventSource,
   eventFns: configureEventFns,
-  respondWithErrors: configureRespondWithErrors = false,
+  respondWithErrors: configureRespondWithErrors = process.env.NODE_ENV === 'development',
   loggerConfig: configureLoggerConfig = {},
   logger: configureLogger = createLogger({
     ...DEFAULT_LOGGER_CONFIG,

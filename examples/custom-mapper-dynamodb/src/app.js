@@ -49,7 +49,7 @@ const users = [{
 }]
 let userIdCounter = users.length
 
-// The aws-serverless-express library creates a server and listens on a Unix
+// The serverless-express library creates a server and listens on a Unix
 // Domain Socket for you, so you can remove the usual call to app.listen.
 // app.listen(3000)
 app.use('/', router)

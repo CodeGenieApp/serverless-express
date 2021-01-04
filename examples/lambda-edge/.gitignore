@@ -1,4 +1,4 @@
 lambda-invoke-response.json
 sam-template.packaged.yaml
-aws-serverless-express-*.tgz
+@vendia/serverless-express-*.tgz
 dist/

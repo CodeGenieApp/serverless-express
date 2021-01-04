@@ -1,8 +1,8 @@
-const awsServerlessExpress = require('aws-serverless-express')
+const serverlessExpress = require('@vendia/serverless-express')
 const app = require('./app')
 
-const ase = awsServerlessExpress.configure({
+const se = serverlessExpress.configure({
   app
 })
 
-exports.handler = ase.handler
+exports.handler = se.handler

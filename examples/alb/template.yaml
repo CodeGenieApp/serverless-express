@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: aws-serverless-express + ALB example
+Description: serverless-express + ALB example
 Resources:
   Vpc:
     Type: 'AWS::EC2::VPC'

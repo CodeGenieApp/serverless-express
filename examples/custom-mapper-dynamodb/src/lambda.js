@@ -1,8 +1,8 @@
-const awsServerlessExpress = require('aws-serverless-express')
+const serverlessExpress = require('@vendia/serverless-express')
 const app = require('./app')
 const { mapDynamoDbEventToHttpRequest, mapResponseToDynamoDb } = require('./dynamodb-event-mappings')
 
-const ase = awsServerlessExpress.configure({
+const se = serverlessExpress.configure({
   app,
   eventFns: {
     request: mapDynamoDbEventToHttpRequest,
@@ -13,4 +13,4 @@ const ase = awsServerlessExpress.configure({
   }
 })
 
-exports.handler = ase.handler
+exports.handler = se.handler
