@@ -1,62 +1,36 @@
-const http = require('http')
 const { getEventFnsBasedOnEventSource } = require('./event-mappings')
 const { getContentType, isContentTypeBinaryMimeType } = require('./utils')
+const Response = require('./response')
 
 function forwardResponse ({
-  server,
+  binaryMimeTypes,
   response,
   resolver,
   eventResponseMapperFn,
   logger
 }) {
   logger.debug('Forwarding response from application to API Gateway... HTTP response:', { headers: response.headers, statusCode: response.statusCode })
-  const buf = []
-
-  response
-    .on('data', (chunk) => buf.push(chunk))
-    .on('end', () => {
-      const bodyBuffer = Buffer.concat(buf)
-      const statusCode = response.statusCode
-      const headers = response.headers
-      const contentType = getContentType({
-        contentTypeHeader: headers['content-type']
-      })
-      logger.debug('contentType', { contentType })
-      const isBase64Encoded = isContentTypeBinaryMimeType({
-        contentType,
-        binaryMimeTypes: server._serverlessExpress.binaryMimeTypes
-      })
-      const body = bodyBuffer.toString(isBase64Encoded ? 'base64' : 'utf8')
-      const successResponse = eventResponseMapperFn({
-        statusCode,
-        body,
-        headers,
-        isBase64Encoded
-      })
-      logger.debug('Forwarding response from application to API Gateway... API Gateway response:', { successResponse })
-      resolver.succeed({
-        response: successResponse
-      })
-    })
-}
-
-function forwardConnectionErrorResponseToApiGateway ({
-  error,
-  resolver,
-  logger,
-  respondWithErrors,
-  eventResponseMapperFn
-}) {
-  logger.error('serverless-express connection error: ', error)
-  const body = respondWithErrors ? error.stack : ''
-  const errorResponse = eventResponseMapperFn({
-    statusCode: 502, // "DNS resolution, TCP level errors, or actual HTTP parse errors" - https://nodejs.org/api/http.html#http_http_request_options_callback
-    body,
-    headers: {},
-    isBase64Encoded: false
+  const statusCode = response.statusCode
+  const headers = Response.headers(response)
+  const contentType = getContentType({
+    contentTypeHeader: headers['content-type']
   })
-
-  resolver.succeed({ response: errorResponse })
+  logger.debug('contentType', { contentType })
+  const isBase64Encoded = isContentTypeBinaryMimeType({
+    contentType,
+    binaryMimeTypes
+  })
+  const body = Response.body(response).toString(isBase64Encoded ? 'base64' : 'utf8')
+  const successResponse = eventResponseMapperFn({
+    statusCode,
+    body,
+    headers,
+    isBase64Encoded
+  })
+  logger.debug('Forwarding response from application to API Gateway... API Gateway response:', { successResponse })
+  resolver.succeed({
+    response: successResponse
+  })
 }
 
 function forwardLibraryErrorResponseToApiGateway ({
@@ -79,67 +53,29 @@ function forwardLibraryErrorResponseToApiGateway ({
   resolver.succeed({ response: errorResponse })
 }
 
-function forwardRequestToNodeServer ({
-  server,
+async function forwardRequestToNodeServer ({
+  app,
+  framework,
   event,
   context,
   resolver,
   eventSource,
+  binaryMimeTypes,
   eventFns = getEventFnsBasedOnEventSource({ eventSource }),
-  logger,
-  respondWithErrors
+  logger
 }) {
   logger.debug('Forwarding request to application...')
   const eventResponseMapperFn = eventFns.response
-  try {
-    const { body, ...requestOptions } = eventFns.request({ event })
-    logger.debug('requestOptions', requestOptions)
-    const req = http.request({ socketPath: server._serverlessExpress.socketPath, ...requestOptions }, (response) => forwardResponse({
-      server,
-      response,
-      resolver,
-      eventResponseMapperFn,
-      logger
-    }))
-
-    if (body) {
-      logger.debug('body', body)
-      req.write(body)
-    }
-
-    req
-      .on('error', (error) => forwardConnectionErrorResponseToApiGateway({
-        error,
-        resolver,
-        logger,
-        respondWithErrors,
-        eventResponseMapperFn
-      }))
-      .end()
-  } catch (error) {
-    forwardLibraryErrorResponseToApiGateway({
-      error,
-      resolver,
-      logger,
-      respondWithErrors,
-      eventResponseMapperFn
-    })
-  }
-}
-
-function startServer ({ server }) {
-  return server.listen(server._serverlessExpress.socketPath)
-}
-
-function getSocketPath ({ socketPathSuffix }) {
-  /* only running tests on Linux; Window support is for local dev only */
-  /* istanbul ignore if */
-  if (/^win/.test(process.platform)) {
-    const path = require('path')
-    return path.join('\\\\?\\pipe', process.cwd(), `server-${socketPathSuffix}`)
-  } else {
-    return `/tmp/server-${socketPathSuffix}.sock`
-  }
+  const requestValues = eventFns.getRequestValues({ event })
+  const response = await framework.sendRequest({ app, requestValues })
+  forwardResponse({
+    binaryMimeTypes,
+    response,
+    resolver,
+    eventResponseMapperFn,
+    logger
+  })
+  return response
 }
 
 function makeResolver ({
@@ -148,10 +84,6 @@ function makeResolver ({
   promise,
   resolutionMode
 }) {
-  // Lambda times out waiting for an empty event loop (which never empties since we have a running server)
-  // Setting `context.callbackWaitsForEmptyEventLoop = false` fixes for our use case
-  if (resolutionMode === 'CALLBACK') context.callbackWaitsForEmptyEventLoop = false
-
   return {
     succeed: ({ response }) => {
       if (resolutionMode === 'CONTEXT') return context.succeed(response)
@@ -163,10 +95,7 @@ function makeResolver ({
 
 module.exports = {
   forwardResponse,
-  forwardConnectionErrorResponseToApiGateway,
   forwardLibraryErrorResponseToApiGateway,
   forwardRequestToNodeServer,
-  startServer,
-  getSocketPath,
   makeResolver
 }

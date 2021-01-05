@@ -102,7 +102,7 @@
   ],
   "jest": {
     "collectCoverageFrom": [
-      "src/*"
+      "src/**"
     ]
   },
   "devDependencies": {

@@ -1,15 +1,12 @@
-const fs = require('fs')
-const http = require('http')
 const { createLogger, format, transports } = require('winston')
 const {
   forwardRequestToNodeServer,
-  startServer,
-  makeResolver,
-  getSocketPath
+  forwardLibraryErrorResponseToApiGateway,
+  makeResolver
 } = require('./transport')
-const { getRandomString } = require('./utils')
 const { getEventFnsBasedOnEventSource } = require('./event-mappings')
 const { getEventSourceBasedOnEvent } = require('./event-mappings/utils')
+const { getFramework } = require('./frameworks')
 
 const currentLambdaInvoke = {}
 
@@ -22,46 +19,15 @@ function setCurrentLambdaInvoke ({ event, context }) {
   currentLambdaInvoke.context = context
 }
 
-function createServer ({
-  app,
-  binaryMimeTypes,
-  logger
-}) {
-  logger.debug('Creating HTTP server based on app...', { app, binaryMimeTypes })
-  const server = http.createServer(app)
-  const socketPathSuffix = getRandomString()
-  const socketPath = getSocketPath({ socketPathSuffix })
-  server._serverlessExpress = {
-    socketPath,
-    binaryMimeTypes: binaryMimeTypes ? [...binaryMimeTypes] : []
-  }
-
-  logger.debug('Created HTTP server', { server })
-  server.on('error', (error) => {
-    /* istanbul ignore else */
-    if (error.code === 'EADDRINUSE') {
-      logger.warn(`Attempting to listen on socket ${socketPath}, but it's already in use. This is likely as a result of a previous invocation error or timeout. Check the logs for the invocation(s) immediately prior to this for root cause. If this is purely as a result of a timeout, consider increasing the function timeout and/or cpu/memory allocation. serverless-express will restart the Node.js server listening on a new port and continue with this request.`)
-      server._serverlessExpress.socketPath = getSocketPath({ socketPathSuffix: getRandomString() })
-
-      return server.close(() => {
-        fs.unlinkSync(error.address)
-        startServer({ server })
-      })
-    } else {
-      logger.error('serverless-express server error: ', error)
-    }
-  })
-
-  return server
-}
-
 function proxy ({
-  server,
+  app,
+  framework = getFramework({ app }),
   event = {},
   context = {},
   callback = null,
   resolutionMode = 'PROMISE',
   eventSource = getEventSourceBasedOnEvent({ event }),
+  binaryMimeTypes,
   eventFns = getEventFnsBasedOnEventSource({ eventSource }),
   logger,
   respondWithErrors
@@ -80,34 +46,26 @@ function proxy ({
       resolutionMode
     })
 
-    if (server.listening) {
-      logger.debug('Server is already listening...')
+    try {
       forwardRequestToNodeServer({
-        server,
+        app,
+        framework,
         event,
         context,
         resolver,
         eventSource,
+        binaryMimeTypes,
         eventFns,
-        logger,
-        respondWithErrors
+        logger
       })
-    } else {
-      logger.debug('Server isn\'t listening... Starting server. This is likely a cold-start. If you see this message on every request, you may be calling `serverlessExpress.createServer` on every call inside the handler function. If this is the case, consider moving it outside of the handler function for imrpoved performance.')
-      startServer({ server })
-        .on('listening', () => {
-          logger.debug('Server started...')
-          forwardRequestToNodeServer({
-            server,
-            event,
-            context,
-            resolver,
-            eventSource,
-            eventFns,
-            logger,
-            respondWithErrors
-          })
-        })
+    } catch (error) {
+      forwardLibraryErrorResponseToApiGateway({
+        error,
+        resolver,
+        logger,
+        respondWithErrors,
+        eventResponseMapperFn: eventFns.response
+      })
     }
   })
 }
@@ -129,43 +87,38 @@ const DEFAULT_LOGGER_CONFIG = {
 
 function configure ({
   app: configureApp,
+  framework: configureFramework = getFramework({ app: configureApp }),
   binaryMimeTypes: configureBinaryMimeTypes = [],
   resolutionMode: configureResolutionMode = 'PROMISE',
   eventSource: configureEventSource,
   eventFns: configureEventFns,
-  respondWithErrors: configureRespondWithErrors = process.env.NODE_ENV === 'development',
+  respondWithErrors: configureRespondWithErrors = true, // process.env.NODE_ENV === 'development',
   loggerConfig: configureLoggerConfig = {},
   logger: configureLogger = createLogger({
     ...DEFAULT_LOGGER_CONFIG,
     ...configureLoggerConfig
   }),
-  createServer: configureCreateServer = ({
-    app = configureApp,
-    binaryMimeTypes = configureBinaryMimeTypes,
-    logger = configureLogger
-  } = {}) => (createServer({
-    app,
-    binaryMimeTypes,
-    logger
-  })),
-  server: configureServer = configureCreateServer(),
   proxy: configureProxy = ({
-    server = configureServer,
+    app: configureProxyApp = configureApp,
+    framework: configureProxyFramework = configureFramework,
     resolutionMode = configureResolutionMode,
     event,
     context,
     callback,
     eventSource = configureEventSource,
+    binaryMimeTypes = configureBinaryMimeTypes,
     eventFns = configureEventFns,
     logger = configureLogger,
     respondWithErrors = configureRespondWithErrors
   } = {}) => (proxy({
-    server,
+    app: configureProxyApp,
+    framework: configureProxyFramework,
     event,
     context,
     resolutionMode,
     callback,
     eventSource,
+    binaryMimeTypes,
     eventFns,
     logger,
     respondWithErrors
@@ -177,8 +130,6 @@ function configure ({
   })
 } = {}) {
   return {
-    server: configureServer,
-    createServer: configureCreateServer,
     proxy: configureProxy,
     handler: configureHandler,
     logger: configureLogger

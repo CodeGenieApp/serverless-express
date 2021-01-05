@@ -5,7 +5,6 @@ const apiGatewayEvent = require('../examples/basic-starter/api-gateway-event.jso
 const app = require('../examples/basic-starter/src/app')
 
 const serverlessExpress = vendiaServerlessExpress.configure({ app })
-const server = serverlessExpress.server
 const nodeMajorVersion = process.version.split('.')[0].split('v')[1]
 
 function clone (json) {
@@ -45,7 +44,6 @@ function makeResponse (response) {
   }
   const baseHeaders = {
     'access-control-allow-origin': ['*'],
-    connection: ['close'],
     'content-type': ['application/json; charset=utf-8'],
     'x-powered-by': ['Express']
   }
@@ -120,7 +118,7 @@ describe('integration tests', () => {
     expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
     const expectedResponse = makeResponse({
       multiValueHeaders: {
-        'content-length': ['151'],
+        'content-length': [151],
         'content-security-policy': ["default-src 'none'"],
         'content-type': ['text/html; charset=utf-8'],
         'x-content-type-options': ['nosniff']
@@ -189,24 +187,6 @@ describe('integration tests', () => {
     }))
   })
 
-  test('GET JSON single (resolutionMode = PROMISE; new server)', async () => {
-    const newServererlessExpress = vendiaServerlessExpress.configure({ app, resolutionMode: 'PROMISE' })
-    const event = makeEvent({
-      path: '/users/1',
-      httpMethod: 'GET'
-    })
-    const response = await newServererlessExpress.handler(event)
-    delete response.multiValueHeaders.date
-    expect(response).toEqual(makeResponse({
-      body: '{"id":1,"name":"Joe"}',
-      multiValueHeaders: {
-        'content-length': ['21'],
-        etag: ['W/"15-rRboW+j/yFKqYqV6yklp53+fANQ"']
-      }
-    }))
-    newServererlessExpress.server.close()
-  })
-
   test('GET JSON single 404', async () => {
     const response = await serverlessExpress.handler(makeEvent({
       path: '/users/3',
@@ -224,16 +204,12 @@ describe('integration tests', () => {
   })
 
   test('success - image response', async () => {
-    const serverWithBinaryTypes = serverlessExpress.createServer({
-      app,
-      binaryMimeTypes: ['image/*']
-    })
     const event = makeEvent({
       path: '/sam',
       httpMethod: 'GET'
     })
     const response = await serverlessExpress.proxy({
-      server: serverWithBinaryTypes,
+      binaryMimeTypes: ['image/*'],
       event
     })
     delete response.multiValueHeaders.date
@@ -249,12 +225,11 @@ describe('integration tests', () => {
       multiValueHeaders: {
         'accept-ranges': ['bytes'],
         'cache-control': ['public, max-age=0'],
-        'content-length': ['15933'],
+        'content-length': [15933],
         'content-type': ['image/png']
       },
       isBase64Encoded: true
     }))
-    serverWithBinaryTypes.close()
   })
   const newName = 'Sandy Samantha Salamander'
 
@@ -341,9 +316,6 @@ describe('integration tests', () => {
         'access-control-allow-origin': [
           '*'
         ],
-        connection: [
-          'close'
-        ],
         'content-length': [
           '24'
         ],
@@ -361,30 +333,6 @@ describe('integration tests', () => {
     }))
   })
 
-  // TODO: This test is failing on Node.js 10 as this isn't forcing a connection error like earlier versions of Node do.
-  // Need to determine a new way of forcing a connection error which works in both 8 and 10 before re-enabling this.
-  // For now, we still have a unit test for forwardConnectionErrorResponseToApiGateway.
-  test.skip('forwardConnectionErrorResponseToApiGateway', async () => {
-    const response = await serverlessExpress.handler(makeEvent({
-      path: '/',
-      httpMethod: 'GET',
-      body: '{"name": "Sam502"}',
-      multiValueHeaders: {
-        'Content-Length': ['-1']
-      }
-    }))
-    delete response.multiValueHeaders.date
-    expect(response).toEqual({
-      body: '',
-      multiValueHeaders: {},
-      statusCode: 502
-    })
-  })
-
-  const mockApp = function (req, res) {
-    res.end('')
-  }
-
   test.skip('forwardLibraryErrorResponseToApiGateway', async () => {
     const response = await serverlessExpress.handler(null)
     expect(response).toEqual({
@@ -392,23 +340,6 @@ describe('integration tests', () => {
       body: '',
       multiValueHeaders: {}
     })
-  })
-
-  test('serverListenCallback', async () => {
-    const serverListenCallback = jest.fn()
-    const serverWithListenCallback = serverlessExpress.createServer({
-      app: mockApp
-    })
-    serverWithListenCallback.on('listening', serverListenCallback)
-
-    const response = await serverlessExpress.proxy({
-      server: serverWithListenCallback,
-      event: makeEvent()
-    })
-
-    expect(response.statusCode).toBe(200)
-    expect(serverListenCallback).toHaveBeenCalled()
-    serverWithListenCallback.close()
   })
 
   test('Multiple headers of the same name (set-cookie)', async () => {
@@ -431,28 +362,5 @@ describe('integration tests', () => {
       },
       statusCode: 200
     }))
-  })
-
-  // NOTE: These must remain as the final tests as the EADDRINUSE test breaks
-  // the main `server` used by tests since the socket is deleted
-  // and the server.onClose also closes `server`
-  test('server.onError EADDRINUSE', async () => {
-    const serverWithSameSocketPath = serverlessExpress.createServer({ app: mockApp })
-    serverWithSameSocketPath._serverlessExpress.socketPath = server._serverlessExpress.socketPath
-
-    const response = await serverlessExpress.proxy({
-      server: serverWithSameSocketPath,
-      event: makeEvent()
-    })
-    expect(response.statusCode).toBe(200)
-    expect(serverWithSameSocketPath._serverlessExpress.socketPath).not.toBe(server._serverlessExpress.socketPath)
-    serverWithSameSocketPath.close()
-  })
-
-  test('server.onClose', async () => {
-    server.on('close', () => {
-      expect(server.listening).toBe(false)
-    })
-    server.close()
   })
 })

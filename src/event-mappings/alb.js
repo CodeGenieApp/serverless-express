@@ -1,12 +1,12 @@
-const { mapEventToHttpRequest, mapResponseToService } = require('./utils')
+const { getRequestValuesFromEvent, getResponseToService } = require('./utils')
 
-const mapAlbEventToHttpRequest = ({ event }) => mapEventToHttpRequest({ event })
-const mapResponseToAlb = ({
+const getRequestValuesFromAlbEvent = ({ event }) => getRequestValuesFromEvent({ event })
+const getResponseToAlb = ({
   statusCode,
   body,
   headers,
   isBase64Encoded
-}) => mapResponseToService({
+}) => getResponseToService({
   statusCode,
   body,
   headers,
@@ -14,6 +14,6 @@ const mapResponseToAlb = ({
 })
 
 module.exports = {
-  mapAlbEventToHttpRequest,
-  mapResponseToAlb
+  getRequestValues: getRequestValuesFromAlbEvent,
+  response: getResponseToAlb
 }

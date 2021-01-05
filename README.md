@@ -92,7 +92,7 @@ Set this to true to have serverless-express include the error stack trace in the
 
 ### eventFns
 
-serverless-express natively supports API Gateway, ALB, and Lambda@Edge. If you want to use Express with other AWS Services which can invoke a Lambda Function you can provide your own custom request/response mappings via `eventFns`. See the [custom-mapper-dynamodb example](examples/custom-mapper-dynamodb).
+serverless-express natively supports API Gateway, ALB, and Lambda@Edge. If you want to use Express with other AWS Services integrated with Lambda you can provide your own custom request/response mappings via `eventFns`. See the [custom-mapper-dynamodb example](examples/custom-mapper-dynamodb).
 
 ```js
 function requestMapper ({ event }) {

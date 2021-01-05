@@ -1,4 +1,4 @@
-const mapLambdaEdgeEventToHttpRequest = ({ event }) => {
+const getRequestValuesFromLambdaEdgeEvent = ({ event }) => {
   const cloudFormationRequest = event.Records[0].cf.request
   const { headers: headersMap, uri: path, method } = cloudFormationRequest
 
@@ -6,7 +6,7 @@ const mapLambdaEdgeEventToHttpRequest = ({ event }) => {
   Object.entries(headersMap).forEach(([headerKey, headerValue]) => {
     headers[headerKey] = headerValue.map(header => header.value).join(',')
   })
-  // const request = mapEventToHttpRequest({ event })
+  // const request = getRequestValuesFromEvent({ event })
   // TODO: include querstring params in path
   return {
     method,
@@ -19,7 +19,7 @@ const mapLambdaEdgeEventToHttpRequest = ({ event }) => {
     // port: headers['X-Forwarded-Port']
   }
 }
-const mapResponseToLambdaEdge = ({
+const getResponseToLambdaEdge = ({
   statusCode,
   body,
   headers,
@@ -43,6 +43,6 @@ const mapResponseToLambdaEdge = ({
   }
 }
 module.exports = {
-  mapLambdaEdgeEventToHttpRequest,
-  mapResponseToLambdaEdge
+  request: getRequestValuesFromLambdaEdgeEvent,
+  response: getResponseToLambdaEdge
 }

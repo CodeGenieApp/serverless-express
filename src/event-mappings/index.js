@@ -1,35 +1,24 @@
-const { mapApiGatewayEventToHttpRequest, mapResponseToApiGateway } = require('./api-gateway')
-const { mapAlbEventToHttpRequest, mapResponseToAlb } = require('./alb')
-const { mapLambdaEdgeEventToHttpRequest, mapResponseToLambdaEdge } = require('./lambda-edge')
-const { mapEventToHttpRequest, mapResponseToService } = require('./utils')
+const apiGatewayEventMapping = require('./api-gateway')
+const albEventMapping = require('./alb')
+const lambdaEdgeEventMapping = require('./lambda-edge')
+const { getRequestValuesFromEvent, getResponseToService } = require('./utils')
 
 function getEventFnsBasedOnEventSource ({ eventSource }) {
   switch (eventSource) {
     case 'API_GATEWAY':
-      return {
-        request: mapApiGatewayEventToHttpRequest,
-        response: mapResponseToApiGateway
-      }
+      return apiGatewayEventMapping
     case 'ALB':
-      return {
-        request: mapAlbEventToHttpRequest,
-        response: mapResponseToAlb
-      }
+      return albEventMapping
     case 'LAMBDA_EDGE':
-      return {
-        request: mapLambdaEdgeEventToHttpRequest,
-        response: mapResponseToLambdaEdge
-      }
+      return lambdaEdgeEventMapping
     default:
       return {
-        request: mapEventToHttpRequest,
-        response: mapResponseToService
+        request: getRequestValuesFromEvent,
+        response: getResponseToService
       }
   }
 }
 
 module.exports = {
-  mapApiGatewayEventToHttpRequest,
-  mapResponseToApiGateway,
   getEventFnsBasedOnEventSource
 }

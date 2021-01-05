@@ -26,13 +26,41 @@ function getPathWithQueryStringParams ({
   })
 }
 
-function getRandomString () {
-  return Math.random().toString(36).substring(2, 15)
+function waitForStreamComplete (stream) {
+  if (stream.complete || stream.writableEnded) {
+    return stream
+  }
+
+  return new Promise((resolve, reject) => {
+    stream.once('error', complete)
+    stream.once('end', complete)
+    stream.once('finish', complete)
+
+    let isComplete = false
+
+    function complete (err) {
+      if (isComplete) {
+        return
+      }
+
+      isComplete = true
+
+      stream.removeListener('error', complete)
+      stream.removeListener('end', complete)
+      stream.removeListener('finish', complete)
+
+      if (err) {
+        reject(err)
+      } else {
+        resolve(stream)
+      }
+    }
+  })
 }
 
 module.exports = {
   getPathWithQueryStringParams,
   isContentTypeBinaryMimeType,
   getContentType,
-  getRandomString
+  waitForStreamComplete
 }

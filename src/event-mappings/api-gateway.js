@@ -1,14 +1,14 @@
-const { mapEventToHttpRequest, mapResponseToService } = require('./utils')
+const { getRequestValuesFromEvent, getResponseToService } = require('./utils')
 
-const mapApiGatewayEventToHttpRequest = ({ event }) => mapEventToHttpRequest({ event })
+const getRequestValuesFromApiGatewayEvent = ({ event }) => getRequestValuesFromEvent({ event })
 
-function mapResponseToApiGateway ({
+function getResponseToApiGateway ({
   statusCode,
   body,
   headers,
   isBase64Encoded
 }) {
-  const responseToService = mapResponseToService({
+  const responseToService = getResponseToService({
     statusCode,
     body,
     headers,
@@ -25,6 +25,6 @@ function mapResponseToApiGateway ({
 }
 
 module.exports = {
-  mapApiGatewayEventToHttpRequest,
-  mapResponseToApiGateway
+  getRequestValues: getRequestValuesFromApiGatewayEvent,
+  response: getResponseToApiGateway
 }

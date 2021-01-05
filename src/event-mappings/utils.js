@@ -8,7 +8,7 @@ function getEventBody ({
   return Buffer.from(body, isBase64Encoded ? 'base64' : 'utf8')
 }
 
-function mapEventToHttpRequest ({
+function getRequestValuesFromEvent ({
   event,
   method = event.httpMethod,
   path = getPathWithQueryStringParams({ event }),
@@ -26,22 +26,19 @@ function mapEventToHttpRequest ({
   if (event.body) {
     body = getEventBody({ event })
     const isBase64Encoded = event.isBase64Encoded
-    headers['Content-Length'] = Buffer.byteLength(body, isBase64Encoded ? 'base64' : 'utf8')
+    headers['content-length'] = Buffer.byteLength(body, isBase64Encoded ? 'base64' : 'utf8')
   }
 
   return {
     method,
-    path,
     headers,
-    body
-    // protocol: `${headers['X-Forwarded-Proto']}:`,
-    // host: headers.Host,
-    // hostname: headers.Host, // Alias for host
-    // port: headers['X-Forwarded-Port']
+    body,
+    remoteAddress: event.requestContext.identity.sourceIp,
+    path
   }
 }
 
-function mapResponseToService ({
+function getResponseToService ({
   statusCode,
   body,
   headers,
@@ -74,7 +71,7 @@ function getEventSourceBasedOnEvent ({
 }
 
 module.exports = {
-  mapEventToHttpRequest,
-  mapResponseToService,
+  getRequestValuesFromEvent,
+  getResponseToService,
   getEventSourceBasedOnEvent
 }
