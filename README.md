@@ -51,28 +51,6 @@ ExpressApi:
     BinaryMediaTypes: ['application/json', 'image/*']
 ```
 
-### loggerConfig
-
-Provide additional [Winston logger](https://www.npmjs.com/package/winston) configuration. For example, you could add a new transport to emit any errors to a separate CloudWatch Metric or Log Group. `loggerConfig` will be shallow-merged into the default configuration.
-
-```js
-// Default:
-{
-  level: 'warning',
-  format: format.combine(
-    format.colorize(),
-    format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss'
-    }),
-    format.errors({ stack: true }),
-    format.json()
-  ),
-  transports: [
-    new transports.Console()
-  ]
-}
-```
-
 ### resolutionMode (default: `'PROMISE'`)
 
 Lambda supports three methods to end the execution and return a result: context, callback, and promise. By default, serverless-express uses promise resolution, but you can specify 'CONTEXT' or 'CALLBACK' if you need to change this. If you specify 'CALLBACK', then `context.callbackWaitsForEmptyEventLoop = false` is also set for you.
@@ -130,15 +108,22 @@ configure({
 })
 ```
 
-### logger
+### log
 
-Provide a `logger` object with `debug` and `error` methods to override the default [Winston logger](https://www.npmjs.com/package/winston). For example, you could have any error logs also emit to a separate CloudWatch Metric or Log Group, though in most cases you should be able to simply provide `loggerConfig` with additional log transports.
+Provide a custom `log` object with `info`, `debug` and `error` methods. For example, you could override the default with a [Winston log](https://www.npmjs.com/package/winston) instance.
 
 ```js
 {
-  logger: {
-    debug: (message, additional) => {/*...*/},
-    error: (message, additional) => {/*...*/}
+  log: {
+    info (message, additional) {
+      console.info(message, additional)
+    },
+    debug (message, additional) {
+      console.debug(message, additional)
+    },
+    error (message, additional) {
+      console.error(message, additional)
+    }
   }
 }
 ```
@@ -192,7 +177,7 @@ app.get('/', (req, res) => {
 - For apps that may not see traffic for several minutes at a time, you could see [cold starts](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)
 - Cannot use native libraries (aka [Addons](https://nodejs.org/api/addons.html)) unless you package your app on an EC2 machine running Amazon Linux
 - Stateless only
-- API Gateway has a timeout of 30 seconds, and Lambda has a maximum execution time of 15 minutes.
+- API Gateway has a timeout of 29 seconds, and Lambda has a maximum execution time of 15 minutes.
 
 ## Loadtesting
 

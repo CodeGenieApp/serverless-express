@@ -7,9 +7,6 @@ const se = serverlessExpress.configure({
   eventFns: {
     request: mapDynamoDbEventToHttpRequest,
     response: mapResponseToDynamoDb
-  },
-  loggerConfig: {
-    level: 'debug'
   }
 })
 

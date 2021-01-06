@@ -13,11 +13,7 @@ exports.handler = async (event, context, callback) => {
   const app = await appPromise;
   const se = serverlessExpress.configure({
     app,
-    binaryMimeTypes,
-    respondWithErrors: true,
-    loggerConfig: {
-      level: 'debug'
-    }
+    binaryMimeTypes
   });
 
   return se.proxy({ event, context, callback });

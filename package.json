@@ -20,10 +20,9 @@
   },
   "license": "Apache-2.0",
   "files": [
-    "index.js",
     "src/"
   ],
-  "main": "index.js",
+  "main": "src/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/vendia/serverless-express.git"
@@ -136,8 +135,7 @@
     "install-example-dependencies": "cd examples && npm install --prefix basic-starter-api-gateway-v1 basic-starter-api-gateway-v1 && cd .."
   },
   "dependencies": {
-    "type-is": "^1.6.16",
-    "winston": "^3.2.1"
+    "type-is": "^1.6.16"
   },
   "config": {
     "commitizen": {

@@ -10,10 +10,6 @@ const binaryMimeTypes = [
 ]
 const se = serverlessExpress.configure({
   app,
-  binaryMimeTypes,
-  respondWithErrors: true,
-  loggerConfig: {
-    level: 'debug'
-  }
+  binaryMimeTypes
 })
 exports.handler = se.handler

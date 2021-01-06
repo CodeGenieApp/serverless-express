@@ -1,4 +1,3 @@
-const { createLogger, format, transports } = require('winston')
 const {
   forwardRequestToNodeServer,
   forwardLibraryErrorResponseToApiGateway,
@@ -29,10 +28,10 @@ function proxy ({
   eventSource = getEventSourceBasedOnEvent({ event }),
   binaryMimeTypes,
   eventFns = getEventFnsBasedOnEventSource({ eventSource }),
-  logger,
+  log,
   respondWithErrors
 }) {
-  logger.debug('Calling proxy', { event, context, resolutionMode, eventSource })
+  log.debug('Calling proxy', { event, context, resolutionMode, eventSource })
   setCurrentLambdaInvoke({ event, context })
   return new Promise((resolve, reject) => {
     const promise = {
@@ -56,13 +55,13 @@ function proxy ({
         eventSource,
         binaryMimeTypes,
         eventFns,
-        logger
+        log
       })
     } catch (error) {
       forwardLibraryErrorResponseToApiGateway({
         error,
         resolver,
-        logger,
+        log,
         respondWithErrors,
         eventResponseMapperFn: eventFns.response
       })
@@ -70,19 +69,16 @@ function proxy ({
   })
 }
 
-const DEFAULT_LOGGER_CONFIG = {
-  level: 'warning',
-  format: format.combine(
-    format.colorize(),
-    format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss'
-    }),
-    format.errors({ stack: true }),
-    format.json()
-  ),
-  transports: [
-    new transports.Console()
-  ]
+const DEFAULT_LOGGER = {
+  info (message, additional) {
+    console.info(message, additional)
+  },
+  debug (message, additional) {
+    console.debug(message, additional)
+  },
+  error (message, additional) {
+    console.error(message, additional)
+  }
 }
 
 function configure ({
@@ -92,12 +88,8 @@ function configure ({
   resolutionMode: configureResolutionMode = 'PROMISE',
   eventSource: configureEventSource,
   eventFns: configureEventFns,
-  respondWithErrors: configureRespondWithErrors = true, // process.env.NODE_ENV === 'development',
-  loggerConfig: configureLoggerConfig = {},
-  logger: configureLogger = createLogger({
-    ...DEFAULT_LOGGER_CONFIG,
-    ...configureLoggerConfig
-  }),
+  respondWithErrors: configureRespondWithErrors = process.env.NODE_ENV === 'development',
+  log: configureLogger = DEFAULT_LOGGER,
   proxy: configureProxy = ({
     app: configureProxyApp = configureApp,
     framework: configureProxyFramework = configureFramework,
@@ -108,7 +100,7 @@ function configure ({
     eventSource = configureEventSource,
     binaryMimeTypes = configureBinaryMimeTypes,
     eventFns = configureEventFns,
-    logger = configureLogger,
+    log = configureLogger,
     respondWithErrors = configureRespondWithErrors
   } = {}) => (proxy({
     app: configureProxyApp,
@@ -120,7 +112,7 @@ function configure ({
     eventSource,
     binaryMimeTypes,
     eventFns,
-    logger,
+    log,
     respondWithErrors
   })),
   handler: configureHandler = (event, context, callback) => configureProxy({
@@ -132,7 +124,7 @@ function configure ({
   return {
     proxy: configureProxy,
     handler: configureHandler,
-    logger: configureLogger
+    log: configureLogger
   }
 }
 

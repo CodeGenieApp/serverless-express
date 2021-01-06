@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const vendiaServerlessExpress = require('../index')
+const vendiaServerlessExpress = require('../src/index')
 const apiGatewayEvent = require('../examples/basic-starter-api-gateway-v1/api-gateway-event.json')
 const app = require('../examples/basic-starter-api-gateway-v1/src/app')
 

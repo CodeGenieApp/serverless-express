@@ -7,15 +7,15 @@ function forwardResponse ({
   response,
   resolver,
   eventResponseMapperFn,
-  logger
+  log
 }) {
-  logger.debug('Forwarding response from application to API Gateway... HTTP response:', { headers: response.headers, statusCode: response.statusCode })
+  log.debug('Forwarding response from application to API Gateway... HTTP response:', { headers: response.headers, statusCode: response.statusCode })
   const statusCode = response.statusCode
   const headers = Response.headers(response)
   const contentType = getContentType({
     contentTypeHeader: headers['content-type']
   })
-  logger.debug('contentType', { contentType })
+  log.debug('contentType', { contentType })
   const isBase64Encoded = isContentTypeBinaryMimeType({
     contentType,
     binaryMimeTypes
@@ -28,7 +28,7 @@ function forwardResponse ({
     isBase64Encoded
   })
 
-  logger.debug('Forwarding response from application to API Gateway... API Gateway response:', { successResponse })
+  log.debug('Forwarding response from application to API Gateway... API Gateway response:', { successResponse })
   resolver.succeed({
     response: successResponse
   })
@@ -37,11 +37,11 @@ function forwardResponse ({
 function forwardLibraryErrorResponseToApiGateway ({
   error,
   resolver,
-  logger,
+  log,
   respondWithErrors,
   eventResponseMapperFn
 }) {
-  logger.error('serverless-express error: ', error)
+  log.error('serverless-express error: ', error)
 
   const body = respondWithErrors ? error.stack : ''
   const errorResponse = eventResponseMapperFn({
@@ -63,18 +63,18 @@ async function forwardRequestToNodeServer ({
   eventSource,
   binaryMimeTypes,
   eventFns = getEventFnsBasedOnEventSource({ eventSource }),
-  logger
+  log
 }) {
   const eventResponseMapperFn = eventFns.response
   const requestValues = eventFns.getRequestValues({ event })
-  logger.debug('Forwarding request to application...', { requestValues })
+  log.debug('Forwarding request to application...', { requestValues })
   const response = await framework.sendRequest({ app, requestValues })
   forwardResponse({
     binaryMimeTypes,
     response,
     resolver,
     eventResponseMapperFn,
-    logger
+    log
   })
   return response
 }

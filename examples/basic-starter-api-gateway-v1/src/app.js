@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const compression = require('compression')
-const { getCurrentLambdaInvoke } = require(process.env.NODE_ENV === 'test' ? '../../../index' : '@vendia/serverless-express')
+const { getCurrentLambdaInvoke } = require(process.env.NODE_ENV === 'test' ? '../../../src/index' : '@vendia/serverless-express')
 const app = express()
 const router = express.Router()
 

@@ -4,7 +4,8 @@ const eventSources = require('../src/event-sources')
 const ServerlessRequest = require('../src/request')
 const ServerlessResponse = require('../src/response')
 const expressFramework = require('../src/frameworks/express')
-const logger = {
+const log = {
+  info: () => null,
   debug: () => null,
   error: () => null
 }
@@ -134,7 +135,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
         serverlessExpressTransport.forwardLibraryErrorResponseToApiGateway({
           error: new Error('ERROR'),
           resolver: contextResolver,
-          logger,
+          log,
           eventResponseMapperFn: apiGatewayEventSource.response
         })
       }
@@ -155,7 +156,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
         serverlessExpressTransport.forwardLibraryErrorResponseToApiGateway({
           error: new Error('There was an error...'),
           resolver: contextResolver,
-          logger,
+          log,
           respondWithErrors: true,
           eventResponseMapperFn: apiGatewayEventSource.response
         })
@@ -195,7 +196,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           response,
           resolver: contextResolver,
           eventResponseMapperFn: apiGatewayEventSource.response,
-          logger
+          log
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
@@ -220,7 +221,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           response,
           resolver: contextResolver,
           eventResponseMapperFn: apiGatewayEventSource.response,
-          logger
+          log
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
@@ -244,7 +245,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           response,
           resolver: contextResolver,
           eventResponseMapperFn: apiGatewayEventSource.response,
-          logger
+          log
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
@@ -268,7 +269,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           response,
           resolver: contextResolver,
           eventResponseMapperFn: apiGatewayEventSource.response,
-          logger
+          log
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
@@ -292,7 +293,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           response,
           resolver: contextResolver,
           eventResponseMapperFn: apiGatewayEventSource.response,
-          logger
+          log
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
