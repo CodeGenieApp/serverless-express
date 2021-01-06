@@ -31,7 +31,7 @@ Resources:
       CodeUri: ./dist
       Handler: lambda.handler
       MemorySize: 128
-      Runtime: nodejs8.10
+      Runtime: nodejs12.x
       Timeout: 5
       Role: !GetAtt ExpressLambdaRole.Arn
       AutoPublishAlias: live

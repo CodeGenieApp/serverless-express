@@ -8,6 +8,7 @@ const app = require('./app')
 const binaryMimeTypes = [
   // '*/*'
 ]
+
 const se = serverlessExpress.configure({
   app,
   binaryMimeTypes,

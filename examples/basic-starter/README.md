@@ -48,7 +48,7 @@ To update this example against the latest local changes to @vendia/serverless-ex
 
 ```bash
 npm pack ../..
-npm install ./@vendia/serverless-express-3.3.5.tgz
+npm install ./vendia-serverless-express-4.0.0-rc.1.tgz
 npm install --prefix ./src ./
 npm run local
 ```

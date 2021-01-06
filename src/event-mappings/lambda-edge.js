@@ -7,12 +7,13 @@ const getRequestValuesFromLambdaEdgeEvent = ({ event }) => {
     headers[headerKey] = headerValue.map(header => header.value).join(',')
   })
   // const request = getRequestValuesFromEvent({ event })
-  // TODO: include querstring params in path
+  // TODO: include querystring params in path
   return {
     method,
     path,
     headers,
     body: null
+    // remoteAddress: event.requestContext.identity.sourceIp,
     // protocol: `${headers['X-Forwarded-Proto']}:`,
     // host: headers.Host,
     // hostname: headers.Host, // Alias for host
@@ -27,6 +28,8 @@ const getResponseToLambdaEdge = ({
 }) => {
   const headersMap = {}
   Object.entries(headers).forEach(([headerKey, headerValue]) => {
+    // Lambda@Edge fails if you include content-length
+    if (headerKey.toLowerCase() === 'content-length') return
     if (!headersMap[headerKey]) headersMap[headerKey] = []
 
     headersMap[headerKey].push({
@@ -34,15 +37,20 @@ const getResponseToLambdaEdge = ({
       value: headerValue
     })
   })
-
-  return {
+  const bodyEncoding = isBase64Encoded ? 'base64' : 'text'
+  const responseToService = {
     status: statusCode,
     body,
     headers: headersMap,
-    bodyEncoding: isBase64Encoded ? 'base64' : 'text'
+    bodyEncoding
   }
+
+  // TODO: Handle if responseToServiceBytes exceeds Lambda@Edge limits
+  // const responseToServiceBytes = (new TextEncoder().encode(JSON.stringify(responseToService))).length
+
+  return responseToService
 }
 module.exports = {
-  request: getRequestValuesFromLambdaEdgeEvent,
+  getRequestValues: getRequestValuesFromLambdaEdgeEvent,
   response: getResponseToLambdaEdge
 }

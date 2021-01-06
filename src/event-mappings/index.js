@@ -1,7 +1,6 @@
 const apiGatewayEventMapping = require('./api-gateway')
 const albEventMapping = require('./alb')
 const lambdaEdgeEventMapping = require('./lambda-edge')
-const { getRequestValuesFromEvent, getResponseToService } = require('./utils')
 
 function getEventFnsBasedOnEventSource ({ eventSource }) {
   switch (eventSource) {
@@ -12,10 +11,7 @@ function getEventFnsBasedOnEventSource ({ eventSource }) {
     case 'LAMBDA_EDGE':
       return lambdaEdgeEventMapping
     default:
-      return {
-        request: getRequestValuesFromEvent,
-        response: getResponseToService
-      }
+      throw new Error('Couldn\'t detect valid event source.')
   }
 }
 

@@ -4,10 +4,10 @@
   "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
   "main": "lambda.js",
   "config": {
-    "s3BucketName": "sls-xpress2",
+    "s3BucketName": "sls-xpress-edge1",
     "region": "us-east-1",
     "cloudFormationStackName": "ServerlessExpressEdge",
-    "functionName": "ServerlessExpressStackNew-ExpressLambdaFunction-GU4XXGPADJ0E"
+    "functionName": ""
   },
   "scripts": {
     "start": "node app.local.js",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@vendia/serverless-express": "file:@vendia/serverless-express-3.3.5.tgz",
+    "@vendia/serverless-express": "file:vendia-serverless-express-4.0.0-rc.1.tgz",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
     "cors": "^2.8.3",

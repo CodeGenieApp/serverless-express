@@ -27,6 +27,7 @@ function forwardResponse ({
     headers,
     isBase64Encoded
   })
+
   logger.debug('Forwarding response from application to API Gateway... API Gateway response:', { successResponse })
   resolver.succeed({
     response: successResponse
