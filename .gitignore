@@ -3,3 +3,6 @@ npm-debug.log
 .DS_Store
 .env
 coverage
+sam-template.packaged.yaml
+vendia-serverless-express-*.tgz
+dist/

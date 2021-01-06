@@ -17,32 +17,21 @@ Conditions:
 
 Resources:
   ExpressApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: prod
-      BinaryMediaTypes: ['*/*']
+    Type: AWS::Serverless::HttpApi
 
   ExpressLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./src
+      CodeUri: ./dist
       Handler: lambda.handler
       MemorySize: 1024
       Runtime: nodejs12.x
       Timeout: 30
       Events:
         ProxyApiRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref ExpressApi
-            Path: /
-            Method: ANY
-        ProxyApiGreedy:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ExpressApi
-            Path: /{proxy+}
-            Method: ANY
+            ApiId: !Ref ExpressApi
 
   MyApiCertificate:
     Type: 'AWS::CertificateManager::Certificate'

@@ -65,9 +65,9 @@ async function forwardRequestToNodeServer ({
   eventFns = getEventFnsBasedOnEventSource({ eventSource }),
   logger
 }) {
-  logger.debug('Forwarding request to application...')
   const eventResponseMapperFn = eventFns.response
   const requestValues = eventFns.getRequestValues({ event })
+  logger.debug('Forwarding request to application...', { requestValues })
   const response = await framework.sendRequest({ app, requestValues })
   forwardResponse({
     binaryMimeTypes,

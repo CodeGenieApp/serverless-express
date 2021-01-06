@@ -64,7 +64,9 @@ function getEventSourceBasedOnEvent ({
   event
 }) {
   if (event && event.requestContext && event.requestContext.elb) return 'ALB'
-  if (event && event.requestContext && event.requestContext.stage) return 'API_GATEWAY'
+  if (event && event.requestContext && event.requestContext.stage) {
+    return event.version === '2.0' ? 'API_GATEWAY_V2' : 'API_GATEWAY_V1'
+  }
   if (event && event.Records) return 'LAMBDA_EDGE'
 
   throw new Error('Unable to determine event source based on event.')
@@ -73,5 +75,6 @@ function getEventSourceBasedOnEvent ({
 module.exports = {
   getRequestValuesFromEvent,
   getResponseToService,
-  getEventSourceBasedOnEvent
+  getEventSourceBasedOnEvent,
+  getEventBody
 }

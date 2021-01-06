@@ -8,7 +8,7 @@ const logger = {
   debug: () => null,
   error: () => null
 }
-const apiGatewayEventSource = eventSources.getEventFnsBasedOnEventSource({ eventSource: 'API_GATEWAY' })
+const apiGatewayEventSource = eventSources.getEventFnsBasedOnEventSource({ eventSource: 'API_GATEWAY_V1' })
 
 test('getPathWithQueryStringParams: no params', () => {
   const event = {
