@@ -1,4 +1,4 @@
-const { getEventFnsBasedOnEventSource } = require('./event-mappings')
+const { getEventFnsBasedOnEventSource } = require('./event-sources')
 const { getContentType, isContentTypeBinaryMimeType } = require('./utils')
 const Response = require('./response')
 

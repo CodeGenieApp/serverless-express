@@ -1,15 +1,15 @@
-const apiGatewayEventMapping = require('./api-gateway')
-const albEventMapping = require('./alb')
-const lambdaEdgeEventMapping = require('./lambda-edge')
+const apiGatewayEventSource = require('./api-gateway')
+const albEventSource = require('./alb')
+const lambdaEdgeEventSource = require('./lambda-edge')
 
 function getEventFnsBasedOnEventSource ({ eventSource }) {
   switch (eventSource) {
     case 'API_GATEWAY':
-      return apiGatewayEventMapping
+      return apiGatewayEventSource
     case 'ALB':
-      return albEventMapping
+      return albEventSource
     case 'LAMBDA_EDGE':
-      return lambdaEdgeEventMapping
+      return lambdaEdgeEventSource
     default:
       throw new Error('Couldn\'t detect valid event source.')
   }

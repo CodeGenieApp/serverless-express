@@ -1,6 +1,6 @@
 const serverlessExpressTransport = require('../src/transport')
 const serverlessExpressUtils = require('../src/utils')
-const serverlessExpressEventMappings = require('../src/event-mappings')
+const eventSources = require('../src/event-sources')
 const ServerlessRequest = require('../src/request')
 const ServerlessResponse = require('../src/response')
 const expressFramework = require('../src/frameworks/express')
@@ -8,7 +8,7 @@ const logger = {
   debug: () => null,
   error: () => null
 }
-const apiGatewayEventMapping = serverlessExpressEventMappings.getEventFnsBasedOnEventSource({ eventSource: 'API_GATEWAY' })
+const apiGatewayEventSource = eventSources.getEventFnsBasedOnEventSource({ eventSource: 'API_GATEWAY' })
 
 test('getPathWithQueryStringParams: no params', () => {
   const event = {
@@ -78,7 +78,7 @@ function getEventFnsBasedOnEventSource (multiValueHeaders = {}) {
       }
     }
   }
-  const requestValues = apiGatewayEventMapping.getRequestValues({ event })
+  const requestValues = apiGatewayEventSource.getRequestValues({ event })
   const requestResponse = expressFramework.getRequestResponse(requestValues)
 
   return requestResponse
@@ -135,7 +135,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
           error: new Error('ERROR'),
           resolver: contextResolver,
           logger,
-          eventResponseMapperFn: apiGatewayEventMapping.response
+          eventResponseMapperFn: apiGatewayEventSource.response
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
@@ -157,7 +157,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
           resolver: contextResolver,
           logger,
           respondWithErrors: true,
-          eventResponseMapperFn: apiGatewayEventMapping.response
+          eventResponseMapperFn: apiGatewayEventSource.response
         })
       }
     ).then(successResponse => {
@@ -194,7 +194,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           binaryMimeTypes,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: apiGatewayEventMapping.response,
+          eventResponseMapperFn: apiGatewayEventSource.response,
           logger
         })
       }
@@ -219,7 +219,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           binaryMimeTypes,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: apiGatewayEventMapping.response,
+          eventResponseMapperFn: apiGatewayEventSource.response,
           logger
         })
       }
@@ -243,7 +243,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           binaryMimeTypes,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: apiGatewayEventMapping.response,
+          eventResponseMapperFn: apiGatewayEventSource.response,
           logger
         })
       }
@@ -267,7 +267,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           binaryMimeTypes,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: apiGatewayEventMapping.response,
+          eventResponseMapperFn: apiGatewayEventSource.response,
           logger
         })
       }
@@ -291,7 +291,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           binaryMimeTypes,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: apiGatewayEventMapping.response,
+          eventResponseMapperFn: apiGatewayEventSource.response,
           logger
         })
       }

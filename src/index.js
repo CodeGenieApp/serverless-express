@@ -4,8 +4,8 @@ const {
   forwardLibraryErrorResponseToApiGateway,
   makeResolver
 } = require('./transport')
-const { getEventFnsBasedOnEventSource } = require('./event-mappings')
-const { getEventSourceBasedOnEvent } = require('./event-mappings/utils')
+const { getEventFnsBasedOnEventSource } = require('./event-sources')
+const { getEventSourceBasedOnEvent } = require('./event-sources/utils')
 const { getFramework } = require('./frameworks')
 
 const currentLambdaInvoke = {}
