@@ -1,4 +1,4 @@
-const apiGatewayEventSource = require('./api-gateway')
+const apiGatewayEventSource = require('./api-gateway-v1')
 const albEventSource = require('./alb')
 const lambdaEdgeEventSource = require('./lambda-edge')
 
