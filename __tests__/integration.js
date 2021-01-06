@@ -1,8 +1,8 @@
 const path = require('path')
 const fs = require('fs')
 const vendiaServerlessExpress = require('../index')
-const apiGatewayEvent = require('../examples/basic-starter/api-gateway-event.json')
-const app = require('../examples/basic-starter/src/app')
+const apiGatewayEvent = require('../examples/basic-starter-api-gateway-v1/api-gateway-event.json')
+const app = require('../examples/basic-starter-api-gateway-v1/src/app')
 
 const serverlessExpress = vendiaServerlessExpress.configure({ app })
 const nodeMajorVersion = process.version.split('.')[0].split('v')[1]
@@ -216,7 +216,7 @@ describe('integration tests', () => {
     delete response.multiValueHeaders.etag
     delete response.multiValueHeaders['last-modified']
 
-    const samLogoPath = path.resolve(path.join(__dirname, '../examples/basic-starter/src/sam-logo.png'))
+    const samLogoPath = path.resolve(path.join(__dirname, '../examples/basic-starter-api-gateway-v1/src/sam-logo.png'))
     const samLogoImage = fs.readFileSync(samLogoPath)
     const samLogoBase64 = Buffer.from(samLogoImage).toString('base64')
 

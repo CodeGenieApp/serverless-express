@@ -10,7 +10,7 @@ npm install @vendia/serverless-express
 
 ## Quick Start/Example
 
-Want to get up and running quickly? [Check out our basic starter example](examples/basic-starter) that includes:
+Want to get up and running quickly? [Check out our basic starter example](examples/basic-starter-api-gateway-v1) that includes:
 
 - Lambda function
 - Express application

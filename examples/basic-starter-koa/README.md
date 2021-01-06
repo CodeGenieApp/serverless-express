@@ -6,7 +6,7 @@ In addition to a basic Lambda function and Express server, the `example` directo
 
 This guide assumes you have already [set up an AWS account](http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/AboutAWSAccounts.html) and have the latest version of the [AWS CLI](https://aws.amazon.com/cli/) installed.
 
-1. From your preferred project directory: `git clone https://github.com/@vendia/serverless-express.git && cd serverless-express/examples/basic-starter`.
+1. From your preferred project directory: `git clone https://github.com/@vendia/serverless-express.git && cd serverless-express/examples/basic-starter-koa`.
 1. Update the `config` section of `package.json` with your `s3BucketName` and `region` (optionally, change the `cloudFormationStackName`). If the bucket you specify does not yet exist, the next step will create it for you.
 1. (optional: domain) If you want to use a custom domain name for your application/API, specify it in the `config.domain` section of `package.json`. This example assumes the domain is registered in Route53 in the same account you're deploying the example to.
 1. Run `npm run setup` - this installs the node dependencies, creates an S3 bucket (if it does not already exist), packages and deploys your serverless Express application to AWS Lambda, and creates an API Gateway proxy API.
@@ -23,7 +23,7 @@ See the sections below for details on how to migrate an existing (or create a ne
 
 To use this example as a base for a new Node.js project:
 
-1. Copy the files in the `examples/basic-starter` directory into a new project directory (`cp -r ./examples/basic-starter ~/projects/my-new-node-project`). If you have not already done so, follow the [steps for running the example](#steps-for-running-the-example) (you may want to first modify some of the resource names to something more project-specific, eg. the CloudFormation stack, Lambda function, and API Gateway API).
+1. Copy the files in the `examples/basic-starter-koa` directory into a new project directory (`cp -r ./examples/basic-starter-koa ~/projects/my-new-node-project`). If you have not already done so, follow the [steps for running the example](#steps-for-running-the-example) (you may want to first modify some of the resource names to something more project-specific, eg. the CloudFormation stack, Lambda function, and API Gateway API).
 2. After making updates to `app.js`, simply run `npm run package-deploy`.
 
 To migrate an existing Node server:
