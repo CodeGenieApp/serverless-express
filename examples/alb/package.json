@@ -18,5 +18,8 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "pug": "^2.0.3"
+  },
+  "devDependencies": {
+    "lodash": "^4.17.20"
   }
 }
