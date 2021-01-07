@@ -26,14 +26,15 @@ function getEventBody ({
 function getRequestValuesFromEvent ({
   event,
   method = event.httpMethod,
-  path = getPathWithQueryStringParams({ event }),
-  headers
+  path = getPathWithQueryStringParams({ event })
 }) {
-  if (!headers) {
-    headers = {}
+  let headers = {}
+  if (event.multiValueHeaders) {
     Object.entries(event.multiValueHeaders).forEach(([headerKey, headerValue]) => {
       headers[headerKey] = headerValue.join(',')
     })
+  } else {
+    headers = event.headers
   }
 
   let body
