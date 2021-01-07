@@ -1,5 +1,5 @@
 const serverlessExpressTransport = require('../src/transport')
-const serverlessExpressUtils = require('../src/utils')
+const serverlessExpressEventSourcesUtils = require('../src/event-sources/utils')
 const eventSources = require('../src/event-sources')
 const ServerlessRequest = require('../src/request')
 const ServerlessResponse = require('../src/response')
@@ -15,7 +15,7 @@ test('getPathWithQueryStringParams: no params', () => {
   const event = {
     path: '/foo/bar'
   }
-  const pathWithQueryStringParams = serverlessExpressUtils.getPathWithQueryStringParams({ event })
+  const pathWithQueryStringParams = serverlessExpressEventSourcesUtils.getPathWithQueryStringParams({ event })
   expect(pathWithQueryStringParams).toEqual('/foo/bar')
 })
 
@@ -26,7 +26,7 @@ test('getPathWithQueryStringParams: 1 param', () => {
       bizz: 'bazz'
     }
   }
-  const pathWithQueryStringParams = serverlessExpressUtils.getPathWithQueryStringParams({ event })
+  const pathWithQueryStringParams = serverlessExpressEventSourcesUtils.getPathWithQueryStringParams({ event })
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz')
 })
 
@@ -37,7 +37,7 @@ test('getPathWithQueryStringParams: to be url-encoded param', () => {
       redirect_uri: 'http://lvh.me:3000/cb'
     }
   }
-  const pathWithQueryStringParams = serverlessExpressUtils.getPathWithQueryStringParams({ event })
+  const pathWithQueryStringParams = serverlessExpressEventSourcesUtils.getPathWithQueryStringParams({ event })
   expect(pathWithQueryStringParams).toEqual('/foo/bar?redirect_uri=http%3A%2F%2Flvh.me%3A3000%2Fcb')
 })
 
@@ -49,7 +49,7 @@ test('getPathWithQueryStringParams: 2 params', () => {
       buzz: 'bozz'
     }
   }
-  const pathWithQueryStringParams = serverlessExpressUtils.getPathWithQueryStringParams({ event })
+  const pathWithQueryStringParams = serverlessExpressEventSourcesUtils.getPathWithQueryStringParams({ event })
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&buzz=bozz')
 })
 
@@ -63,7 +63,7 @@ test('getPathWithQueryStringParams: array param', () => {
       ]
     }
   }
-  const pathWithQueryStringParams = serverlessExpressUtils.getPathWithQueryStringParams({ event })
+  const pathWithQueryStringParams = serverlessExpressEventSourcesUtils.getPathWithQueryStringParams({ event })
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&bizz=buzz')
 })
 

@@ -1,6 +1,16 @@
+
+const isType = require('type-is')
 const { getEventFnsBasedOnEventSource } = require('./event-sources')
-const { getContentType, isContentTypeBinaryMimeType } = require('./utils')
 const Response = require('./response')
+
+function isContentTypeBinaryMimeType ({ contentType, binaryMimeTypes }) {
+  return binaryMimeTypes.length > 0 && Boolean(isType.is(contentType, binaryMimeTypes))
+}
+
+function getContentType ({ contentTypeHeader }) {
+  // only compare mime type; ignore encoding part
+  return contentTypeHeader ? contentTypeHeader.split(';')[0] : ''
+}
 
 function forwardResponse ({
   binaryMimeTypes,

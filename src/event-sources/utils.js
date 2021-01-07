@@ -1,4 +1,19 @@
-const { getPathWithQueryStringParams } = require('../utils')
+const url = require('url')
+
+function getPathWithQueryStringParams ({
+  event,
+  query = event.multiValueQueryStringParameters,
+  // NOTE: Use `event.pathParameters.proxy` if available ({proxy+}); fall back to `event.path`
+  path = (event.pathParameters && event.pathParameters.proxy && `/${event.pathParameters.proxy}`) || event.path,
+  // NOTE: Strip base path for custom domains
+  stripBasePath = '',
+  replaceRegex = new RegExp(`^${stripBasePath}`)
+}) {
+  return url.format({
+    pathname: path.replace(replaceRegex, ''),
+    query
+  })
+}
 
 function getEventBody ({
   event,
@@ -73,6 +88,7 @@ function getEventSourceBasedOnEvent ({
 }
 
 module.exports = {
+  getPathWithQueryStringParams,
   getRequestValuesFromEvent,
   getResponseToService,
   getEventSourceBasedOnEvent,
