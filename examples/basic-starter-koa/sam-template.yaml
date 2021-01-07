@@ -27,7 +27,7 @@ Resources:
     Properties:
       CodeUri: ./src
       Handler: lambda.handler
-      MemorySize: 1024
+      MemorySize: 128
       Runtime: nodejs8.10
       Timeout: 30
       Events:
