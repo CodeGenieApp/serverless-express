@@ -31,7 +31,7 @@ function getRequestValuesFromEvent ({
   let headers = {}
   if (event.multiValueHeaders) {
     Object.entries(event.multiValueHeaders).forEach(([headerKey, headerValue]) => {
-      headers[headerKey] = headerValue.join(',')
+      headers[headerKey.toLowerCase()] = headerValue.join(',')
     })
   } else {
     headers = event.headers
@@ -65,7 +65,7 @@ function getResponseToService ({
   Object.entries(headers).forEach(([headerKey, headerValue]) => {
     const headerArray = Array.isArray(headerValue) ? headerValue : [headerValue]
 
-    multiValueHeaders[headerKey] = headerArray
+    multiValueHeaders[headerKey.toLowerCase()] = headerArray
   })
 
   return {
