@@ -1,4 +1,4 @@
-const { getRequestValuesFromEvent, getResponseToService } = require('./utils')
+const { getRequestValuesFromEvent, getResponseToService } = require('../utils')
 
 const getRequestValuesFromApiGatewayEvent = ({ event }) => getRequestValuesFromEvent({ event })
 

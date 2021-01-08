@@ -1,7 +1,7 @@
-const apiGatewayV1EventSource = require('./api-gateway-v1')
-const apiGatewayV2EventSource = require('./api-gateway-v2')
-const albEventSource = require('./alb')
-const lambdaEdgeEventSource = require('./lambda-edge')
+const apiGatewayV1EventSource = require('./aws/api-gateway-v1')
+const apiGatewayV2EventSource = require('./aws/api-gateway-v2')
+const albEventSource = require('./aws/alb')
+const lambdaEdgeEventSource = require('./aws/lambda-edge')
 
 function getEventFnsBasedOnEventSource ({ eventSource }) {
   switch (eventSource) {
