@@ -19,13 +19,16 @@ function forwardResponse ({
   eventResponseMapperFn,
   log
 }) {
-  log.debug('Forwarding response from application to API Gateway... HTTP response:', { headers: response.headers, statusCode: response.statusCode })
+  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:HTTP_RESPONSE', {
+    headers: response.headers,
+    statusCode: response.statusCode
+  })
   const statusCode = response.statusCode
   const headers = Response.headers(response)
   const contentType = getContentType({
     contentTypeHeader: headers['content-type']
   })
-  log.debug('contentType', { contentType })
+  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:CONTENT_TYPE', { contentType })
   const isBase64Encoded = isContentTypeBinaryMimeType({
     contentType,
     binaryMimeTypes
@@ -38,7 +41,7 @@ function forwardResponse ({
     isBase64Encoded
   })
 
-  log.debug('Forwarding response from application to API Gateway... API Gateway response:', { successResponse })
+  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:API_GATEWAY_RESPONSE', { successResponse })
   resolver.succeed({
     response: successResponse
   })
@@ -51,7 +54,7 @@ function forwardLibraryErrorResponseToApiGateway ({
   respondWithErrors,
   eventResponseMapperFn
 }) {
-  log.error('serverless-express error: ', error)
+  log.error('SERVERLESS_EXPRESS:FORWARD_LIBRARY_ERROR_RESPONSE_TO_API_GATEWAY:ERROR', error)
 
   const body = respondWithErrors ? error.stack : ''
   const errorResponse = eventResponseMapperFn({
@@ -77,7 +80,7 @@ async function forwardRequestToNodeServer ({
 }) {
   const eventResponseMapperFn = eventFns.response
   const requestValues = eventFns.getRequestValues({ event })
-  log.debug('Forwarding request to application...', { requestValues })
+  log.debug('SERVERLESS_EXPRESS:REQUEST_VALUES', { requestValues })
   const response = await framework.sendRequest({ app, requestValues })
   forwardResponse({
     binaryMimeTypes,

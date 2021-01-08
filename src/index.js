@@ -31,7 +31,14 @@ function proxy ({
   log,
   respondWithErrors
 }) {
-  log.debug('Calling proxy', { event, context, resolutionMode, eventSource })
+  log.debug('SERVERLESS_EXPRESS:PROXY', {
+    event,
+    context,
+    resolutionMode,
+    eventSource,
+    binaryMimeTypes,
+    respondWithErrors
+  })
   setCurrentLambdaInvoke({ event, context })
   return new Promise((resolve, reject) => {
     const promise = {
