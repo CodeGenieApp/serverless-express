@@ -7,15 +7,15 @@ const { getEventFnsBasedOnEventSource } = require('./event-sources')
 const { getEventSourceBasedOnEvent } = require('./event-sources/utils')
 const { getFramework } = require('./frameworks')
 
-const currentLambdaInvoke = {}
+const currentInvoke = {}
 
-function getCurrentLambdaInvoke () {
-  return currentLambdaInvoke
+function getCurrentInvoke () {
+  return currentInvoke
 }
 
 function setCurrentLambdaInvoke ({ event, context }) {
-  currentLambdaInvoke.event = event
-  currentLambdaInvoke.context = context
+  currentInvoke.event = event
+  currentInvoke.context = context
 }
 
 function proxy ({
@@ -137,5 +137,5 @@ function configure ({
 
 module.exports = {
   configure,
-  getCurrentLambdaInvoke
+  getCurrentInvoke
 }

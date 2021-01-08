@@ -133,9 +133,9 @@ Provide a custom `log` object with `info`, `debug` and `error` methods. For exam
 This package exposes a function to easily get the `event` and `context` objects Lambda receives from the event source.
 
 ```js
-const { getCurrentLambdaInvoke } = require('@vendia/serverless-express')
+const { getCurrentInvoke } = require('@vendia/serverless-express')
 app.get('/', (req, res) => {
-  const { event, context } = getCurrentLambdaInvoke()
+  const { event, context } = getCurrentInvoke()
 
   res.json(event)
 })

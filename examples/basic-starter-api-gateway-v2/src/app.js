@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const compression = require('compression')
-const { getCurrentLambdaInvoke } = require(process.env.NODE_ENV === 'test' ? '../../../src/index' : '@vendia/serverless-express')
+const { getCurrentInvoke } = require(process.env.NODE_ENV === 'test' ? '../../../src/index' : '@vendia/serverless-express')
 const app = express()
 const router = express.Router()
 
@@ -25,9 +25,9 @@ router.use(bodyParser.urlencoded({ extended: true }))
 app.set('views', path.join(__dirname, 'views'))
 
 router.get('/', (req, res) => {
-  const currentLambdaInvoke = getCurrentLambdaInvoke()
+  const currentInvoke = getCurrentInvoke()
   res.render('index', {
-    apiUrl: currentLambdaInvoke ? `https://${currentLambdaInvoke.event.multiValueHeaders.Host[0]}/${currentLambdaInvoke.event.requestContext.stage}` : 'http://localhost:3000'
+    apiUrl: currentInvoke ? `https://${currentInvoke.event.multiValueHeaders.Host[0]}/${currentInvoke.event.requestContext.stage}` : 'http://localhost:3000'
   })
 })
 
