@@ -1,6 +1,6 @@
 const {
   forwardRequestToNodeServer,
-  forwardLibraryErrorResponseToApiGateway,
+  respondToEventSourceWithError,
   makeResolver
 } = require('./transport')
 const { getEventFnsBasedOnEventSource } = require('./event-sources')
@@ -65,7 +65,7 @@ function proxy ({
         log
       })
     } catch (error) {
-      forwardLibraryErrorResponseToApiGateway({
+      respondToEventSourceWithError({
         error,
         resolver,
         log,

@@ -124,7 +124,7 @@ class MockContext {
   }
 }
 
-describe('forwardLibraryErrorResponseToApiGateway', () => {
+describe('respondToEventSourceWithError', () => {
   test('responds with 500 status', () => {
     return new Promise(
       (resolve) => {
@@ -132,7 +132,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
         const contextResolver = {
           succeed: (p) => context.succeed(p.response)
         }
-        serverlessExpressTransport.forwardLibraryErrorResponseToApiGateway({
+        serverlessExpressTransport.respondToEventSourceWithError({
           error: new Error('ERROR'),
           resolver: contextResolver,
           log,
@@ -153,7 +153,7 @@ describe('forwardLibraryErrorResponseToApiGateway', () => {
         const contextResolver = {
           succeed: (p) => context.succeed(p.response)
         }
-        serverlessExpressTransport.forwardLibraryErrorResponseToApiGateway({
+        serverlessExpressTransport.respondToEventSourceWithError({
           error: new Error('There was an error...'),
           resolver: contextResolver,
           log,

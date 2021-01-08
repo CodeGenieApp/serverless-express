@@ -339,7 +339,7 @@ describe('integration tests', () => {
     }))
   })
 
-  test.skip('forwardLibraryErrorResponseToApiGateway', async () => {
+  test.skip('respondToEventSourceWithError', async () => {
     const response = await serverlessExpress.handler(null)
     expect(response).toEqual({
       statusCode: 500,

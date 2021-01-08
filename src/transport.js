@@ -41,20 +41,20 @@ function forwardResponse ({
     isBase64Encoded
   })
 
-  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:API_GATEWAY_RESPONSE', { successResponse })
+  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE', { successResponse })
   resolver.succeed({
     response: successResponse
   })
 }
 
-function forwardLibraryErrorResponseToApiGateway ({
+function respondToEventSourceWithError ({
   error,
   resolver,
   log,
   respondWithErrors,
   eventResponseMapperFn
 }) {
-  log.error('SERVERLESS_EXPRESS:FORWARD_LIBRARY_ERROR_RESPONSE_TO_API_GATEWAY:ERROR', error)
+  log.error('SERVERLESS_EXPRESS:RESPOND_TO_EVENT_SOURCE_WITH_ERROR', error)
 
   const body = respondWithErrors ? error.stack : ''
   const errorResponse = eventResponseMapperFn({
@@ -109,7 +109,7 @@ function makeResolver ({
 
 module.exports = {
   forwardResponse,
-  forwardLibraryErrorResponseToApiGateway,
+  respondToEventSourceWithError,
   forwardRequestToNodeServer,
   makeResolver
 }
