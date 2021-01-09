@@ -79,7 +79,7 @@ async function forwardRequestToNodeServer ({
   log
 }) {
   const eventResponseMapperFn = eventFns.response
-  const requestValues = eventFns.getRequestValues({ event })
+  const requestValues = eventFns.getRequestValues({ event, context, log })
   log.debug('SERVERLESS_EXPRESS:REQUEST_VALUES', { requestValues })
   const response = await framework.sendRequest({ app, requestValues })
   forwardResponse({
@@ -92,24 +92,8 @@ async function forwardRequestToNodeServer ({
   return response
 }
 
-function makeResolver ({
-  context,
-  callback,
-  promise,
-  resolutionMode
-}) {
-  return {
-    succeed: ({ response }) => {
-      if (resolutionMode === 'CONTEXT') return context.succeed(response)
-      if (resolutionMode === 'CALLBACK') return callback(null, response)
-      if (resolutionMode === 'PROMISE') return promise.resolve(response)
-    }
-  }
-}
-
 module.exports = {
   forwardResponse,
   respondToEventSourceWithError,
-  forwardRequestToNodeServer,
-  makeResolver
+  forwardRequestToNodeServer
 }

@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const vendiaServerlessExpress = require('../src/index')
+const configure = require('../src/index')
 const apiGatewayEvent = require('../examples/basic-starter-api-gateway-v1/api-gateway-event.json')
 const app = require('../examples/basic-starter-api-gateway-v1/src/app')
 
@@ -10,7 +10,7 @@ const log = {
   error: () => null
 }
 
-const serverlessExpress = vendiaServerlessExpress.configure({ app, log })
+const serverlessExpress = configure({ app, log })
 const nodeMajorVersion = process.version.split('.')[0].split('v')[1]
 
 function clone (json) {

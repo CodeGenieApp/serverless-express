@@ -79,11 +79,11 @@ function getResponseToService ({
 function getEventSourceBasedOnEvent ({
   event
 }) {
-  if (event && event.requestContext && event.requestContext.elb) return 'ALB'
-  if (event && event.requestContext && event.requestContext.stage) {
-    return event.version === '2.0' ? 'API_GATEWAY_V2' : 'API_GATEWAY_V1'
+  if (event.requestContext && event.requestContext.elb) return 'AWS_ALB'
+  if (event.requestContext && event.requestContext.stage) {
+    return event.version === '2.0' ? 'AWS_API_GATEWAY_V2' : 'AWS_API_GATEWAY_V1'
   }
-  if (event && event.Records) return 'LAMBDA_EDGE'
+  if (event.Records) return 'AWS_LAMBDA_EDGE'
 
   throw new Error('Unable to determine event source based on event.')
 }

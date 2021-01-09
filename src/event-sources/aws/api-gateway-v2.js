@@ -1,7 +1,7 @@
 const url = require('url')
 const { getResponseToService, getEventBody } = require('../utils')
 
-const getRequestValuesFromApiGatewayEvent = ({ event }) => {
+function getRequestValuesFromApiGatewayEvent ({ event }) {
   const {
     requestContext,
     requestPath,

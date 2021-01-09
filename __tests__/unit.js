@@ -1,6 +1,7 @@
 const serverlessExpressTransport = require('../src/transport')
 const serverlessExpressEventSourcesUtils = require('../src/event-sources/utils')
 const eventSources = require('../src/event-sources')
+const makeResolver = require('../src/make-resolver')
 const ServerlessRequest = require('../src/request')
 const ServerlessResponse = require('../src/response')
 const expressFramework = require('../src/frameworks/express')
@@ -9,7 +10,7 @@ const log = {
   debug: () => null,
   error: () => null
 }
-const apiGatewayEventSource = eventSources.getEventFnsBasedOnEventSource({ eventSource: 'API_GATEWAY_V1' })
+const apiGatewayEventSource = eventSources.getEventFnsBasedOnEventSource({ eventSource: 'AWS_API_GATEWAY_V1' })
 
 test('getPathWithQueryStringParams: no params', () => {
   const event = {
@@ -310,7 +311,7 @@ describe('makeResolver', () => {
     return new Promise(
       (resolve) => {
         const context = new MockContext(resolve)
-        const contextResolver = serverlessExpressTransport.makeResolver({
+        const contextResolver = makeResolver({
           context,
           resolutionMode: 'CONTEXT'
         })
@@ -323,7 +324,7 @@ describe('makeResolver', () => {
 
   test('CALLBACK', () => {
     const callback = (e, response) => response
-    const callbackResolver = serverlessExpressTransport.makeResolver({
+    const callbackResolver = makeResolver({
       callback,
       resolutionMode: 'CALLBACK',
       context: {}
@@ -341,7 +342,7 @@ describe('makeResolver', () => {
         resolve,
         reject
       }
-      const promiseResolver = serverlessExpressTransport.makeResolver({
+      const promiseResolver = makeResolver({
         promise,
         resolutionMode: 'PROMISE'
       })

@@ -1,4 +1,4 @@
-const getRequestValuesFromLambdaEdgeEvent = ({ event }) => {
+function getRequestValuesFromLambdaEdgeEvent ({ event }) {
   const cloudFormationRequest = event.Records[0].cf.request
   const { headers: headersMap, uri: path, method } = cloudFormationRequest
 
@@ -20,12 +20,12 @@ const getRequestValuesFromLambdaEdgeEvent = ({ event }) => {
     // port: headers['X-Forwarded-Port']
   }
 }
-const getResponseToLambdaEdge = ({
+function getResponseToLambdaEdge ({
   statusCode,
   body,
   headers,
   isBase64Encoded
-}) => {
+}) {
   const headersMap = {}
   Object.entries(headers).forEach(([headerKey, headerValue]) => {
     // Lambda@Edge fails if you include content-length
