@@ -45,11 +45,13 @@ function getRequestValuesFromEvent ({
     headers['content-length'] = Buffer.byteLength(body, isBase64Encoded ? 'base64' : 'utf8')
   }
 
+  const remoteAddress = (event && event.requestContext && event.requestContext.identity && event.requestContext.identity.sourceIp) || ''
+
   return {
     method,
     headers,
     body,
-    remoteAddress: event.requestContext.identity.sourceIp,
+    remoteAddress,
     path
   }
 }
