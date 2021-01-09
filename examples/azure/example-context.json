@@ -1,0 +1,99 @@
+{
+  "invocationId": "3074ce97-36c4-408d-816e-d9302d5b73cc",
+  "traceContext": {
+    "traceparent": "",
+    "tracestate": "",
+    "attributes": {}
+  },
+  "executionContext": {
+    "invocationId": "3074ce97-36c4-408d-816e-d9302d5b73cc",
+    "functionName": "express",
+    "functionDirectory": "/home/brett/projects/serverless-express/examples/azure/express"
+  },
+  "bindings": {
+    "req": {
+      "method": "GET",
+      "url": "http://localhost:7071/api/express",
+      "originalUrl": "http://localhost:7071/api/express",
+      "headers": {
+        "cache-control": "max-age=0",
+        "connection": "keep-alive",
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+        "cookie": "MCPopupClosed=yes; _ga=GA1.1.187398681.1604401010",
+        "host": "localhost:7071",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36",
+        "upgrade-insecure-requests": "1",
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-user": "?1",
+        "sec-fetch-dest": "document"
+      },
+      "query": {},
+      "params": {}
+    }
+  },
+  "bindingData": {
+    "invocationId": "3074ce97-36c4-408d-816e-d9302d5b73cc",
+    "query": {},
+    "headers": {
+      "cache-Control": "max-age=0",
+      "connection": "keep-alive",
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+      "accept-Encoding": "gzip, deflate, br",
+      "accept-Language": "en-US,en;q=0.9",
+      "cookie": "MCPopupClosed=yes; _ga=GA1.1.187398681.1604401010",
+      "host": "localhost:7071",
+      "user-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36",
+      "upgrade-Insecure-Requests": "1",
+      "sec-Fetch-Site": "cross-site",
+      "sec-Fetch-Mode": "navigate",
+      "sec-Fetch-User": "?1",
+      "sec-Fetch-Dest": "document"
+    },
+    "sys": {
+      "methodName": "express",
+      "utcNow": "2021-01-09T03:59:39.238Z",
+      "randGuid": "72031d66-c988-4611-86dd-ff4a74f76c58"
+    }
+  },
+  "bindingDefinitions": [
+    {
+      "name": "req",
+      "type": "httpTrigger",
+      "direction": "in"
+    },
+    {
+      "name": "res",
+      "type": "http",
+      "direction": "out"
+    }
+  ],
+  "req": {
+    "method": "GET",
+    "url": "http://localhost:7071/api/express",
+    "originalUrl": "http://localhost:7071/api/express",
+    "headers": {
+      "cache-control": "max-age=0",
+      "connection": "keep-alive",
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+      "accept-encoding": "gzip, deflate, br",
+      "accept-language": "en-US,en;q=0.9",
+      "cookie": "MCPopupClosed=yes; _ga=GA1.1.187398681.1604401010",
+      "host": "localhost:7071",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36",
+      "upgrade-insecure-requests": "1",
+      "sec-fetch-site": "cross-site",
+      "sec-fetch-mode": "navigate",
+      "sec-fetch-user": "?1",
+      "sec-fetch-dest": "document"
+    },
+    "query": {},
+    "params": {}
+  },
+  "res": {
+    "headers": {},
+    "cookies": []
+  }
+}

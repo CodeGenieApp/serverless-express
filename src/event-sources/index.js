@@ -2,6 +2,7 @@ const awsApiGatewayV1EventSource = require('./aws/api-gateway-v1')
 const awsApiGatewayV2EventSource = require('./aws/api-gateway-v2')
 const awsAlbEventSource = require('./aws/alb')
 const awsLambdaEdgeEventSource = require('./aws/lambda-edge')
+const azureHttp = require('./azure/http')
 
 function getEventFnsBasedOnEventSource ({ eventSource }) {
   switch (eventSource) {
@@ -13,6 +14,8 @@ function getEventFnsBasedOnEventSource ({ eventSource }) {
       return awsAlbEventSource
     case 'AWS_LAMBDA_EDGE':
       return awsLambdaEdgeEventSource
+    case 'AZURE_HTTP':
+      return azureHttp
     default:
       throw new Error('Couldn\'t detect valid event source.')
   }

@@ -17,7 +17,8 @@ function forwardResponse ({
   response,
   resolver,
   eventResponseMapperFn,
-  log
+  log,
+  event
 }) {
   log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:HTTP_RESPONSE', {
     headers: response.headers,
@@ -38,7 +39,8 @@ function forwardResponse ({
     statusCode,
     body,
     headers,
-    isBase64Encoded
+    isBase64Encoded,
+    event
   })
 
   log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE', { successResponse })
@@ -87,7 +89,8 @@ async function forwardRequestToNodeServer ({
     response,
     resolver,
     eventResponseMapperFn,
-    log
+    log,
+    event
   })
   return response
 }

@@ -86,6 +86,7 @@ function getEventSourceBasedOnEvent ({
     return event.version === '2.0' ? 'AWS_API_GATEWAY_V2' : 'AWS_API_GATEWAY_V1'
   }
   if (event.Records) return 'AWS_LAMBDA_EDGE'
+  if (event.traceContext) return 'AZURE_HTTP'
 
   throw new Error('Unable to determine event source based on event.')
 }
