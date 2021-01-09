@@ -8,8 +8,8 @@ const app = require('./app')
 const binaryMimeTypes = [
   '*/*'
 ]
-const se = serverlessExpress.configure({
+
+exports.handler = serverlessExpress({
   app,
   binaryMimeTypes
-})
-exports.handler = se.handler
+}).handler

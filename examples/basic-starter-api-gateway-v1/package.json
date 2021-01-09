@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@vendia/serverless-express": "file:../..",
+    "@vendia/serverless-express": "file:vendia-serverless-express-4.0.0-rc.2.tgz",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
     "cors": "^2.8.3",

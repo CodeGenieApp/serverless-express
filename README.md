@@ -25,10 +25,9 @@ The only AWS Lambda specific code you need to write is a simple handler like bel
 
 ```js
 // lambda.js
-const { configure } = require('@vendia/serverless-express')
+const serverlessExpress = require('@vendia/serverless-express')
 const app = require('./app')
-const servererlessExpress = configure({ app })
-exports.handler = servererlessExpress.handler
+exports.handler = serverlessExpress({ app }).handler
 ```
 
 ## API
@@ -56,7 +55,7 @@ ExpressApi:
 Lambda supports three methods to end the execution and return a result: context, callback, and promise. By default, serverless-express uses promise resolution, but you can specify 'CONTEXT' or 'CALLBACK' if you need to change this. If you specify 'CALLBACK', then `context.callbackWaitsForEmptyEventLoop = false` is also set for you.
 
 ```js
-configure({
+serverlessExpress({
   app,
   resolutionMode: 'CALLBACK'
 })
@@ -99,7 +98,7 @@ function responseMapper ({
   }
 }
 
-configure({
+serverlessExpress({
   app,
   eventFns: {
     request: requestMapper,
