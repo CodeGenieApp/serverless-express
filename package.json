@@ -109,6 +109,7 @@
     "@semantic-release/changelog": "^1.0.1",
     "@semantic-release/git": "^3.0.1",
     "@semantic-release/npm": "^3.0.2",
+    "@types/aws-lambda": "^8.10.70",
     "commitizen": "^4.2.2",
     "commitlint": "^11.0.0",
     "cz-conventional-changelog": "^2.1.0",
@@ -121,8 +122,8 @@
     "husky": "^0.15.0-rc.4",
     "jest": "^24.5.0",
     "lint-staged": "^7.2.0",
-    "semantic-release": "^17.2.3",
-    "node-notifier": ">=8.0.1"
+    "node-notifier": ">=8.0.1",
+    "semantic-release": "^17.2.3"
   },
   "scripts": {
     "test": "jest",
