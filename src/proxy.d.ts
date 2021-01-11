@@ -5,6 +5,6 @@ interface ProxyParams {
   binaryMimeTypes?: string[]
 }
 
-declare function proxy(proxyParams: ProxyParams): Promise
+declare function proxy(proxyParams: ProxyParams): Promise<any>
 
 export default ProxyParams
