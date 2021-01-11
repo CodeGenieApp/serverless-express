@@ -13,11 +13,11 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@vendia/serverless-express": "file:../..",
+    "@vendia/serverless-express": "^4.0.0-rc.5",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
-    "pug": "^2.0.3"
+    "express": "^4.17.1",
+    "pug": "^2.0.4"
   },
   "devDependencies": {
     "lodash": "^4.17.20"
