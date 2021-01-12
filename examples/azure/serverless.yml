@@ -59,30 +59,9 @@ functions:
   express:
     handler: src/handler
     events:
-      # - http: true
-      #   name: req
-      #   route: '{proxy1}'
-      #   authLevel: anonymous
-      # - http: true
-      #   name: req2
-      #   route: '{proxy1}/{proxy2}'
-      #   authLevel: anonymous
-      # - http: true
-      #   name: req3
-      #   route: '{proxy1}/{proxy2}/{proxy3}'
-      #   authLevel: anonymous
-      # - http: true
-      #   route: 'sam'
-      #   authLevel: anonymous
       - http: true
-        route: 'users'
+        route: '{*segments}'
         authLevel: anonymous
-      # - http: true
-      #   route: 'users/{userId}'
-      #   authLevel: anonymous
-      # - http: true
-      #   route: 'cookie'
-      #   authLevel: anonymous
 
   # The following are a few examples of other events you can configure:
   # storageBlob:
