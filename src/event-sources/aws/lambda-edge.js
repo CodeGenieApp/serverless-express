@@ -44,12 +44,13 @@ function getResponseToLambdaEdge ({
 }) {
   const headersMap = {}
   Object.entries(headers).forEach(([headerKey, headerValue]) => {
+    const headerKeyLowerCase = headerKey.toLowerCase()
     // Lambda@Edge fails if you include content-length
-    if (headerKey.toLowerCase() === 'content-length') return
-    if (!headersMap[headerKey]) headersMap[headerKey] = []
+    if (headerKeyLowerCase === 'content-length') return
+    if (!headersMap[headerKeyLowerCase]) headersMap[headerKeyLowerCase] = []
 
-    headersMap[headerKey].push({
-      key: headerKey,
+    headersMap[headerKeyLowerCase].push({
+      key: headerKeyLowerCase,
       value: headerValue
     })
   })
