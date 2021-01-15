@@ -4,10 +4,17 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const compression = require('compression')
 const { getCurrentInvoke } = require('@vendia/serverless-express')
+const ejs = require('ejs').__express
 const app = express()
 const router = express.Router()
 
-app.set('view engine', 'pug')
+app.set('view engine', 'ejs')
+app.engine('.ejs', ejs)
+
+// app.engine('pug', require('pug').__express)
+
+// app.set('views', path.join(__dirname, 'views'))
+// app.set('view engine', 'pug')
 
 router.use(compression())
 
@@ -20,8 +27,9 @@ app.set('views', path.join(__dirname, 'views'))
 
 router.get('/', (req, res) => {
   const currentInvoke = getCurrentInvoke()
+  const host = currentInvoke.event.Records[0].cf.request.headers.host[0].value
   res.render('index', {
-    apiUrl: currentInvoke ? `https://${currentInvoke.event.headers.host[0].value}/${currentInvoke.event.requestContext.stage}` : 'http://localhost:3000'
+    apiUrl: currentInvoke ? `https://${host}` : 'http://localhost:3000'
   })
 })
 

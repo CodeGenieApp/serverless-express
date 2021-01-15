@@ -22,8 +22,17 @@ Resources:
             QueryString: true
           ViewerProtocolPolicy: redirect-to-https
           LambdaFunctionAssociations:
-            - EventType: viewer-request
+            - EventType: viewer-request # TODO: test origin-request
               LambdaFunctionARN: !Ref ExpressLambdaFunction.Version
+              IncludeBody: true
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+            - PUT
+            - POST
+            - PATCH
+            - DELETE
 
   ExpressLambdaFunction:
     Type: AWS::Serverless::Function

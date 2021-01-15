@@ -1,4 +1,5 @@
-const lambdaFunction = require('../dist/lambda.js')
+// const lambdaFunction = require('../dist/lambda.js')
+const lambdaFunction = require('../src/lambda.js')
 const apiGatewayEvent = require('../lambda-edge-event.json')
 
 const context = {
@@ -12,15 +13,12 @@ const callback = (e, v) => {
   if (v) console.info(v)
   process.exit(0)
 }
-const server = lambdaFunction.handler(apiGatewayEvent, context, callback)
+console.log('lambdaFunction', lambdaFunction)
+lambdaFunction.handler(apiGatewayEvent, context, callback)
 
 process.stdin.resume()
 
 function exitHandler (options, err) {
-  if (options.cleanup && server && server.close) {
-    server.close()
-  }
-
   if (err) console.error(err.stack)
   if (options.exit) process.exit()
 }
