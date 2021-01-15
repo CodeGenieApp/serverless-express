@@ -2,7 +2,7 @@ const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const compression = require('compression')
+// const compression = require('compression')
 const { getCurrentInvoke } = require('@vendia/serverless-express')
 const ejs = require('ejs').__express
 const app = express()
@@ -16,7 +16,7 @@ app.engine('.ejs', ejs)
 // app.set('views', path.join(__dirname, 'views'))
 // app.set('view engine', 'pug')
 
-router.use(compression())
+// router.use(compression())
 
 router.use(cors())
 router.use(bodyParser.json())

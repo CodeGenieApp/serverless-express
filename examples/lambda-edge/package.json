@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@vendia/serverless-express": "^4.0.0-rc.6",
+    "@vendia/serverless-express": "^4.0.0-rc.7",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -33,6 +33,7 @@
     "pug": "^3.0.0"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^7.0.0",
     "cross-var": "^1.1.0",
     "install": "^0.13.0",
     "npm": "^6.14.11",

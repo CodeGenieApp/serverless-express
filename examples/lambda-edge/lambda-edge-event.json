@@ -108,9 +108,9 @@
               }
             ]
           },
-          "method": "POST",
+          "method": "GET",
           "querystring": "",
-          "uri": "/users"
+          "uri": "/"
         }
       }
     }

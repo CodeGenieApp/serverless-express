@@ -1,4 +1,5 @@
 const path = require('path')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: './src/lambda.js',
@@ -10,5 +11,12 @@ module.exports = {
     filename: 'lambda.js',
     // library: 'serverlessExpressEdge',
     libraryTarget: 'commonjs2'
-  }
+  },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: './src/views', to: 'views' }
+      ]
+    })
+  ]
 }
