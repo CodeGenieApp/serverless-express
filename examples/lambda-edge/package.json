@@ -24,20 +24,21 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@vendia/serverless-express": "^4.0.0-rc.5",
-    "body-parser": "^1.17.1",
-    "compression": "^1.6.2",
-    "cors": "^2.8.3",
-    "express": "^4.15.2",
-    "pug": "^2.0.4"
+    "@vendia/serverless-express": "^4.0.0-rc.6",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "pug": "^3.0.0"
   },
   "devDependencies": {
     "cross-var": "^1.1.0",
-    "install": "^0.12.2",
-    "npm": "^6.14.6",
-    "source-map-support": "^0.5.12",
-    "webpack": "^4.35.0",
-    "webpack-cli": "^3.3.5",
-    "webpack-node-externals": "^1.7.2"
+    "install": "^0.13.0",
+    "npm": "^6.14.11",
+    "source-map-support": "^0.5.19",
+    "webpack": "^5.14.0",
+    "webpack-cli": "^4.3.1",
+    "webpack-node-externals": "^2.5.2"
   }
 }

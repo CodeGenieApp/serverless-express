@@ -1,6 +1,20 @@
 function getRequestValuesFromLambdaEdgeEvent ({ event }) {
   const cloudFormationRequest = event.Records[0].cf.request
-  const { headers: headersMap, uri: path, method } = cloudFormationRequest
+  const {
+    headers: headersMap,
+    uri: path,
+    method,
+    body: requestBodyObject = {},
+    clientIp
+  } = cloudFormationRequest
+  let body = null
+  if (requestBodyObject.data) {
+    if (requestBodyObject.encoding === 'base64') {
+      body = Buffer.from(requestBodyObject.data, 'base64').toString('utf8')
+    } else {
+      body = requestBodyObject.data
+    }
+  }
 
   const headers = {}
   Object.entries(headersMap).forEach(([headerKey, headerValue]) => {
@@ -8,15 +22,17 @@ function getRequestValuesFromLambdaEdgeEvent ({ event }) {
   })
   // const request = getRequestValuesFromEvent({ event })
   // TODO: include querystring params in path
+  const { host } = headers
+
   return {
     method,
     path,
     headers,
-    body: null
-    // remoteAddress: event.requestContext.identity.sourceIp,
+    body,
+    remoteAddress: clientIp,
+    host,
+    hostname: host // Alias for host
     // protocol: `${headers['X-Forwarded-Proto']}:`,
-    // host: headers.Host,
-    // hostname: headers.Host, // Alias for host
     // port: headers['X-Forwarded-Port']
   }
 }
@@ -50,6 +66,7 @@ function getResponseToLambdaEdge ({
 
   return responseToService
 }
+
 module.exports = {
   getRequestValues: getRequestValuesFromLambdaEdgeEvent,
   response: getResponseToLambdaEdge
