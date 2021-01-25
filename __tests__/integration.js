@@ -35,9 +35,9 @@ function makeEvent (eventOverrides = {}) {
 function expectedRootResponse () {
   return makeResponse({
     multiValueHeaders: {
-      'content-length': ['3728'],
+      'content-length': ['4659'],
       'content-type': ['text/html; charset=utf-8'],
-      etag: ['W/"e90-ToQlyXvAkG0PJrs7lZqgVr+CrkI"']
+      etag: ['W/"1233-UcgIN3SD7YNLl2bLEKDbkMGu6io"']
     }
   })
 }
@@ -66,7 +66,7 @@ function makeResponse (response) {
 }
 
 describe('integration tests', () => {
-  test('proxy returns promise', () => {
+  test('handler returns promise', () => {
     const response = serverlessExpressInstance.handler(makeEvent({
       path: '/',
       httpMethod: 'GET'
@@ -164,24 +164,22 @@ describe('integration tests', () => {
       }))
       done()
     }
-    serverlessExpressInstance.proxy({
-      event: makeEvent({
-        path: '/users/1',
-        httpMethod: 'GET'
-      }),
-      resolutionMode: 'CALLBACK',
-      callback
+
+    const event = makeEvent({
+      path: '/users/1',
+      httpMethod: 'GET'
     })
+    const serverlessExpressInstanceWithCallbackResolutionMode = serverlessExpress({ app, log, resolutionMode: 'CALLBACK' })
+    serverlessExpressInstanceWithCallbackResolutionMode.handler(event, {}, callback)
   })
 
   test('GET JSON single (resolutionMode = PROMISE)', async () => {
-    const response = await serverlessExpressInstance.proxy({
-      event: makeEvent({
-        path: '/users/1',
-        httpMethod: 'GET'
-      }),
-      resolutionMode: 'PROMISE'
+    const event = makeEvent({
+      path: '/users/1',
+      httpMethod: 'GET'
     })
+    const serverlessExpressInstanceWithPromiseResolutionMode = serverlessExpress({ app, log, resolutionMode: 'PROMISE' })
+    const response = await serverlessExpressInstanceWithPromiseResolutionMode.handler(event)
 
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
@@ -214,10 +212,9 @@ describe('integration tests', () => {
       path: '/sam',
       httpMethod: 'GET'
     })
-    const response = await serverlessExpressInstance.proxy({
-      binaryMimeTypes: ['image/*'],
-      event
-    })
+
+    const serverlessExpressInstanceWithBinaryMimeTypes = serverlessExpress({ app, log, binaryMimeTypes: ['image/*'] })
+    const response = await serverlessExpressInstanceWithBinaryMimeTypes.handler(event)
     delete response.multiValueHeaders.date
     delete response.multiValueHeaders.etag
     delete response.multiValueHeaders['last-modified']

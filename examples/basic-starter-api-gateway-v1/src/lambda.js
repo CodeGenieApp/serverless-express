@@ -1,4 +1,5 @@
-const serverlessExpress = require(process.env.NODE_ENV === 'test' ? '../../index' : '@vendia/serverless-express')
+require('source-map-support/register')
+const serverlessExpress = require(process.env.NODE_ENV === 'test' ? '../../..' : '@vendia/serverless-express')
 const app = require('./app')
 
 // NOTE: If you get ERR_CONTENT_DECODING_FAILED in your browser, this is likely

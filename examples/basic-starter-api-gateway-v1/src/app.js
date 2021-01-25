@@ -4,10 +4,12 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const compression = require('compression')
 const { getCurrentInvoke } = require(process.env.NODE_ENV === 'test' ? '../../../src/index' : '@vendia/serverless-express')
+const ejs = require('ejs').__express
 const app = express()
 const router = express.Router()
 
-app.set('view engine', 'pug')
+app.set('view engine', 'ejs')
+app.engine('.ejs', ejs)
 
 if (process.env.NODE_ENV === 'test') {
   // NOTE: serverless-express uses this app for its integration tests
@@ -26,8 +28,19 @@ app.set('views', path.join(__dirname, 'views'))
 
 router.get('/', (req, res) => {
   const currentInvoke = getCurrentInvoke()
+  const { event = {} } = currentInvoke
+  const {
+    requestContext = {},
+    multiValueHeaders = {}
+  } = event
+  const { stage = '' } = requestContext
+  const {
+    Host = ['localhost:3000']
+  } = multiValueHeaders
+  const apiUrl = `https://${Host[0]}/${stage}`
   res.render('index', {
-    apiUrl: currentInvoke ? `https://${currentInvoke.event.multiValueHeaders.Host[0]}/${currentInvoke.event.requestContext.stage}` : 'http://localhost:3000'
+    apiUrl,
+    stage
   })
 })
 
