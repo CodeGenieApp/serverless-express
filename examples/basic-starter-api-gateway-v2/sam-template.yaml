@@ -23,8 +23,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./dist
-      Handler: lambda.handler
-      MemorySize: 128
+      Handler: main.handler
+      MemorySize: 1024
       Runtime: nodejs12.x
       Timeout: 30
       Events:
@@ -91,7 +91,7 @@ Outputs:
   ApiUrl:
     Description: Invoke URL for your API. Clicking this link will perform a GET request
       on the root resource of your API.
-    Value: !Sub https://${ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/prod/
+    Value: !Sub https://${ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/
 
   LambdaFunctionName:
     Description: Name of the Serverless Express Lambda Function

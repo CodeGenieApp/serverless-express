@@ -38,7 +38,8 @@ function forwardResponse ({
     statusCode,
     body,
     headers,
-    isBase64Encoded
+    isBase64Encoded,
+    response
   })
 
   log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE', { successResponse })

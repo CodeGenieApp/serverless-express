@@ -48,23 +48,20 @@ function getRequestValuesFromApiGatewayEvent ({ event }) {
 function getResponseToApiGateway ({
   statusCode,
   body,
-  headers,
-  isBase64Encoded
+  headers = {},
+  isBase64Encoded = false,
+  response = {}
 }) {
-  const responseToService = getResponseToService({
+  if (headers['transfer-encoding'] === 'chunked' || response.chunkedEncoding) {
+    throw new Error('chunked encoding is not supported by API Gateway')
+  }
+
+  return {
     statusCode,
     body,
     headers,
     isBase64Encoded
-  })
-  const transferEncodingHeader = responseToService.multiValueHeaders['transfer-encoding']
-
-  // chunked transfer not currently supported by API Gateway
-  if (transferEncodingHeader && transferEncodingHeader.includes('chunked')) {
-    responseToService.multiValueHeaders['transfer-encoding'] = transferEncodingHeader.filter(headerValue => headerValue !== 'chunked')
   }
-
-  return responseToService
 }
 
 module.exports = {

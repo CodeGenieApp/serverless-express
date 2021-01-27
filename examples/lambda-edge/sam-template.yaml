@@ -39,7 +39,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       Handler: lambda.handler
-      MemorySize: 128
+      MemorySize: 1024
       Runtime: nodejs12.x
       Timeout: 5
       Role: !GetAtt ExpressLambdaRole.Arn

@@ -1,69 +1,10 @@
 const path = require('path')
 const fs = require('fs')
 const serverlessExpress = require('../src/index')
-const apiGatewayEvent = require('../examples/basic-starter-api-gateway-v1/api-gateway-event.json')
 const app = require('../examples/basic-starter-api-gateway-v1/src/app')
-
-const log = {
-  info: () => null,
-  debug: () => null,
-  error: () => null
-}
+const { log, makeEvent, expectedRootResponse, makeResponse } = require('../jest-helpers')
 
 const serverlessExpressInstance = serverlessExpress({ app, log })
-const nodeMajorVersion = process.version.split('.')[0].split('v')[1]
-
-function clone (json) {
-  return JSON.parse(JSON.stringify(json))
-}
-
-function makeEvent (eventOverrides = {}) {
-  const baseEvent = clone(apiGatewayEvent)
-  const multiValueHeaders = {
-    ...baseEvent.multiValueHeaders,
-    ...eventOverrides.multiValueHeaders
-  }
-  const root = {
-    ...baseEvent,
-    ...eventOverrides
-  }
-  root.multiValueHeaders = multiValueHeaders
-  root.pathParameters.proxy = eventOverrides.path && eventOverrides.path.replace(/^\//, '')
-  return root
-}
-
-function expectedRootResponse () {
-  return makeResponse({
-    multiValueHeaders: {
-      'content-length': ['4659'],
-      'content-type': ['text/html; charset=utf-8'],
-      etag: ['W/"1233-UcgIN3SD7YNLl2bLEKDbkMGu6io"']
-    }
-  })
-}
-
-function makeResponse (response) {
-  const baseResponse = {
-    body: '',
-    isBase64Encoded: false,
-    statusCode: 200
-  }
-  const baseHeaders = {
-    'access-control-allow-origin': ['*'],
-    'content-type': ['application/json; charset=utf-8'],
-    'x-powered-by': ['Express']
-  }
-  const multiValueHeaders = {
-    ...baseHeaders,
-    ...response.multiValueHeaders
-  }
-  const finalResponse = {
-    ...baseResponse,
-    ...response
-  }
-  finalResponse.multiValueHeaders = multiValueHeaders
-  return finalResponse
-}
 
 describe('integration tests', () => {
   test('handler returns promise', () => {
@@ -352,10 +293,10 @@ describe('integration tests', () => {
     }))
     delete response.multiValueHeaders.date
 
-    const expectedSetCookieHeaders = nodeMajorVersion >= 10 ? [
+    const expectedSetCookieHeaders = [
       'Foo=bar; Path=/',
       'Fizz=buzz; Path=/'
-    ] : ['Foo=bar; Path=/,Fizz=buzz; Path=/']
+    ]
     expect(response).toEqual(makeResponse({
       body: '{}',
       multiValueHeaders: {

@@ -5,11 +5,8 @@ const makeResolver = require('../src/make-resolver')
 const ServerlessRequest = require('../src/request')
 const ServerlessResponse = require('../src/response')
 const expressFramework = require('../src/frameworks/express')
-const log = {
-  info: () => null,
-  debug: () => null,
-  error: () => null
-}
+const { log, MockContext } = require('../jest-helpers')
+
 const apiGatewayEventSource = eventSources.getEventFnsBasedOnEventSource({ eventSource: 'AWS_API_GATEWAY_V1' })
 
 test('getPathWithQueryStringParams: no params', () => {
@@ -114,16 +111,6 @@ test('getEventFnsBasedOnEventSource: without headers', async (done) => {
   })
   done()
 })
-
-class MockContext {
-  constructor (resolve) {
-    this.resolve = resolve
-  }
-
-  succeed (successResponse) {
-    this.resolve(successResponse)
-  }
-}
 
 describe('respondToEventSourceWithError', () => {
   test('responds with 500 status', () => {

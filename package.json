@@ -119,6 +119,7 @@
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
+    "express": "^4.17.1",
     "husky": "^0.15.0-rc.4",
     "jest": "^24.5.0",
     "lint-staged": "^7.2.0",
