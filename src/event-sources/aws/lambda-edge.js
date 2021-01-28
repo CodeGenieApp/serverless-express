@@ -69,6 +69,6 @@ function getResponseToLambdaEdge ({
 }
 
 module.exports = {
-  getRequestValues: getRequestValuesFromLambdaEdgeEvent,
-  response: getResponseToLambdaEdge
+  getRequest: getRequestValuesFromLambdaEdgeEvent,
+  getResponse: getResponseToLambdaEdge
 }

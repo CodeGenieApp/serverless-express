@@ -14,6 +14,6 @@ const getResponseToAlb = ({
 })
 
 module.exports = {
-  getRequestValues: getRequestValuesFromAlbEvent,
-  response: getResponseToAlb
+  getRequest: getRequestValuesFromAlbEvent,
+  getResponse: getResponseToAlb
 }

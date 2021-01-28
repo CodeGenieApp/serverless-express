@@ -1,6 +1,6 @@
 const { setCurrentInvoke } = require('./current-invoke')
-const { getEventFnsBasedOnEventSource } = require('./event-sources')
-const { getEventSourceBasedOnEvent } = require('./event-sources/utils')
+const { getEventSource } = require('./event-sources')
+const { getEventSourceNameBasedOnEvent } = require('./event-sources/utils')
 const { getFramework } = require('./frameworks')
 const makeResolver = require('./make-resolver')
 const { forwardRequestToNodeServer, respondToEventSourceWithError } = require('./transport')
@@ -12,9 +12,9 @@ function proxy ({
   context = {},
   callback = null,
   resolutionMode = 'PROMISE',
-  eventSource = getEventSourceBasedOnEvent({ event }),
+  eventSourceName = getEventSourceNameBasedOnEvent({ event }),
   binaryMimeTypes,
-  eventFns = getEventFnsBasedOnEventSource({ eventSource }),
+  eventSource = getEventSource({ eventSourceName }),
   log,
   respondWithErrors
 }) {
@@ -22,7 +22,7 @@ function proxy ({
     event,
     context,
     resolutionMode,
-    eventSource,
+    eventSourceName,
     binaryMimeTypes,
     respondWithErrors
   })
@@ -46,9 +46,9 @@ function proxy ({
         event,
         context,
         resolver,
-        eventSource,
+        eventSourceName,
         binaryMimeTypes,
-        eventFns,
+        eventSource,
         log
       })
     } catch (error) {
@@ -57,7 +57,7 @@ function proxy ({
         resolver,
         log,
         respondWithErrors,
-        eventResponseMapperFn: eventFns.response
+        eventSource
       })
     }
   })

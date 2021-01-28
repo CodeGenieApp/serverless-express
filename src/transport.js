@@ -1,6 +1,6 @@
 
 const isType = require('type-is')
-const { getEventFnsBasedOnEventSource } = require('./event-sources')
+const { getEventSource } = require('./event-sources')
 const Response = require('./response')
 
 function isContentTypeBinaryMimeType ({ contentType, binaryMimeTypes }) {
@@ -16,7 +16,7 @@ function forwardResponse ({
   binaryMimeTypes,
   response,
   resolver,
-  eventResponseMapperFn,
+  eventSource,
   log
 }) {
   const statusCode = response.statusCode
@@ -37,7 +37,7 @@ function forwardResponse ({
     isBase64Encoded
   })
 
-  const successResponse = eventResponseMapperFn({
+  const successResponse = eventSource.getResponse({
     statusCode,
     body,
     headers,
@@ -57,12 +57,12 @@ function respondToEventSourceWithError ({
   resolver,
   log,
   respondWithErrors,
-  eventResponseMapperFn
+  eventSource
 }) {
   log.error('SERVERLESS_EXPRESS:RESPOND_TO_EVENT_SOURCE_WITH_ERROR', error)
 
   const body = respondWithErrors ? error.stack : ''
-  const errorResponse = eventResponseMapperFn({
+  const errorResponse = eventSource.getResponse({
     statusCode: 500,
     body,
     headers: {},
@@ -78,13 +78,12 @@ async function forwardRequestToNodeServer ({
   event,
   context,
   resolver,
-  eventSource,
+  eventSourceName,
   binaryMimeTypes,
-  eventFns = getEventFnsBasedOnEventSource({ eventSource }),
+  eventSource = getEventSource({ eventSourceName }),
   log
 }) {
-  const eventResponseMapperFn = eventFns.response
-  const requestValues = eventFns.getRequestValues({ event, context, log })
+  const requestValues = eventSource.getRequest({ event, context, log })
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:REQUEST_VALUES', { requestValues })
   const response = await framework.sendRequest({ app, requestValues })
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:RESPONSE', { response })
@@ -92,7 +91,7 @@ async function forwardRequestToNodeServer ({
     binaryMimeTypes,
     response,
     resolver,
-    eventResponseMapperFn,
+    eventSource,
     log
   })
   return response

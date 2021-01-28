@@ -78,7 +78,7 @@ function getResponseToService ({
   }
 }
 
-function getEventSourceBasedOnEvent ({
+function getEventSourceNameBasedOnEvent ({
   event
 }) {
   if (event.requestContext && event.requestContext.elb) return 'AWS_ALB'
@@ -94,6 +94,6 @@ module.exports = {
   getPathWithQueryStringParams,
   getRequestValuesFromEvent,
   getResponseToService,
-  getEventSourceBasedOnEvent,
+  getEventSourceNameBasedOnEvent,
   getEventBody
 }

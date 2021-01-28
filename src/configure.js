@@ -7,8 +7,8 @@ function configure ({
   framework: configureFramework = getFramework({ app: configureApp }),
   binaryMimeTypes: configureBinaryMimeTypes = [],
   resolutionMode: configureResolutionMode = 'PROMISE',
-  eventSource: configureEventSource,
-  eventFns: configureEventFns,
+  eventSourceName: configureEventSourceName,
+  eventSource: configureEventFns,
   respondWithErrors: configureRespondWithErrors = process.env.NODE_ENV === 'development',
   log: configureLogger = logger,
   proxy: configureProxy = ({
@@ -18,9 +18,9 @@ function configure ({
     event,
     context,
     callback,
-    eventSource = configureEventSource,
+    eventSourceName = configureEventSourceName,
     binaryMimeTypes = configureBinaryMimeTypes,
-    eventFns = configureEventFns,
+    eventSource = configureEventFns,
     log = configureLogger,
     respondWithErrors = configureRespondWithErrors
   } = {}) => proxy({
@@ -30,9 +30,9 @@ function configure ({
     context,
     resolutionMode,
     callback,
-    eventSource,
+    eventSourceName,
     binaryMimeTypes,
-    eventFns,
+    eventSource,
     log,
     respondWithErrors
   }),

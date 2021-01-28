@@ -25,6 +25,6 @@ function getResponseToApiGateway ({
 }
 
 module.exports = {
-  getRequestValues: getRequestValuesFromApiGatewayEvent,
-  response: getResponseToApiGateway
+  getRequest: getRequestValuesFromApiGatewayEvent,
+  getResponse: getResponseToApiGateway
 }

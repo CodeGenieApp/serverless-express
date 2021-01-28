@@ -3,8 +3,8 @@ const awsApiGatewayV2EventSource = require('./aws/api-gateway-v2')
 const awsAlbEventSource = require('./aws/alb')
 const awsLambdaEdgeEventSource = require('./aws/lambda-edge')
 
-function getEventFnsBasedOnEventSource ({ eventSource }) {
-  switch (eventSource) {
+function getEventSource ({ eventSourceName }) {
+  switch (eventSourceName) {
     case 'AWS_API_GATEWAY_V1':
       return awsApiGatewayV1EventSource
     case 'AWS_API_GATEWAY_V2':
@@ -19,5 +19,5 @@ function getEventFnsBasedOnEventSource ({ eventSource }) {
 }
 
 module.exports = {
-  getEventFnsBasedOnEventSource
+  getEventSource
 }

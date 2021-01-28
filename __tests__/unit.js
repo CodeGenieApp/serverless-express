@@ -7,7 +7,7 @@ const ServerlessResponse = require('../src/response')
 const expressFramework = require('../src/frameworks/express')
 const { log, MockContext } = require('../jest-helpers')
 
-const apiGatewayEventSource = eventSources.getEventFnsBasedOnEventSource({ eventSource: 'AWS_API_GATEWAY_V1' })
+const apiGatewayEventSource = eventSources.getEventSource({ eventSourceName: 'AWS_API_GATEWAY_V1' })
 
 test('getPathWithQueryStringParams: no params', () => {
   const event = {
@@ -65,7 +65,7 @@ test('getPathWithQueryStringParams: array param', () => {
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&bizz=buzz')
 })
 
-function getEventFnsBasedOnEventSource (multiValueHeaders = {}) {
+function getRequestResponse (multiValueHeaders = {}) {
   const event = {
     path: '/foo',
     httpMethod: 'GET',
@@ -77,14 +77,14 @@ function getEventFnsBasedOnEventSource (multiValueHeaders = {}) {
       }
     }
   }
-  const requestValues = apiGatewayEventSource.getRequestValues({ event })
+  const requestValues = apiGatewayEventSource.getRequest({ event })
   const requestResponse = expressFramework.getRequestResponse(requestValues)
 
   return requestResponse
 }
 
-test('getEventFnsBasedOnEventSource: with headers', async (done) => {
-  const { request } = await getEventFnsBasedOnEventSource({ 'x-foo': ['foo'] })
+test('getRequestResponse: with headers', async (done) => {
+  const { request } = await getRequestResponse({ 'x-foo': ['foo'] })
   expect(request).toBeInstanceOf(ServerlessRequest)
   expect(request.body).toBeInstanceOf(Buffer)
   expect(request.body.toString('utf-8')).toEqual('Hello serverless!')
@@ -98,8 +98,8 @@ test('getEventFnsBasedOnEventSource: with headers', async (done) => {
   done()
 })
 
-test('getEventFnsBasedOnEventSource: without headers', async (done) => {
-  const requestResponse = await getEventFnsBasedOnEventSource()
+test('getRequestResponse: without headers', async (done) => {
+  const requestResponse = await getRequestResponse()
   expect(requestResponse.request).toBeInstanceOf(ServerlessRequest)
   expect(requestResponse.request.body).toBeInstanceOf(Buffer)
   expect(requestResponse.request.body.toString('utf-8')).toEqual('Hello serverless!')
@@ -124,7 +124,7 @@ describe('respondToEventSourceWithError', () => {
           error: new Error('ERROR'),
           resolver: contextResolver,
           log,
-          eventResponseMapperFn: apiGatewayEventSource.response
+          eventSource: apiGatewayEventSource
         })
       }
     ).then(successResponse => expect(successResponse).toEqual({
@@ -146,7 +146,7 @@ describe('respondToEventSourceWithError', () => {
           resolver: contextResolver,
           log,
           respondWithErrors: true,
-          eventResponseMapperFn: apiGatewayEventSource.response
+          eventSource: apiGatewayEventSource
         })
       }
     ).then(successResponse => {
@@ -174,7 +174,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
   test('content-type header missing', async (done) => {
     const binaryMimeTypes = []
     const multiValueHeaders = { foo: ['bar'] }
-    const { requestResponse } = await getEventFnsBasedOnEventSource(multiValueHeaders)
+    const { requestResponse } = await getRequestResponse(multiValueHeaders)
     const response = new ServerlessResponse(requestResponse.request)
     return new Promise(
       (resolve) => {
@@ -183,7 +183,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           binaryMimeTypes,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: apiGatewayEventSource.response,
+          eventSource: apiGatewayEventSource,
           log
         })
       }
@@ -208,7 +208,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           binaryMimeTypes,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: apiGatewayEventSource.response,
+          eventSource: apiGatewayEventSource,
           log
         })
       }
@@ -232,7 +232,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           binaryMimeTypes,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: apiGatewayEventSource.response,
+          eventSource: apiGatewayEventSource,
           log
         })
       }
@@ -256,7 +256,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           binaryMimeTypes,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: apiGatewayEventSource.response,
+          eventSource: apiGatewayEventSource,
           log
         })
       }
@@ -280,7 +280,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
           binaryMimeTypes,
           response,
           resolver: contextResolver,
-          eventResponseMapperFn: apiGatewayEventSource.response,
+          eventSource: apiGatewayEventSource,
           log
         })
       }

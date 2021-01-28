@@ -4,9 +4,9 @@ const { mapDynamoDbEventToHttpRequest, mapResponseToDynamoDb } = require('./dyna
 
 const se = serverlessExpress.configure({
   app,
-  eventFns: {
-    request: mapDynamoDbEventToHttpRequest,
-    response: mapResponseToDynamoDb
+  eventSource: {
+    getRequest: mapDynamoDbEventToHttpRequest,
+    getResponse: mapResponseToDynamoDb
   }
 })
 
