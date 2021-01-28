@@ -1,19 +1,9 @@
-
-const isType = require('type-is')
 const { getEventSource } = require('./event-sources')
 const Response = require('./response')
-
-function isContentTypeBinaryMimeType ({ contentType, binaryMimeTypes }) {
-  return binaryMimeTypes.length > 0 && Boolean(isType.is(contentType, binaryMimeTypes))
-}
-
-function getContentType ({ contentTypeHeader }) {
-  // only compare mime type; ignore encoding part
-  return contentTypeHeader ? contentTypeHeader.split(';')[0] : ''
-}
+const isBinary = require('./is-binary')
 
 function forwardResponse ({
-  binaryMimeTypes,
+  binarySettings,
   response,
   resolver,
   eventSource,
@@ -21,18 +11,17 @@ function forwardResponse ({
 }) {
   const statusCode = response.statusCode
   const headers = Response.headers(response)
-  const contentType = getContentType({
-    contentTypeHeader: headers['content-type']
+  const isBase64Encoded = isBinary({
+    headers,
+    binarySettings
   })
-  const isBase64Encoded = isContentTypeBinaryMimeType({
-    contentType,
-    binaryMimeTypes
-  })
-  const body = Response.body(response).toString(isBase64Encoded ? 'base64' : 'utf8')
+  const encoding = isBase64Encoded ? 'base64' : 'utf8'
+  const body = Response.body(response).toString(encoding)
+  const logBody = isBase64Encoded ? '[BASE64_ENCODED]' : body
 
   log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE_PARAMS', {
     statusCode,
-    body,
+    body: logBody,
     headers,
     isBase64Encoded
   })
@@ -45,7 +34,10 @@ function forwardResponse ({
     response
   })
 
-  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE', { successResponse })
+  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE', {
+    successResponse,
+    body: logBody
+  })
 
   resolver.succeed({
     response: successResponse
@@ -79,7 +71,7 @@ async function forwardRequestToNodeServer ({
   context,
   resolver,
   eventSourceName,
-  binaryMimeTypes,
+  binarySettings,
   eventSource = getEventSource({ eventSourceName }),
   log
 }) {
@@ -88,7 +80,7 @@ async function forwardRequestToNodeServer ({
   const response = await framework.sendRequest({ app, requestValues })
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:RESPONSE', { response })
   forwardResponse({
-    binaryMimeTypes,
+    binarySettings,
     response,
     resolver,
     eventSource,

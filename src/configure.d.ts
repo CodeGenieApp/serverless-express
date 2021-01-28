@@ -5,7 +5,13 @@ import ProxyParams from "./proxy"
 
 interface ConfigureParams {
   app: RequestListener,
-  binaryMimeTypes?: string[]
+  binaryMimeTypes?: string[],
+  binarySettings: BinarySettings
+}
+
+interface BinarySettings {
+  isBinary?: Function | boolean,
+  contentTypes: string[]
 }
 
 interface ConfigureResult {

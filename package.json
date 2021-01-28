@@ -137,9 +137,6 @@
     "lint": "eslint src examples",
     "install-example-dependencies": "cd examples && npm install --prefix basic-starter-api-gateway-v1 basic-starter-api-gateway-v1 && cd .."
   },
-  "dependencies": {
-    "type-is": "^1.6.16"
-  },
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"

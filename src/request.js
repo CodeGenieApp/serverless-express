@@ -1,4 +1,3 @@
-'use strict'
 // ATTRIBUTION: https://github.com/dougmoscrop/serverless-http
 
 const http = require('http')

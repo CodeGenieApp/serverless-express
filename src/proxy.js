@@ -5,6 +5,16 @@ const { getFramework } = require('./frameworks')
 const makeResolver = require('./make-resolver')
 const { forwardRequestToNodeServer, respondToEventSourceWithError } = require('./transport')
 
+const DEFAULT_BINARY_ENCODINGS = ['gzip', 'deflate', 'br']
+const DEFAULT_BINARY_CONTENT_TYPES = ['image/*']
+
+function getDefaultBinarySettings (deprecatedBinaryMimeTypes) {
+  return {
+    contentTypes: deprecatedBinaryMimeTypes || DEFAULT_BINARY_CONTENT_TYPES,
+    contentEncodings: DEFAULT_BINARY_ENCODINGS
+  }
+}
+
 function proxy ({
   app,
   framework = getFramework({ app }),
@@ -14,6 +24,7 @@ function proxy ({
   resolutionMode = 'PROMISE',
   eventSourceName = getEventSourceNameBasedOnEvent({ event }),
   binaryMimeTypes,
+  binarySettings = getDefaultBinarySettings(binaryMimeTypes),
   eventSource = getEventSource({ eventSourceName }),
   log,
   respondWithErrors
@@ -23,9 +34,14 @@ function proxy ({
     context,
     resolutionMode,
     eventSourceName,
-    binaryMimeTypes,
+    binarySettings,
     respondWithErrors
   })
+
+  if (binaryMimeTypes) {
+    console.warn('{ binaryMimeTypes: [] } is deprecated. base64 encoding is now automatically determined based on response content-type and content-encoding. If you need to manually set binary content types, instead, use { binarySettings: { contentTypes: [] } }')
+  }
+
   setCurrentInvoke({ event, context })
   return new Promise((resolve, reject) => {
     const promise = {
@@ -47,7 +63,7 @@ function proxy ({
         context,
         resolver,
         eventSourceName,
-        binaryMimeTypes,
+        binarySettings,
         eventSource,
         log
       })
