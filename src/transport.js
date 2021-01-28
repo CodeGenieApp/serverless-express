@@ -19,21 +19,24 @@ function forwardResponse ({
   eventResponseMapperFn,
   log
 }) {
-  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:HTTP_RESPONSE', {
-    headers: response.headers,
-    statusCode: response.statusCode
-  })
   const statusCode = response.statusCode
   const headers = Response.headers(response)
   const contentType = getContentType({
     contentTypeHeader: headers['content-type']
   })
-  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:CONTENT_TYPE', { contentType })
   const isBase64Encoded = isContentTypeBinaryMimeType({
     contentType,
     binaryMimeTypes
   })
   const body = Response.body(response).toString(isBase64Encoded ? 'base64' : 'utf8')
+
+  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE_PARAMS', {
+    statusCode,
+    body,
+    headers,
+    isBase64Encoded
+  })
+
   const successResponse = eventResponseMapperFn({
     statusCode,
     body,
@@ -43,6 +46,7 @@ function forwardResponse ({
   })
 
   log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE', { successResponse })
+
   resolver.succeed({
     response: successResponse
   })
@@ -81,8 +85,9 @@ async function forwardRequestToNodeServer ({
 }) {
   const eventResponseMapperFn = eventFns.response
   const requestValues = eventFns.getRequestValues({ event, context, log })
-  log.debug('SERVERLESS_EXPRESS:REQUEST_VALUES', { requestValues })
+  log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:REQUEST_VALUES', { requestValues })
   const response = await framework.sendRequest({ app, requestValues })
+  log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:RESPONSE', { response })
   forwardResponse({
     binaryMimeTypes,
     response,
