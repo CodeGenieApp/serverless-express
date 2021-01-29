@@ -6,7 +6,7 @@ import ProxyParams from "./proxy"
 interface ConfigureParams {
   app: RequestListener,
   binaryMimeTypes?: string[],
-  binarySettings: BinarySettings
+  binarySettings?: BinarySettings
 }
 
 interface BinarySettings {
