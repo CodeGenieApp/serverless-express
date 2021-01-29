@@ -210,8 +210,8 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
         'cache-control': ['public, max-age=0'],
         'content-length': [15933],
         'content-type': ['image/png'],
-        'etag': ['W/"3e3d-1774d22e86c"'],
-        'last-modified': ['Fri, 29 Jan 2021 07:54:29 GMT']
+        'etag': ['W/"3e3d-1774e01e5d1"'],
+        'last-modified': ['Fri, 29 Jan 2021 11:58:03 GMT']
       },
       isBase64Encoded: true
     }, { shouldConvertContentLengthToInt: true })
