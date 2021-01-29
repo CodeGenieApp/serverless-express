@@ -16,7 +16,7 @@ const apiGatewayV1Event = {
     'CloudFront-Is-SmartTV-Viewer': 'false',
     'CloudFront-Is-Tablet-Viewer': 'false',
     'CloudFront-Viewer-Country': 'US',
-    'content-type': 'application/json',
+    'content-type': '',
     'Host': 'xxxxxx.execute-api.us-east-1.amazonaws.com',
     'origin': 'https://xxxxxx.execute-api.us-east-1.amazonaws.com',
     'pragma': 'no-cache',
@@ -60,9 +60,7 @@ const apiGatewayV1Event = {
     'CloudFront-Viewer-Country': [
       'US'
     ],
-    'content-type': [
-      'application/json'
-    ],
+    'content-type': [],
     'Host': [
       'xxxxxx.execute-api.us-east-1.amazonaws.com'
     ],
@@ -135,11 +133,11 @@ const apiGatewayV1Event = {
     'domainName': 'xxxxxx.execute-api.us-east-1.amazonaws.com',
     'apiId': 'xxxxxx'
   },
-  'body': '{"name": "Sandy Samantha Salamander"}',
+  'body': '',
   'isBase64Encoded': false
 }
 
-module.exports = function makeApiGatewayV1Event (values = {}) {
+function makeApiGatewayV1Event (values = {}) {
   const baseEvent = clone(apiGatewayV1Event)
   const mergedEvent = mergeDeep(baseEvent, values)
 
@@ -147,4 +145,24 @@ module.exports = function makeApiGatewayV1Event (values = {}) {
   if (!mergedEvent.requestContext.path) mergedEvent.requestContext.path = `${mergedEvent.requestContext.stage}${mergedEvent.path}`
 
   return mergedEvent
+}
+
+function makeApiGatewayV1Response (values = {}) {
+  const baseResponse = {
+    body: '',
+    isBase64Encoded: false,
+    statusCode: 200,
+    multiValueHeaders: {
+      'content-type': ['application/json; charset=utf-8'],
+      'x-powered-by': ['Express']
+    }
+  }
+  const mergedResponse = mergeDeep(baseResponse, values)
+
+  return mergedResponse
+}
+
+module.exports = {
+  makeApiGatewayV1Event,
+  makeApiGatewayV1Response
 }

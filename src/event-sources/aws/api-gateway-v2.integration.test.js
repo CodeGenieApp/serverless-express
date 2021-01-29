@@ -18,7 +18,7 @@ const serverlessExpressInstance = serverlessExpress({ app, log })
 
 describe('API Gateway V2 Integ', () => {
   test('simple response', async () => {
-    const event = makeApiGatewayV2Event({ rawPath: '/' })
+    const event = makeApiGatewayV2Event({ path: '/', httpMethod: 'GET' })
     const response = await serverlessExpressInstance.handler(event)
     expect(response.statusCode).toEqual(200)
     expect(response.body).toEqual('{}')
@@ -29,7 +29,7 @@ describe('API Gateway V2 Integ', () => {
     expect(response.headers['etag']).toEqual('W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"')
   })
   test('returns custom header', async () => {
-    const event = makeApiGatewayV2Event({ rawPath: '/custom-header' })
+    const event = makeApiGatewayV2Event({ path: '/custom-header', httpMethod: 'GET' })
     const response = await serverlessExpressInstance.handler(event)
     expect(response.headers['x-custom-header']).toEqual('test')
   })

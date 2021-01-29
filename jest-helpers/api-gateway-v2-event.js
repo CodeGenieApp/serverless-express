@@ -4,7 +4,8 @@ const mergeDeep = require('./merge-deep')
 const apiGatewayV2Event = {
   'version': '2.0',
   'routeKey': '$default',
-  'rawPath': '/users',
+  // Default rawPath to event.path
+  // 'rawPath': '/users',
   'rawQueryString': '',
   'headers': {
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -30,8 +31,9 @@ const apiGatewayV2Event = {
     'domainName': '6bwvllq3t2.execute-api.us-east-1.amazonaws.com',
     'domainPrefix': '6bwvllq3t2',
     'http': {
-      'method': 'GET',
-      // Default requestContext.http.path to rawPath
+      // Default method to event.method
+      // 'method': 'GET',
+      // Default requestContext.http.path to event.path
       // 'path': '/users',
       'protocol': 'HTTP/1.1',
       'sourceIp': '203.123.103.37',
@@ -46,13 +48,61 @@ const apiGatewayV2Event = {
   'isBase64Encoded': false
 }
 
-module.exports =
-
 function makeApiGatewayV2Event (values = {}) {
   const baseEvent = clone(apiGatewayV2Event)
   const mergedEvent = mergeDeep(baseEvent, values)
 
-  mergedEvent.requestContext.http.path = mergedEvent.requestContext.http.path || values.rawPath
+  if (!mergedEvent.rawPath) mergedEvent.rawPath = values.path
+  if (!mergedEvent.requestContext.http.path) mergedEvent.requestContext.http.path = values.path
+  if (!mergedEvent.requestContext.http.method) mergedEvent.requestContext.http.method = values.httpMethod
 
+  mergedEvent.headers = convertMultiValueHeadersToHeaders({ multiValueHeaders: values.multiValueHeaders })
+  delete mergedEvent.multiValueHeaders
+  delete mergedEvent.path
   return mergedEvent
+}
+
+function convertMultiValueHeadersToHeaders ({ multiValueHeaders }) {
+  const headers = {}
+
+  if (!multiValueHeaders) return headers
+
+  Object.entries(multiValueHeaders).forEach(([key, value]) => {
+    headers[key] = value.join(',')
+  })
+
+  return headers
+}
+
+function makeApiGatewayV2Response (values = {}, {
+  shouldConvertContentLengthToInt = false
+} = {}) {
+  const baseResponse = {
+    body: '',
+    isBase64Encoded: false,
+    statusCode: 200,
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      'x-powered-by': 'Express'
+    }
+  }
+  values.headers = convertMultiValueHeadersToHeaders({ multiValueHeaders: values.multiValueHeaders })
+  delete values.multiValueHeaders
+
+  if (shouldConvertContentLengthToInt) {
+    // APIGWV2 returns content-length as a number instead of a string under certain conditions:
+    // 404 missing route
+    // image response
+    if (values.headers['content-length']) values.headers['content-length'] = parseInt(values.headers['content-length'])
+  }
+
+  delete values.multiValueHeaders
+  const mergedResponse = mergeDeep(baseResponse, values)
+
+  return mergedResponse
+}
+
+module.exports = {
+  makeApiGatewayV2Event,
+  makeApiGatewayV2Response
 }

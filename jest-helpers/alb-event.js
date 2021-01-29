@@ -16,8 +16,8 @@ const albEvent = {
     'accept-language': ['en-US,en;q=0.9'],
     'cache-control': ['no-cache'],
     'connection': ['keep-alive'],
-    'content-length': ['26'],
-    'content-type': ['application/json'],
+    'content-length': [],
+    'content-type': [],
     'host': ['aws-ser-alb-p9y7dvwm0r42-2135869912.us-east-1.elb.amazonaws.com'],
     'origin': ['http://aws-ser-alb-p9y7dvwm0r42-2135869912.us-east-1.elb.amazonaws.com'],
     'pragma': ['no-cache'],
@@ -32,9 +32,13 @@ const albEvent = {
   'isBase64Encoded': false
 }
 
-module.exports = function makeAlbEvent (values = {}) {
+function makeAlbEvent (values = {}) {
   const baseEvent = clone(albEvent)
   const mergedEvent = mergeDeep(baseEvent, values)
 
   return mergedEvent
+}
+
+module.exports = {
+  makeAlbEvent
 }

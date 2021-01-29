@@ -120,9 +120,13 @@ const lambdaEdgeEvent = {
   ]
 }
 
-module.exports = function makeLambdaEdgeEvent (values = {}) {
+function makeLambdaEdgeEvent (values = {}) {
   const baseEvent = clone(lambdaEdgeEvent)
   const mergedEvent = mergeDeep(baseEvent, values)
 
   return mergedEvent
+}
+
+module.exports = {
+  makeLambdaEdgeEvent
 }

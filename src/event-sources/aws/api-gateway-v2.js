@@ -56,16 +56,19 @@ function getResponseToApiGateway ({
     throw new Error('chunked encoding is not supported by API Gateway')
   }
 
-  const cookies = headers['set-cookie']
-  delete headers['set-cookie']
-
-  return {
+  const responseToApiGateway = {
     statusCode,
     body,
-    cookies,
     headers,
     isBase64Encoded
   }
+
+  if (headers['set-cookie']) {
+    responseToApiGateway.cookies = headers['set-cookie']
+    delete headers['set-cookie']
+  }
+
+  return responseToApiGateway
 }
 
 module.exports = {

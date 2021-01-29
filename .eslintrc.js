@@ -4,6 +4,7 @@ module.exports = {
         test: true,
         expect: true,
         describe: true,
+        beforeEach: true,
         jest: true
     }
 };
