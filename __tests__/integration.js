@@ -2,48 +2,44 @@ const path = require('path')
 const fs = require('fs')
 const serverlessExpress = require('../src/index')
 const app = require('../examples/basic-starter-api-gateway-v1/src/app')
-const { log, makeEvent, expectedRootResponse, makeResponse } = require('../jest-helpers')
+const { log, makeEvent, expectedRootResponse, makeResponse, EACH_MATRIX } = require('../jest-helpers')
 
 const serverlessExpressInstance = serverlessExpress({ app, log })
 
-describe('integration tests', () => {
+describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, frameworkName) => {
   test('handler returns promise', () => {
-    const response = serverlessExpressInstance.handler(makeEvent({
+    const event = makeEvent({
+      eventSourceName,
       path: '/',
       httpMethod: 'GET'
-    }))
+    })
+    const response = serverlessExpressInstance.handler(event)
     expect(response.then).toBeTruthy()
   })
 
-  test('GET HTML (initial request)', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({ path: '/', httpMethod: 'GET' }))
-
-    delete response.multiValueHeaders.date
-    expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
-    const expectedResponse = expectedRootResponse()
-    delete response.body
-    delete expectedResponse.body
-    expect(response).toEqual(expectedResponse)
-  })
-
-  test('GET HTML (subsequent request)', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({
+  test('GET HTML', async () => {
+    const event = makeEvent({
+      eventSourceName,
       path: '/',
       httpMethod: 'GET'
-    }))
-    delete response.multiValueHeaders.date
+    })
+    const response = await serverlessExpressInstance.handler(event)
+
     expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
     const expectedResponse = expectedRootResponse()
     delete response.body
     delete expectedResponse.body
+    delete response.multiValueHeaders.date
     expect(response).toEqual(expectedResponse)
   })
 
   test('GET JSON collection', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({
+    const event = makeEvent({
+      eventSourceName,
       path: '/users',
       httpMethod: 'GET'
-    }))
+    })
+    const response = await serverlessExpressInstance.handler(event)
 
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
@@ -56,10 +52,12 @@ describe('integration tests', () => {
   })
 
   test('GET missing route', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({
+    const event = makeEvent({
+      eventSourceName,
       path: '/nothing-here',
       httpMethod: 'GET'
-    }))
+    })
+    const response = await serverlessExpressInstance.handler(event)
 
     delete response.multiValueHeaders.date
     expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
@@ -78,10 +76,12 @@ describe('integration tests', () => {
   })
 
   test('GET JSON single', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({
+    const event = makeEvent({
+      eventSourceName,
       path: '/users/1',
       httpMethod: 'GET'
-    }))
+    })
+    const response = await serverlessExpressInstance.handler(event)
 
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
@@ -107,6 +107,7 @@ describe('integration tests', () => {
     }
 
     const event = makeEvent({
+      eventSourceName,
       path: '/users/1',
       httpMethod: 'GET'
     })
@@ -116,6 +117,7 @@ describe('integration tests', () => {
 
   test('GET JSON single (resolutionMode = PROMISE)', async () => {
     const event = makeEvent({
+      eventSourceName,
       path: '/users/1',
       httpMethod: 'GET'
     })
@@ -133,10 +135,12 @@ describe('integration tests', () => {
   })
 
   test('GET JSON single 404', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({
+    const event = makeEvent({
+      eventSourceName,
       path: '/users/3',
       httpMethod: 'GET'
-    }))
+    })
+    const response = await serverlessExpressInstance.handler(event)
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
       body: '{}',
@@ -150,6 +154,7 @@ describe('integration tests', () => {
 
   test('success - image response', async () => {
     const event = makeEvent({
+      eventSourceName,
       path: '/sam',
       httpMethod: 'GET'
     })
@@ -179,6 +184,7 @@ describe('integration tests', () => {
 
   test('POST JSON', async () => {
     const event = makeEvent({
+      eventSourceName,
       path: '/users',
       httpMethod: 'POST',
       body: `{"name": "${newName}"}`
@@ -197,10 +203,12 @@ describe('integration tests', () => {
   })
 
   test('GET JSON single (again; post-creation) 200', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({
+    const event = makeEvent({
+      eventSourceName,
       path: '/users/3',
       httpMethod: 'GET'
-    }))
+    })
+    const response = await serverlessExpressInstance.handler(event)
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
       body: `{"id":3,"name":"${newName}"}`,
@@ -213,10 +221,12 @@ describe('integration tests', () => {
   })
 
   test('DELETE JSON', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({
+    const event = makeEvent({
+      eventSourceName,
       path: '/users/1',
       httpMethod: 'DELETE'
-    }))
+    })
+    const response = await serverlessExpressInstance.handler(event)
 
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
@@ -230,11 +240,13 @@ describe('integration tests', () => {
   })
 
   test('PUT JSON', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({
+    const event = makeEvent({
+      eventSourceName,
       path: '/users/2',
       httpMethod: 'PUT',
       body: '{"name": "Samuel"}'
-    }))
+    })
+    const response = await serverlessExpressInstance.handler(event)
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
       body: '{"id":2,"name":"Samuel"}',
@@ -247,12 +259,14 @@ describe('integration tests', () => {
   })
 
   test('base64 encoded request', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({
+    const event = makeEvent({
+      eventSourceName,
       path: '/users/2',
       httpMethod: 'PUT',
       body: global.btoa('{"name": "Samuel"}'),
       isBase64Encoded: true
-    }))
+    })
+    const response = await serverlessExpressInstance.handler(event)
     delete response.multiValueHeaders.date
     expect(response).toEqual(makeResponse({
       body: '{"id":2,"name":"Samuel"}',
@@ -287,10 +301,12 @@ describe('integration tests', () => {
   })
 
   test('Multiple headers of the same name (set-cookie)', async () => {
-    const response = await serverlessExpressInstance.handler(makeEvent({
+    const event = makeEvent({
+      eventSourceName,
       path: '/cookie',
       httpMethod: 'GET'
-    }))
+    })
+    const response = await serverlessExpressInstance.handler(event)
     delete response.multiValueHeaders.date
 
     const expectedSetCookieHeaders = [

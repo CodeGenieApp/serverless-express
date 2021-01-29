@@ -56,8 +56,8 @@ function getResponseToApiGateway ({
     throw new Error('chunked encoding is not supported by API Gateway')
   }
 
-  const cookies = headers["set-cookie"];
-  delete headers["set-cookie"];
+  const cookies = headers['set-cookie']
+  delete headers['set-cookie']
 
   return {
     statusCode,
