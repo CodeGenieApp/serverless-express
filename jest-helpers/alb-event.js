@@ -39,6 +39,23 @@ function makeAlbEvent (values = {}) {
   return mergedEvent
 }
 
+function makeAlbResponse (values = {}) {
+  const baseResponse = {
+    body: '',
+    isBase64Encoded: false,
+    statusCode: 200,
+    multiValueHeaders: {
+      'content-type': ['application/json; charset=utf-8'],
+      'x-powered-by': ['Express']
+    }
+  }
+  const mergedResponse = mergeDeep(baseResponse, values)
+  delete mergedResponse.cookies
+
+  return mergedResponse
+}
+
 module.exports = {
-  makeAlbEvent
+  makeAlbEvent,
+  makeAlbResponse
 }

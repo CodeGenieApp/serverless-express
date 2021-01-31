@@ -1,3 +1,6 @@
+// Lambda@Edge fails if certain headers are returned
+const RESPONSE_HEADERS_DENY_LIST = ['content-length']
+
 function getRequestValuesFromLambdaEdgeEvent ({ event }) {
   const cloudFormationRequest = event.Records[0].cf.request
   const {
@@ -45,8 +48,7 @@ function getResponseToLambdaEdge ({
   const headersMap = {}
   Object.entries(headers).forEach(([headerKey, headerValue]) => {
     const headerKeyLowerCase = headerKey.toLowerCase()
-    // Lambda@Edge fails if you include content-length
-    if (headerKeyLowerCase === 'content-length') return
+    if (RESPONSE_HEADERS_DENY_LIST.includes(headerKeyLowerCase)) return
     if (!headersMap[headerKeyLowerCase]) headersMap[headerKeyLowerCase] = []
 
     headersMap[headerKeyLowerCase].push({

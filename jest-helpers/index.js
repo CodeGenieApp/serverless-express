@@ -1,10 +1,10 @@
-const {makeApiGatewayV1Event, makeApiGatewayV1Response} = require('./api-gateway-v1-event')
-const {makeApiGatewayV2Event, makeApiGatewayV2Response} = require('./api-gateway-v2-event')
-const {makeAlbEvent} = require('./alb-event')
-const {makeLambdaEdgeEvent} = require('./lambda-edge-event.js')
+const { makeApiGatewayV1Event, makeApiGatewayV1Response } = require('./api-gateway-v1-event')
+const { makeApiGatewayV2Event, makeApiGatewayV2Response } = require('./api-gateway-v2-event')
+const { makeAlbEvent, makeAlbResponse } = require('./alb-event')
+const { makeLambdaEdgeEvent, makeLambdaEdgeResponse} = require('./lambda-edge-event.js')
 
 const EVENT_SOURCE_NAMES = [
-  // 'alb',
+  'alb',
   'apiGatewayV1',
   'apiGatewayV2'
   // 'lambdaEdge'
@@ -55,13 +55,13 @@ function makeEvent ({ eventSourceName, ...rest }) {
 function makeResponse ({ eventSourceName, ...rest }, { shouldConvertContentLengthToInt = false } = {}) {
   switch (eventSourceName) {
     case 'alb':
-      return makeAlbEvent(rest)
+      return makeAlbResponse(rest)
     case 'apiGatewayV1':
       return makeApiGatewayV1Response(rest)
     case 'apiGatewayV2':
       return makeApiGatewayV2Response(rest, {shouldConvertContentLengthToInt})
     case 'lambdaEdge':
-      return makeLambdaEdgeEvent(rest)
+      return makeLambdaEdgeResponse(rest)
     default:
       throw new Error(`Unknown eventSourceName ${eventSourceName}`)
   }
