@@ -1,4 +1,4 @@
-const { getRequestValuesFromEvent, getResponseToService } = require('../utils')
+const { getRequestValuesFromEvent, getMultiValueHeaders } = require('../utils')
 
 const getRequestValuesFromApiGatewayEvent = ({ event }) => getRequestValuesFromEvent({ event })
 
@@ -8,20 +8,20 @@ function getResponseToApiGateway ({
   headers,
   isBase64Encoded
 }) {
-  const responseToService = getResponseToService({
-    statusCode,
-    body,
-    headers,
-    isBase64Encoded
-  })
-  const transferEncodingHeader = responseToService.multiValueHeaders['transfer-encoding']
+  const multiValueHeaders = getMultiValueHeaders({ headers })
+  const transferEncodingHeader = multiValueHeaders['transfer-encoding']
 
   // chunked transfer not currently supported by API Gateway
   if (transferEncodingHeader && transferEncodingHeader.includes('chunked')) {
-    responseToService.multiValueHeaders['transfer-encoding'] = transferEncodingHeader.filter(headerValue => headerValue !== 'chunked')
+    multiValueHeaders['transfer-encoding'] = transferEncodingHeader.filter(headerValue => headerValue !== 'chunked')
   }
-
-  return responseToService
+  
+  return {
+    statusCode,
+    body,
+    multiValueHeaders,
+    isBase64Encoded
+  }
 }
 
 module.exports = {

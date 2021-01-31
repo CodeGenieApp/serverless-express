@@ -29,10 +29,9 @@ function getRequestValuesFromEvent ({
   path = getPathWithQueryStringParams({ event })
 }) {
   let headers = {}
+
   if (event.multiValueHeaders) {
-    Object.entries(event.multiValueHeaders).forEach(([headerKey, headerValue]) => {
-      headers[headerKey.toLowerCase()] = headerValue.join(',')
-    })
+    headers = getCommaDelimitedHeaders({ headersMap: event.multiValueHeaders, lowerCaseKey: true })
   } else {
     headers = event.headers
   }
@@ -56,12 +55,7 @@ function getRequestValuesFromEvent ({
   }
 }
 
-function getResponseToService ({
-  statusCode,
-  body,
-  headers,
-  isBase64Encoded
-}) {
+function getMultiValueHeaders ({ headers }) {
   const multiValueHeaders = {}
 
   Object.entries(headers).forEach(([headerKey, headerValue]) => {
@@ -70,12 +64,7 @@ function getResponseToService ({
     multiValueHeaders[headerKey.toLowerCase()] = headerArray
   })
 
-  return {
-    statusCode,
-    body,
-    multiValueHeaders,
-    isBase64Encoded
-  }
+  return multiValueHeaders
 }
 
 function getEventSourceNameBasedOnEvent ({
@@ -90,10 +79,27 @@ function getEventSourceNameBasedOnEvent ({
   throw new Error('Unable to determine event source based on event.')
 }
 
+function getCommaDelimitedHeaders({ headersMap, separator = ',', lowerCaseKey = false }) {
+  const commaDelimitedHeaders = {}
+
+  Object.entries(headersMap)
+  .forEach(([headerKey, headerValue]) => {
+    let newKey = lowerCaseKey ? headerKey.toLowerCase() : headerKey
+    if (Array.isArray(headerValue)) { 
+      commaDelimitedHeaders[newKey] = headerValue.join(separator)
+    } else {
+      commaDelimitedHeaders[newKey] = headerValue
+    }
+  })
+
+  return commaDelimitedHeaders
+}
+
 module.exports = {
   getPathWithQueryStringParams,
   getRequestValuesFromEvent,
-  getResponseToService,
+  getMultiValueHeaders,
   getEventSourceNameBasedOnEvent,
-  getEventBody
+  getEventBody,
+  getCommaDelimitedHeaders
 }

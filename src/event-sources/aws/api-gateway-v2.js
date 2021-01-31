@@ -1,5 +1,5 @@
 const url = require('url')
-const { getEventBody } = require('../utils')
+const { getEventBody, getCommaDelimitedHeaders } = require('../utils')
 
 function getRequestValuesFromApiGatewayEvent ({ event }) {
   const {
@@ -59,14 +59,14 @@ function getResponseToApiGateway ({
   const responseToApiGateway = {
     statusCode,
     body,
-    headers,
     isBase64Encoded
   }
 
   if (headers['set-cookie']) {
     responseToApiGateway.cookies = headers['set-cookie']
-    delete headers['set-cookie']
   }
+
+  responseToApiGateway.headers = getCommaDelimitedHeaders({ headersMap: headers })
 
   return responseToApiGateway
 }
