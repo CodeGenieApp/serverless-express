@@ -95,8 +95,6 @@ function makeApiGatewayV2Response (values = {}, {
     // image response
     if (values.headers['content-length']) values.headers['content-length'] = parseInt(values.headers['content-length'])
   }
-
-  delete values.multiValueHeaders
   const mergedResponse = mergeDeep(baseResponse, values)
 
   return mergedResponse

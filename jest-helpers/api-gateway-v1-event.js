@@ -158,6 +158,7 @@ function makeApiGatewayV1Response (values = {}) {
     }
   }
   const mergedResponse = mergeDeep(baseResponse, values)
+  delete mergedResponse.cookies
 
   return mergedResponse
 }

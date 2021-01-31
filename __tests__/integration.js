@@ -166,8 +166,8 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
   })
 
   test('GET 404', async () => {
-    router.get('/users/:id', (req, res) => {
-      res.status(404).json({})
+    router.get('/users/:userId', (req, res) => {
+      res.status(404).json({ id: req.params.userId })
     })
     const event = makeEvent({
       eventSourceName,
@@ -177,10 +177,10 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     const response = await serverlessExpressInstance.handler(event)
     const expectedResponse = makeResponse({
       eventSourceName,
-      body: '{}',
+      body: JSON.stringify({id: '3'}),
       multiValueHeaders: {
-        'content-length': ['2'],
-        etag: ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
+        'content-length': ['10'],
+        etag: ['W/"a-lfm5LdsGBlIttC0+rnSiywX9+Wc"']
       },
       statusCode: 404
     })
@@ -219,7 +219,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
   })
 
   test('POST JSON', async () => {
-    const newName = 'Sandy Samantha Salamander'
+    const name = 'Squidward'
     router.use(bodyParser.json())
     router.post('/users', (req, res) => {
       res.status(201).json({ data: { name: req.body.name } })
@@ -228,7 +228,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       eventSourceName,
       path: '/users',
       httpMethod: 'POST',
-      body: `{"name": "${newName}"}`,
+      body: `{"name": "${name}"}`,
       multiValueHeaders: {
         'content-type': ['application/json']
       }
@@ -236,120 +236,142 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     const response = await serverlessExpressInstance.handler(event)
     const expectedResponse = makeResponse({
       eventSourceName,
-      body: JSON.stringify({ data: { name: newName } }),
+      body: JSON.stringify({ data: { name: name } }),
       multiValueHeaders: {
-        'content-length': ['45'],
-        etag: ['W/"2d-dg5Fo2Yl1Nlaw+cIP3w6t3RxAHk"']
+        'content-length': ['29'],
+        etag: ['W/"1d-9ERga12t1e/5eBdg3k9zfIvAfWo"']
       },
       statusCode: 201
     })
     expect(response).toEqual(expectedResponse)
   })
 
-  // test('DELETE JSON', async () => {
-  //   const event = makeEvent({
-  //     eventSourceName,
-  //     path: '/users/1',
-  //     httpMethod: 'DELETE'
-  //   })
-  //   const response = await serverlessExpressInstance.handler(event)
-  //   const expectedResponse = makeResponse({
-  //     eventSourceName,
-  //     body: `[{"id":2,"name":"Jane"},{"id":3,"name":"${newName}"}]`,
-  //     multiValueHeaders: {
-  //       'content-length': ['68'],
-  //       etag: ['W/"44-AtuxlvrIBL8NXP4gvEQTI77suNg"']
-  //     },
-  //     statusCode: 200
-  //   })
-  //   expect(response).toEqual(expectedResponse)
-  // })
+  test('DELETE JSON', async () => {
+    router.delete('/users/:id', (req, res) => {
+      res.json([])
+    })
+    const event = makeEvent({
+      eventSourceName,
+      path: '/users/1',
+      httpMethod: 'DELETE'
+    })
+    const response = await serverlessExpressInstance.handler(event)
+    const expectedResponse = makeResponse({
+      eventSourceName,
+      body: '[]',
+      multiValueHeaders: {
+        'content-length': ['2'],
+        etag: ['W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"']
+      },
+      statusCode: 200
+    })
+    expect(response).toEqual(expectedResponse)
+  })
 
-  // test('PUT JSON', async () => {
-  //   const event = makeEvent({
-  //     eventSourceName,
-  //     path: '/users/2',
-  //     httpMethod: 'PUT',
-  //     body: '{"name": "Samuel"}'
-  //   })
-  //   const response = await serverlessExpressInstance.handler(event)
-  //   const expectedResponse = makeResponse({
-  //     eventSourceName,
-  //     body: '{"id":2,"name":"Samuel"}',
-  //     multiValueHeaders: {
-  //       'content-length': ['24'],
-  //       etag: ['W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"']
-  //     },
-  //     statusCode: 200
-  //   })
-  //   expect(response).toEqual(expectedResponse)
-  // })
+  test('PUT JSON', async () => {
+    const name = 'Spongebob'
+    router.use(bodyParser.json())
+    router.put('/users/:id', (req, res) => {
+      res.json({
+        id: req.params.id,
+        ...req.body
+      })
+    })
+    const event = makeEvent({
+      eventSourceName,
+      path: '/users/2',
+      httpMethod: 'PUT',
+      body: JSON.stringify({ name }),
+      multiValueHeaders: {
+        'content-type': ['application/json']
+      }
+    })
+    const response = await serverlessExpressInstance.handler(event)
+    const expectedResponse = makeResponse({
+      eventSourceName,
+      body: JSON.stringify({ id: '2', name }),
+      multiValueHeaders: {
+        'content-length': ['29'],
+        etag: ['W/"1d-S5aeqkgQbnSMqjyXJrRTGxN4UiY"']
+      },
+      statusCode: 200
+    })
+    expect(response).toEqual(expectedResponse)
+  })
 
-  // test('base64 encoded request', async () => {
-  //   const event = makeEvent({
-  //     eventSourceName,
-  //     path: '/users/2',
-  //     httpMethod: 'PUT',
-  //     body: global.btoa('{"name": "Samuel"}'),
-  //     isBase64Encoded: true
-  //   })
-  //   const response = await serverlessExpressInstance.handler(event)
-  //   const expectedResponse = makeResponse({
-  //     eventSourceName,
-  //     body: '{"id":2,"name":"Samuel"}',
-  //     multiValueHeaders: {
-  //       'access-control-allow-origin': [
-  //         '*'
-  //       ],
-  //       'content-length': [
-  //         '24'
-  //       ],
-  //       'content-type': [
-  //         'application/json; charset=utf-8'
-  //       ],
-  //       etag: [
-  //         'W/"18-uGyzhJdtXqacOe9WRxtXSNjIk5Q"'
-  //       ],
-  //       'x-powered-by': [
-  //         'Express'
-  //       ]
-  //     },
-  //     statusCode: 200
-  //   })
-  //   expect(response).toEqual(expectedResponse)
-  // })
+  test('base64 encoded request', async () => {
+    const name = 'Patrick'
+    router.use(bodyParser.json())
+    router.put('/users/:id', (req, res) => {
+      res.json({
+        id: req.params.id,
+        ...req.body
+      })
+    })
+    const event = makeEvent({
+      eventSourceName,
+      path: '/users/2',
+      httpMethod: 'PUT',
+      body: global.btoa(JSON.stringify({ name })),
+      isBase64Encoded: true,
+      multiValueHeaders: {
+        'content-type': ['application/json']
+      }
+    })
+    const response = await serverlessExpressInstance.handler(event)
+    const expectedResponse = makeResponse({
+      eventSourceName,
+      body: JSON.stringify({ id: '2', name }),
+      multiValueHeaders: {
+        'content-length': [
+          '27'
+        ],
+        etag: [
+          'W/"1b-bCkbUU5T9Cepc4SpN5w/iwctZZw"'
+        ]
+      },
+      statusCode: 200
+    })
+    expect(response).toEqual(expectedResponse)
+  })
 
-  // test.skip('respondToEventSourceWithError', async () => {
-  //   const response = await serverlessExpressInstance.handler(null)
-  //   expect(response).toEqual({
-  //     statusCode: 500,
-  //     body: '',
-  //     multiValueHeaders: {}
-  //   })
-  // })
+  test.skip('respondToEventSourceWithError', async () => {
+    const response = await serverlessExpressInstance.handler(null)
+    expect(response).toEqual({
+      statusCode: 500,
+      body: '',
+      multiValueHeaders: {}
+    })
+  })
 
-  // test('Multiple headers of the same name (set-cookie)', async () => {
-  //   const event = makeEvent({
-  //     eventSourceName,
-  //     path: '/cookie',
-  //     httpMethod: 'GET'
-  //   })
-  //   const response = await serverlessExpressInstance.handler(event)
+  test('set-cookie', async () => {
+    router.get('/cookie', (req, res) => {
+      res.cookie('Foo', 'bar')
+      res.cookie('Fizz', 'buzz')
+      res.json({})
+    })
+    const event = makeEvent({
+      eventSourceName,
+      path: '/cookie',
+      httpMethod: 'GET'
+    })
+    const response = await serverlessExpressInstance.handler(event)
 
-  //   const expectedSetCookieHeaders = [
-  //     'Foo=bar; Path=/',
-  //     'Fizz=buzz; Path=/'
-  //   ]
-  //   const expectedResponse = makeResponse({
-  //     eventSourceName,
-  //     body: '{}',
-  //     multiValueHeaders: {
-  //       'set-cookie': expectedSetCookieHeaders,
-  //       'content-length': ['2'],
-  //       etag: ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
-  //     },
-  //     statusCode: 200
-  //   })
-  //   expect(response).toEqual(expectedResponse)
-  // })
+    const expectedSetCookieHeaders = [
+      'Foo=bar; Path=/',
+      'Fizz=buzz; Path=/'
+    ]
+    const expectedResponse = makeResponse({
+      eventSourceName,
+      body: '{}',
+      cookies: expectedSetCookieHeaders,
+      multiValueHeaders: {
+        'set-cookie': expectedSetCookieHeaders,
+        'content-length': ['2'],
+        etag: ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"']
+      },
+      statusCode: 200
+    })
+    expect(response).toEqual(expectedResponse)
+  })
 })
