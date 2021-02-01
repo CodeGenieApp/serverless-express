@@ -31,45 +31,48 @@
     "node": ">=12"
   },
   "release": {
-    "verifyConditions": [
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "angular"
+        }
+      ],
+      [
+        "@semantic-release/release-notes-generator",
+        {
+          "preset": "angular"
+        }
+      ],
       "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/git",
-      "@semantic-release/github"
-    ],
-    "branches": [
-      "master",
-      {
-        "name": "develop",
-        "prerelease": true
-      },
-      {
-        "name": "v4",
-        "channel": "alpha",
-        "prerelease": true
-      }
-    ],
-    "publish": [
-      "@semantic-release/changelog",
-      {
-        "path": "@semantic-release/npm",
-        "npmPublish": true,
-        "tarballDir": "dist"
-      },
-      {
-        "path": "@semantic-release/git",
-        "assets": [
-          "package.json",
-          "package-lock.json",
-          "CHANGELOG.md",
-          "dist/**/*.{js|css}"
-        ],
-        "message": "chore(release): version ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      },
-      {
-        "path": "@semantic-release/github",
-        "assets": "dist/*.tgz"
-      }
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": true,
+          "tarballDir": "dist"
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            {
+              "path": "dist/*.tgz"
+            }
+          ]
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json",
+            "package-lock.json",
+            "CHANGELOG.md",
+            "dist/**/*.{js|css}"
+          ]
+        }
+      ]
     ]
   },
   "husky": {
@@ -106,9 +109,12 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
-    "@semantic-release/changelog": "^1.0.1",
-    "@semantic-release/git": "^3.0.1",
-    "@semantic-release/npm": "^3.0.2",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.0.5",
+    "@semantic-release/npm": "^7.0.5",
+    "@semantic-release/release-notes-generator": "^9.0.1",
     "@types/aws-lambda": "^8.10.70",
     "commitizen": "^4.2.2",
     "commitlint": "^11.0.0",
@@ -116,12 +122,12 @@
     "cors": "^2.8.5",
     "cz-conventional-changelog": "^2.1.0",
     "ejs": "^3.1.5",
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "express": "^4.17.1",
     "husky": "^0.15.0-rc.4",
     "jest": "^24.5.0",
