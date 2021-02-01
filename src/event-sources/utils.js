@@ -40,7 +40,7 @@ function getRequestValuesFromEvent ({
 
   if (event.body) {
     body = getEventBody({ event })
-    const isBase64Encoded = event.isBase64Encoded
+    const { isBase64Encoded } = event
     headers['content-length'] = Buffer.byteLength(body, isBase64Encoded ? 'base64' : 'utf8')
   }
 

@@ -13,7 +13,6 @@ const callback = (e, v) => {
   if (v) console.info(v)
   process.exit(0)
 }
-console.log('lambdaFunction', lambdaFunction)
 lambdaFunction.handler(apiGatewayEvent, context, callback)
 
 process.stdin.resume()

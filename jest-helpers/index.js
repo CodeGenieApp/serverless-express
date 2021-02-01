@@ -6,8 +6,8 @@ const { makeLambdaEdgeEvent, makeLambdaEdgeResponse} = require('./lambda-edge-ev
 const EVENT_SOURCE_NAMES = [
   'alb',
   'apiGatewayV1',
-  'apiGatewayV2'
-  // 'lambdaEdge'
+  'apiGatewayV2',
+  'lambdaEdge'
 ]
 
 const FRAMEWORK_NAMES = [

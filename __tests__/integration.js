@@ -39,7 +39,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
   test('GET HTML', async () => {
     router.get('/', (req, res) => {
       const currentInvoke = serverlessExpress.getCurrentInvoke()
-      const eventPath = currentInvoke.event.path || currentInvoke.event.rawPath
+      const eventPath = currentInvoke.event.path || currentInvoke.event.rawPath || currentInvoke.event.Records[0].cf.request.uri
       res.render('index', {
         path: eventPath
       })
@@ -68,9 +68,9 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
   test('GET JSON', async () => {
     const jsonResponse = { data: { name: 'Brett' } }
     router.get('/users', (req, res) => {
+      res.set('X-Custom-Header', 'test')
       res.json(jsonResponse)
     })
-
     const event = makeEvent({
       eventSourceName,
       path: '/users',
@@ -82,13 +82,14 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       body: JSON.stringify(jsonResponse),
       multiValueHeaders: {
         'content-length': ['25'],
-        etag: ['W/"19-dkLV0OMoaMM+tzXUD50EB/AHHoI"']
+        etag: ['W/"19-dkLV0OMoaMM+tzXUD50EB/AHHoI"'],
+        'x-custom-header': ['test']
       }
     })
     expect(response).toEqual(expectedResponse)
   })
 
-  test('GET JSON (resolutionMode = CALLBACK)', (done) => {
+  test('resolutionMode = CALLBACK', (done) => {
     const jsonResponse = { data: { name: 'Brett' } }
     router.get('/users', (req, res) => {
       res.json(jsonResponse)
@@ -115,7 +116,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     serverlessExpressInstanceWithCallbackResolutionMode.handler(event, {}, callback)
   })
 
-  test('GET JSON (resolutionMode = CONTEXT)', (done) => {
+  test('resolutionMode = CONTEXT', (done) => {
     const jsonResponse = { data: { name: 'Brett' } }
     router.get('/users', (req, res) => {
       res.json(jsonResponse)

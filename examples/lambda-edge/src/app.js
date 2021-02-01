@@ -33,7 +33,6 @@ router.get('/sam', (req, res) => {
 })
 
 router.get('/users', (req, res) => {
-  console.log('users', users)
   res.json(users)
 })
 

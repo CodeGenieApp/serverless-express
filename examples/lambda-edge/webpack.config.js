@@ -5,17 +5,18 @@ module.exports = {
   entry: './src/lambda.js',
   target: 'node',
   mode: 'production',
-  // devtool: 'source-map',
+  devtool: 'source-map',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'lambda.js',
+    filename: '[name].js',
     // library: 'serverlessExpressEdge',
     libraryTarget: 'commonjs2'
   },
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: './src/views', to: 'views' }
+        { from: './src/views', to: 'views' },
+        { from: './src/sam-logo.png' },
       ]
     })
   ]

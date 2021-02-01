@@ -1,3 +1,5 @@
+const { getEventBody } = require('../utils')
+
 // Lambda@Edge fails if certain headers are returned
 const RESPONSE_HEADERS_DENY_LIST = ['content-length']
 
@@ -11,22 +13,24 @@ function getRequestValuesFromLambdaEdgeEvent ({ event }) {
     clientIp
   } = cloudFormationRequest
   let body = null
-  if (requestBodyObject.data) {
-    if (requestBodyObject.encoding === 'base64') {
-      body = Buffer.from(requestBodyObject.data, 'base64').toString('utf8')
-    } else {
-      body = requestBodyObject.data
-    }
-  }
 
   const headers = {}
+
   Object.entries(headersMap).forEach(([headerKey, headerValue]) => {
     headers[headerKey] = headerValue.map(header => header.value).join(',')
   })
-  // const request = getRequestValuesFromEvent({ event })
+  
+  if (requestBodyObject.data) {
+    const isBase64Encoded = requestBodyObject.encoding === 'base64'
+    body = getEventBody({
+      body: requestBodyObject.data,
+      isBase64Encoded
+    })
+    headers['content-length'] = Buffer.byteLength(body, isBase64Encoded ? 'base64' : 'utf8')
+  }
+
   // TODO: include querystring params in path
   const { host } = headers
-
   return {
     method,
     path,
@@ -51,10 +55,19 @@ function getResponseToLambdaEdge ({
     if (RESPONSE_HEADERS_DENY_LIST.includes(headerKeyLowerCase)) return
     if (!headersMap[headerKeyLowerCase]) headersMap[headerKeyLowerCase] = []
 
-    headersMap[headerKeyLowerCase].push({
+    if (!Array.isArray(headerValue)) {
+      headersMap[headerKeyLowerCase].push({
+        key: headerKeyLowerCase,
+        value: headerValue
+      })
+      return
+    }
+
+    const headersArray = headerValue.map(v =>({
       key: headerKeyLowerCase,
-      value: headerValue
-    })
+      value: v
+    }))
+    headersMap[headerKeyLowerCase].push(...headersArray)
   })
   const bodyEncoding = isBase64Encoded ? 'base64' : 'text'
   const responseToService = {

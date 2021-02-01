@@ -22,7 +22,8 @@ Resources:
             QueryString: true
           ViewerProtocolPolicy: redirect-to-https
           LambdaFunctionAssociations:
-            - EventType: viewer-request # TODO: test origin-request
+            # TODO: loadtest origin-request vs viewer-request
+            - EventType: origin-request
               LambdaFunctionARN: !Ref ExpressLambdaFunction.Version
               IncludeBody: true
           AllowedMethods:
@@ -38,8 +39,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./dist
-      Handler: lambda.handler
-      MemorySize: 1024
+      Handler: main.handler
+      MemorySize: 128
       Runtime: nodejs12.x
       Timeout: 5
       Role: !GetAtt ExpressLambdaRole.Arn
