@@ -18,10 +18,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Install example dependencies
-      run: npm run install-example-dependencies
     - name: Install
-      run: npm install
+      run: npm ci
     - name: Test
       run: npm test
     - name: Lint
