@@ -1,5 +1,7 @@
 ## From 3.x to 4.x
 
+### Lambda Handler
+
 ```javascript
 // 3.x
 const awsServerlessExpress = require('aws-serverless-express')
@@ -31,5 +33,29 @@ serverlessExpress({
     contentTypes: [],
     contentEncodings: []
   }
+})
+```
+
+### Get Lambda event and context
+
+```javascript
+// 3.x
+const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+router.use(awsServerlessExpressMiddleware.eventContext())
+router.get('/', (req, res) => {
+  res.json({
+    stage: req.apiGateway.event.requestContext.stage
+  })
+})
+```
+
+```javascript
+// 4.x
+const { getCurrentInvoke } = require('@vendia/serverless-express')
+router.get('/', (req, res) => {
+const currentInvoke = getCurrentInvoke()
+  res.json({
+    stage: currentInvoke.event.requestContext.stage
+  })
 })
 ```

@@ -2,20 +2,11 @@ const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-// const compression = require('compression')
 const { getCurrentInvoke } = require('@vendia/serverless-express')
 const app = express()
 const router = express.Router()
 
 app.set('view engine', 'pug')
-
-// if (process.env.NODE_ENV === 'test') {
-//   // NOTE: serverless-express uses this app for its integration tests
-//   // and only applies compression to the /sam endpoint during testing.
-//   router.use('/sam', compression())
-// } else {
-//   router.use(compression())
-// }
 
 router.use(cors())
 router.use(bodyParser.json())
