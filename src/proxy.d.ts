@@ -3,12 +3,12 @@ import { RequestListener } from "http"
 interface ProxyParams {
   app: RequestListener,
   binaryMimeTypes?: string[],
-  binarySettings: BinarySettings
+  binarySettings?: BinarySettings
 }
 
 interface BinarySettings {
   isBinary?: Function | boolean,
-  contentTypes: string[]
+  contentTypes?: string[]
 }
 
 declare function proxy(proxyParams: ProxyParams): Promise<any>

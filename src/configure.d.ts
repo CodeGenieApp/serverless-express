@@ -11,7 +11,7 @@ interface ConfigureParams {
 
 interface BinarySettings {
   isBinary?: Function | boolean,
-  contentTypes: string[]
+  contentTypes?: string[]
 }
 
 interface ConfigureResult {
