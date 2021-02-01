@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/vendia/serverless-express/compare/v4.0.0...v4.1.0) (2021-02-01)
+
+
+### Features
+
+* add support for additional frameworks other than Express ([16628b3](https://github.com/vendia/serverless-express/commit/16628b38a271bbe7dbb912ae55fdb6558e0154ea))
+
 # [4.0.0](https://github.com/vendia/serverless-express/compare/v3.3.5...v4.0.0) (2021-02-01)
 
 
