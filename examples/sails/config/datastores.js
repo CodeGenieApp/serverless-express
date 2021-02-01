@@ -15,7 +15,6 @@
 
 module.exports.datastores = {
 
-
   /***************************************************************************
   *                                                                          *
   * Your app's default datastore.                                            *
@@ -51,7 +50,6 @@ module.exports.datastores = {
     // adapter: 'sails-mysql',
     // url: 'mysql://user:password@host:port/database',
 
-  },
-
+  }
 
 };

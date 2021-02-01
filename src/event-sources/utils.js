@@ -79,18 +79,18 @@ function getEventSourceNameBasedOnEvent ({
   throw new Error('Unable to determine event source based on event.')
 }
 
-function getCommaDelimitedHeaders({ headersMap, separator = ',', lowerCaseKey = false }) {
+function getCommaDelimitedHeaders ({ headersMap, separator = ',', lowerCaseKey = false }) {
   const commaDelimitedHeaders = {}
 
   Object.entries(headersMap)
-  .forEach(([headerKey, headerValue]) => {
-    let newKey = lowerCaseKey ? headerKey.toLowerCase() : headerKey
-    if (Array.isArray(headerValue)) { 
-      commaDelimitedHeaders[newKey] = headerValue.join(separator)
-    } else {
-      commaDelimitedHeaders[newKey] = headerValue
-    }
-  })
+    .forEach(([headerKey, headerValue]) => {
+      const newKey = lowerCaseKey ? headerKey.toLowerCase() : headerKey
+      if (Array.isArray(headerValue)) {
+        commaDelimitedHeaders[newKey] = headerValue.join(separator)
+      } else {
+        commaDelimitedHeaders[newKey] = headerValue
+      }
+    })
 
   return commaDelimitedHeaders
 }

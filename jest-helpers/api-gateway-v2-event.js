@@ -2,18 +2,18 @@ const clone = require('./clone')
 const mergeDeep = require('./merge-deep')
 
 const apiGatewayV2Event = {
-  'version': '2.0',
-  'routeKey': '$default',
+  version: '2.0',
+  routeKey: '$default',
   // Default rawPath to event.path
   // 'rawPath': '/users',
-  'rawQueryString': '',
-  'headers': {
-    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+  rawQueryString: '',
+  headers: {
+    accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
     'accept-encoding': 'gzip, deflate, br',
     'accept-language': 'en-US,en;q=0.9',
     'cache-control': 'max-age=0',
     'content-length': '0',
-    'host': '6bwvllq3t2.execute-api.us-east-1.amazonaws.com',
+    host: '6bwvllq3t2.execute-api.us-east-1.amazonaws.com',
     'sec-fetch-dest': 'document',
     'sec-fetch-mode': 'navigate',
     'sec-fetch-site': 'none',
@@ -25,27 +25,27 @@ const apiGatewayV2Event = {
     'x-forwarded-port': '443',
     'x-forwarded-proto': 'https'
   },
-  'requestContext': {
-    'accountId': '347971939225',
-    'apiId': '6bwvllq3t2',
-    'domainName': '6bwvllq3t2.execute-api.us-east-1.amazonaws.com',
-    'domainPrefix': '6bwvllq3t2',
-    'http': {
+  requestContext: {
+    accountId: '347971939225',
+    apiId: '6bwvllq3t2',
+    domainName: '6bwvllq3t2.execute-api.us-east-1.amazonaws.com',
+    domainPrefix: '6bwvllq3t2',
+    http: {
       // Default method to event.method
       // 'method': 'GET',
       // Default requestContext.http.path to event.path
       // 'path': '/users',
-      'protocol': 'HTTP/1.1',
-      'sourceIp': '203.123.103.37',
-      'userAgent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+      protocol: 'HTTP/1.1',
+      sourceIp: '203.123.103.37',
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
     },
-    'requestId': 'YuSJQjZfoAMESbg=',
-    'routeKey': '$default',
-    'stage': '$default',
-    'time': '06/Jan/2021:10:55:03 +0000',
-    'timeEpoch': 1609930503973
+    requestId: 'YuSJQjZfoAMESbg=',
+    routeKey: '$default',
+    stage: '$default',
+    time: '06/Jan/2021:10:55:03 +0000',
+    timeEpoch: 1609930503973
   },
-  'isBase64Encoded': false
+  isBase64Encoded: false
 }
 
 function makeApiGatewayV2Event (values = {}) {

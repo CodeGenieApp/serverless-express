@@ -11,10 +11,8 @@
  *   https://sailsjs.com/anatomy/tasks/config/sails-linker.js
  *
  */
-module.exports = function(grunt) {
-
+module.exports = function (grunt) {
   grunt.config.set('sails-linker', {
-
 
     //   ╦╔═╗╦  ╦╔═╗╔═╗╔═╗╦═╗╦╔═╗╔╦╗
     //   ║╠═╣╚╗╔╝╠═╣╚═╗║  ╠╦╝║╠═╝ ║
@@ -41,7 +39,7 @@ module.exports = function(grunt) {
         startTag: '<!--SCRIPTS-->',
         endTag: '<!--SCRIPTS END-->',
         fileTmpl: '<script src="%s"></script>',
-        appRoot: '.tmp/public',
+        appRoot: '.tmp/public'
         // relative: true
         // ^^ Uncomment this if compiling assets for use in PhoneGap, CDN, etc.
         //    (but be note that this can break custom font URLs)
@@ -72,7 +70,7 @@ module.exports = function(grunt) {
         startTag: '<!--SCRIPTS-->',
         endTag: '<!--SCRIPTS END-->',
         fileTmpl: '<script src="%s"></script>',
-        appRoot: '.tmp/public',
+        appRoot: '.tmp/public'
         // relative: true
         // ^^ Uncomment this if compiling assets for use in PhoneGap, CDN, etc.
         //    (but be note that this can break custom font URLs)
@@ -83,7 +81,6 @@ module.exports = function(grunt) {
         'views/**/*.ejs': ['.tmp/public/dist/*.js']
       }
     },
-
 
     //  ╔═╗╔╦╗╦ ╦╦  ╔═╗╔═╗╦ ╦╔═╗╔═╗╔╦╗╔═╗
     //  ╚═╗ ║ ╚╦╝║  ║╣ ╚═╗╠═╣║╣ ║╣  ║ ╚═╗
@@ -111,7 +108,7 @@ module.exports = function(grunt) {
         startTag: '<!--STYLES-->',
         endTag: '<!--STYLES END-->',
         fileTmpl: '<link rel="stylesheet" href="%s">',
-        appRoot: '.tmp/public',
+        appRoot: '.tmp/public'
         // relative: true
         // ^^ Uncomment this if compiling assets for use in PhoneGap, CDN, etc.
         //    (but be note that this can break custom font URLs)
@@ -143,7 +140,7 @@ module.exports = function(grunt) {
         startTag: '<!--STYLES-->',
         endTag: '<!--STYLES END-->',
         fileTmpl: '<link rel="stylesheet" href="%s">',
-        appRoot: '.tmp/public',
+        appRoot: '.tmp/public'
         // relative: true
         // ^^ Uncomment this if compiling assets for use in PhoneGap, CDN, etc.
         //    (but be note that this can break custom font URLs)
@@ -153,9 +150,9 @@ module.exports = function(grunt) {
         'views/**/*.html': ['.tmp/public/dist/*.css'],
         'views/**/*.ejs': ['.tmp/public/dist/*.css']
       }
-    },
+    }
 
-  });//</ grunt.config.set() >
+  });// </ grunt.config.set() >
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // This Grunt plugin is part of the default asset pipeline in Sails,
@@ -180,5 +177,4 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-sails-linker');
   // ```
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 };

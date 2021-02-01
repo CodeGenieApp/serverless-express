@@ -15,7 +15,7 @@ function getResponseToApiGateway ({
   if (transferEncodingHeader && transferEncodingHeader.includes('chunked')) {
     multiValueHeaders['transfer-encoding'] = transferEncodingHeader.filter(headerValue => headerValue !== 'chunked')
   }
-  
+
   return {
     statusCode,
     body,

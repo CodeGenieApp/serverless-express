@@ -19,7 +19,7 @@ function getRequestValuesFromLambdaEdgeEvent ({ event }) {
   Object.entries(headersMap).forEach(([headerKey, headerValue]) => {
     headers[headerKey] = headerValue.map(header => header.value).join(',')
   })
-  
+
   if (requestBodyObject.data) {
     const isBase64Encoded = requestBodyObject.encoding === 'base64'
     body = getEventBody({
@@ -63,7 +63,7 @@ function getResponseToLambdaEdge ({
       return
     }
 
-    const headersArray = headerValue.map(v =>({
+    const headersArray = headerValue.map(v => ({
       key: headerKeyLowerCase,
       value: v
     }))

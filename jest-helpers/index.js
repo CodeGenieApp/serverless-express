@@ -1,7 +1,7 @@
 const { makeApiGatewayV1Event, makeApiGatewayV1Response } = require('./api-gateway-v1-event')
 const { makeApiGatewayV2Event, makeApiGatewayV2Response } = require('./api-gateway-v2-event')
 const { makeAlbEvent, makeAlbResponse } = require('./alb-event')
-const { makeLambdaEdgeEvent, makeLambdaEdgeResponse} = require('./lambda-edge-event.js')
+const { makeLambdaEdgeEvent, makeLambdaEdgeResponse } = require('./lambda-edge-event.js')
 
 const EVENT_SOURCE_NAMES = [
   'alb',
@@ -17,7 +17,7 @@ const EACH_MATRIX = []
 
 EVENT_SOURCE_NAMES.forEach(eventSource => {
   FRAMEWORK_NAMES.forEach(framework => {
-    EACH_MATRIX.push([ eventSource, framework ])
+    EACH_MATRIX.push([eventSource, framework])
   })
 })
 
@@ -59,7 +59,7 @@ function makeResponse ({ eventSourceName, ...rest }, { shouldConvertContentLengt
     case 'apiGatewayV1':
       return makeApiGatewayV1Response(rest)
     case 'apiGatewayV2':
-      return makeApiGatewayV2Response(rest, {shouldConvertContentLengthToInt})
+      return makeApiGatewayV2Response(rest, { shouldConvertContentLengthToInt })
     case 'lambdaEdge':
       return makeLambdaEdgeResponse(rest)
     default:

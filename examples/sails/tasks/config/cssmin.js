@@ -11,8 +11,7 @@
  *   https://sailsjs.com/anatomy/tasks/config/cssmin.js
  *
  */
-module.exports = function(grunt) {
-
+module.exports = function (grunt) {
   grunt.config.set('cssmin', {
     dist: {
       src: ['.tmp/public/concat/production.css'],
@@ -43,5 +42,4 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-contrib-cssmin');
   // ```
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 };

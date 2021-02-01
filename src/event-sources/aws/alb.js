@@ -8,7 +8,7 @@ const getResponseToAlb = ({
   isBase64Encoded
 }) => {
   const multiValueHeaders = getMultiValueHeaders({ headers })
-  
+
   return {
     statusCode,
     body,

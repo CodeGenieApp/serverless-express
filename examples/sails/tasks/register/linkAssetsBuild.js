@@ -7,9 +7,9 @@
  *   https://sailsjs.com/anatomy/tasks/register/link-assets-build.js
  *
  */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   grunt.registerTask('linkAssetsBuild', [
     'sails-linker:devJsBuild',
-    'sails-linker:devStylesBuild',
+    'sails-linker:devStylesBuild'
   ]);
 };

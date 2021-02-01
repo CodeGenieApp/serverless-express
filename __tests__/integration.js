@@ -50,7 +50,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       httpMethod: 'GET'
     })
     const response = await serverlessExpressInstance.handler(event)
-    const expected = `<!DOCTYPE html><html><body>/</body></html>`
+    const expected = '<!DOCTYPE html><html><body>/</body></html>'
     expect(response.body).toEqual(expected)
     const expectedResponse = makeResponse({
       eventSourceName,
@@ -178,7 +178,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     const response = await serverlessExpressInstance.handler(event)
     const expectedResponse = makeResponse({
       eventSourceName,
-      body: JSON.stringify({id: '3'}),
+      body: JSON.stringify({ id: '3' }),
       multiValueHeaders: {
         'content-length': ['10'],
         etag: ['W/"a-lfm5LdsGBlIttC0+rnSiywX9+Wc"']
@@ -218,7 +218,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     const lastModifiedRegex = /^.* GMT$/
     switch (eventSourceName) {
       case 'alb':
-        case 'apiGatewayV1':
+      case 'apiGatewayV1':
         expect(response.multiValueHeaders.etag.length).toEqual(1)
         expect(response.multiValueHeaders.etag[0]).toMatch(etagRegex)
         expect(response.multiValueHeaders['last-modified'].length).toEqual(1)
@@ -226,22 +226,22 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
         delete response.multiValueHeaders.etag
         delete response.multiValueHeaders['last-modified']
         break
-        case 'apiGatewayV2':
-          expect(response.headers.etag).toMatch(etagRegex)
-          expect(response.headers['last-modified']).toMatch(lastModifiedRegex)
-          delete response.headers.etag
-          delete response.headers['last-modified']
-          break
-        case 'lambdaEdge':
-          expect(response.headers.etag.length).toEqual(1)
-          expect(response.headers.etag[0].key).toMatch('etag')
-          expect(response.headers.etag[0].value).toMatch(etagRegex)
-          expect(response.headers['last-modified'].length).toEqual(1)
-          expect(response.headers['last-modified'][0].key).toMatch('last-modified')
-          expect(response.headers['last-modified'][0].value).toMatch(lastModifiedRegex)
-          delete response.headers.etag
-          delete response.headers['last-modified']
-          break
+      case 'apiGatewayV2':
+        expect(response.headers.etag).toMatch(etagRegex)
+        expect(response.headers['last-modified']).toMatch(lastModifiedRegex)
+        delete response.headers.etag
+        delete response.headers['last-modified']
+        break
+      case 'lambdaEdge':
+        expect(response.headers.etag.length).toEqual(1)
+        expect(response.headers.etag[0].key).toMatch('etag')
+        expect(response.headers.etag[0].value).toMatch(etagRegex)
+        expect(response.headers['last-modified'].length).toEqual(1)
+        expect(response.headers['last-modified'][0].key).toMatch('last-modified')
+        expect(response.headers['last-modified'][0].value).toMatch(lastModifiedRegex)
+        delete response.headers.etag
+        delete response.headers['last-modified']
+        break
     }
     expect(response).toEqual(expectedResponse)
   })

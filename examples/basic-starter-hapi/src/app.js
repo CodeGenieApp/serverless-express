@@ -8,8 +8,7 @@ server.route({
   method: 'GET',
   path: '/',
   handler: (request, h) => {
-
-    return 'Hello World!';
+    return 'Hello World!'
   }
 })
 module.exports = server.listener._events.request

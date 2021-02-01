@@ -13,8 +13,6 @@
  *
  */
 module.exports = function (grunt) {
-
-
   grunt.registerTask('default', [
     // 'polyfill:dev', //« uncomment to ALSO transpile during development (for broader browser compat.)
     'compileAssets',
@@ -22,6 +20,4 @@ module.exports = function (grunt) {
     'linkAssets',
     'watch'
   ]);
-
-
 };

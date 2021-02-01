@@ -9,8 +9,7 @@
  *   https://sailsjs.com/anatomy/tasks/config/hash.js
  *
  */
-module.exports = function(grunt) {
-
+module.exports = function (grunt) {
   grunt.config.set('hash', {
     options: {
       mapping: '',
@@ -18,9 +17,9 @@ module.exports = function(grunt) {
       destBasePath: '',
       flatten: false,
       hashLength: 8,
-      hashFunction: function(source, encoding){
+      hashFunction: function (source, encoding) {
         if (!source || !encoding) {
-          throw new Error('Consistency violation: Cannot compute unique hash for production .css/.js cache-busting suffix, because `source` and/or `encoding` are falsey-- but they should be truthy strings!  Here they are, respectively:\nsource: '+require('util').inspect(source, {depth:null})+'\nencoding: '+require('util').inspect(encoding, {depth:null}));
+          throw new Error('Consistency violation: Cannot compute unique hash for production .css/.js cache-busting suffix, because `source` and/or `encoding` are falsey-- but they should be truthy strings!  Here they are, respectively:\nsource: ' + require('util').inspect(source, { depth: null }) + '\nencoding: ' + require('util').inspect(encoding, { depth: null }));
         }
         return require('crypto').createHash('sha1').update(source, encoding).digest('hex');
       }
@@ -58,5 +57,4 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-hash');
   // ```
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 };

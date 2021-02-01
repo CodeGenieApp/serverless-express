@@ -9,8 +9,7 @@
  *   https://sailsjs.com/anatomy/tasks/config/clean.js
  *
  */
-module.exports = function(grunt) {
-
+module.exports = function (grunt) {
   grunt.config.set('clean', {
     dev: ['.tmp/public/**'],
     build: ['www'],
@@ -48,5 +47,4 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-contrib-clean');
   // ```
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 };
