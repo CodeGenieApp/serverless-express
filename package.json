@@ -31,6 +31,9 @@
     "node": ">=12"
   },
   "release": {
+    "branches": [
+      "mainline"
+    ],
     "plugins": [
       [
         "@semantic-release/commit-analyzer",
