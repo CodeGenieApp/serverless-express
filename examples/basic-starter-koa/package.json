@@ -24,8 +24,8 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@vendia/serverless-express": "^4.0.0-rc.5",
-    "koa": "^2.7.0",
+    "@vendia/serverless-express": "^4.0.0",
+    "koa": "^2.13.1",
     "koa-router": "^7.4.0"
   },
   "devDependencies": {

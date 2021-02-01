@@ -1,3 +1,5 @@
+const ServerlessRequest = require('./request')
+const ServerlessResponse = require('./response')
 const { getEventSource } = require('./event-sources')
 const Response = require('./response')
 const isBinary = require('./is-binary')
@@ -64,6 +66,58 @@ function respondToEventSourceWithError ({
   resolver.succeed({ response: errorResponse })
 }
 
+async function getRequestResponse ({
+  method,
+  headers,
+  body,
+  remoteAddress,
+  path
+}) {
+  const request = new ServerlessRequest({
+    method,
+    headers,
+    body,
+    remoteAddress,
+    url: path
+  })
+  await waitForStreamComplete(request)
+
+  const response = new ServerlessResponse(request)
+
+  return { request, response }
+}
+
+function waitForStreamComplete (stream) {
+  if (stream.complete || stream.writableEnded) {
+    return stream
+  }
+
+  return new Promise((resolve, reject) => {
+    stream.once('error', complete)
+    stream.once('end', complete)
+    stream.once('finish', complete)
+
+    let isComplete = false
+
+    function complete (err) {
+      if (isComplete) {
+        return
+      }
+
+      isComplete = true
+
+      stream.removeListener('error', complete)
+      stream.removeListener('end', complete)
+      stream.removeListener('finish', complete)
+
+      if (err) {
+        reject(err)
+      } else {
+        resolve(stream)
+      }
+    }
+  })
+}
 async function forwardRequestToNodeServer ({
   app,
   framework,
@@ -77,7 +131,9 @@ async function forwardRequestToNodeServer ({
 }) {
   const requestValues = eventSource.getRequest({ event, context, log })
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:REQUEST_VALUES', { requestValues })
-  const response = await framework.sendRequest({ app, requestValues })
+  const { request, response } = await getRequestResponse(requestValues)
+  await framework.sendRequest({ app, request, response })
+  await waitForStreamComplete(response)
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:RESPONSE', { response })
   forwardResponse({
     binarySettings,
@@ -92,5 +148,6 @@ async function forwardRequestToNodeServer ({
 module.exports = {
   forwardResponse,
   respondToEventSourceWithError,
-  forwardRequestToNodeServer
+  forwardRequestToNodeServer,
+  getRequestResponse
 }

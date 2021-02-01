@@ -12,4 +12,4 @@ app
   .use(router.routes())
   .use(router.allowedMethods())
 
-module.exports = app.callback()
+module.exports = app

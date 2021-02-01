@@ -1,5 +1,5 @@
-const lambdaFunction = require('./src/lambda.js')
-const albEvent = require('./dynamodb-event.json')
+const lambdaFunction = require('../src/lambda.js')
+const albEvent = require('../dynamodb-event.json')
 
 const server = lambdaFunction.handler(albEvent, {})
   .then(v => {

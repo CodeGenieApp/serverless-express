@@ -4,7 +4,6 @@ const eventSources = require('../src/event-sources')
 const makeResolver = require('../src/make-resolver')
 const ServerlessRequest = require('../src/request')
 const ServerlessResponse = require('../src/response')
-const expressFramework = require('../src/frameworks/express')
 const { log, MockContext } = require('../jest-helpers')
 
 const apiGatewayEventSource = eventSources.getEventSource({ eventSourceName: 'AWS_API_GATEWAY_V1' })
@@ -65,7 +64,7 @@ test('getPathWithQueryStringParams: array param', () => {
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&bizz=buzz')
 })
 
-function getRequestResponse (multiValueHeaders = {}) {
+function getReqRes (multiValueHeaders = {}) {
   const event = {
     path: '/foo',
     httpMethod: 'GET',
@@ -78,13 +77,13 @@ function getRequestResponse (multiValueHeaders = {}) {
     }
   }
   const requestValues = apiGatewayEventSource.getRequest({ event })
-  const requestResponse = expressFramework.getRequestResponse(requestValues)
+  const requestResponse = serverlessExpressTransport.getRequestResponse(requestValues)
 
   return requestResponse
 }
 
 test('getRequestResponse: with headers', async (done) => {
-  const { request } = await getRequestResponse({ 'x-foo': ['foo'] })
+  const { request } = await getReqRes({ 'x-foo': ['foo'] })
   expect(request).toBeInstanceOf(ServerlessRequest)
   expect(request.body).toBeInstanceOf(Buffer)
   expect(request.body.toString('utf-8')).toEqual('Hello serverless!')
@@ -99,7 +98,7 @@ test('getRequestResponse: with headers', async (done) => {
 })
 
 test('getRequestResponse: without headers', async (done) => {
-  const requestResponse = await getRequestResponse()
+  const requestResponse = await getReqRes()
   expect(requestResponse.request).toBeInstanceOf(ServerlessRequest)
   expect(requestResponse.request.body).toBeInstanceOf(Buffer)
   expect(requestResponse.request.body.toString('utf-8')).toEqual('Hello serverless!')
@@ -174,7 +173,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
   test('content-type header missing', async (done) => {
     const binaryMimeTypes = []
     const multiValueHeaders = { foo: ['bar'] }
-    const { requestResponse } = await getRequestResponse(multiValueHeaders)
+    const { requestResponse } = await getReqRes(multiValueHeaders)
     const response = new ServerlessResponse(requestResponse.request)
     return new Promise(
       (resolve) => {
