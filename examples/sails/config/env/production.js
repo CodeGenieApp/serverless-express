@@ -1,3 +1,5 @@
+/* eslint-disable no-irregular-whitespace */
+
 /**
  * Production environment settings
  * (sails.config.*)

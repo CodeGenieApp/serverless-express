@@ -42,7 +42,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/sam', (req, res) => {
-  res.sendFile(`${__dirname}/sam-logo.png`)
+  res.sendFile(path.join(__dirname, 'sam-logo.png'))
 })
 
 router.get('/users', (req, res) => {
