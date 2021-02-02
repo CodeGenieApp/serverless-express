@@ -420,4 +420,39 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     })
     expect(response).toEqual(expectedResponse)
   })
+
+  test('custom logger', async () => {
+    app = express()
+    router = express.Router()
+    app.use('/', router)
+    router.get('/users', (req, res) => {
+      res.json({})
+    })
+    const event = makeEvent({
+      eventSourceName,
+      path: '/users',
+      httpMethod: 'GET'
+    })
+    const customLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+      info: jest.fn(),
+      verbose: jest.fn(),
+      debug: jest.fn()
+    }
+    serverlessExpressInstance = serverlessExpress({ app, log: customLogger })
+    await serverlessExpressInstance.handler(event)
+
+    expect(customLogger.debug.mock.calls.length).toBe(6)
+
+    // TODO: test log levels
+    // customLogger.level = 'error'
+    // customLogger.debug.mockClear()
+    // customLogger.debug.mockReset()
+    // customLogger.debug = jest.fn()
+
+    // serverlessExpressInstance = serverlessExpress({ app, log: customLogger })
+    // await serverlessExpressInstance.handler(event)
+    // expect(customLogger.debug.mock.calls.length).toBe(0)
+  })
 })
