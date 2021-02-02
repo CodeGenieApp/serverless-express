@@ -1,6 +1,6 @@
 const logger = {
   // TODO: allow users to set log level without having to provide the other log methods
-  level: process.env === 'development' ? 'debug' : 'error',
+  level: process.env.NODE_ENV === 'development' ? 'debug' : 'error',
   error (message, additional) {
     if (!logger.level.includes('debug', 'verbose', 'info', 'warn', 'error')) return
     console.error({
