@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/vendia/serverless-express/compare/v4.1.0...v4.1.1) (2021-02-02)
+
+
+### Bug Fixes
+
+* only show debug logs in 'development' ([b0c4814](https://github.com/vendia/serverless-express/commit/b0c4814482ac4ed4f4e201237c0fabd8b5852d46))
+
 # [4.1.0](https://github.com/vendia/serverless-express/compare/v4.0.0...v4.1.0) (2021-02-01)
 
 
