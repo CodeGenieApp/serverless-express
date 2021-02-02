@@ -19,9 +19,6 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
   beforeEach(() => {
     app = express()
     router = express.Router()
-    app.set('view engine', 'ejs')
-    app.engine('.ejs', ejs)
-    app.set('views', path.join(jestHelpersPath, 'views'))
     app.use('/', router)
     serverlessExpressInstance = serverlessExpress({ app, log })
   })
@@ -37,6 +34,9 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
   })
 
   test('GET HTML', async () => {
+    app.set('view engine', 'ejs')
+    app.engine('.ejs', ejs)
+    app.set('views', path.join(jestHelpersPath, 'views'))
     router.get('/', (req, res) => {
       const currentInvoke = serverlessExpress.getCurrentInvoke()
       const eventPath = currentInvoke.event.path || currentInvoke.event.rawPath || currentInvoke.event.Records[0].cf.request.uri
@@ -66,24 +66,42 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
   })
 
   test('GET JSON', async () => {
-    const jsonResponse = { data: { name: 'Brett' } }
+    // TODO: Fix lambdaEdge query strings
+    const multiValueQueryStringParameters = {
+      singleNormal: ['1'],
+      singleSpecial: ['hello world!'],
+      arr: ['a', 'b', 'hello world~']
+    }
+    const queryStringParameters = {
+      singleNormal: '1',
+      singleSpecial: 'hello world!',
+      arr: 'hello world~'
+    }
     router.get('/users', (req, res) => {
-      res.set('X-Custom-Header', 'test')
-      res.json(jsonResponse)
+      const { singleNormal, singleSpecial, arr } = req.query
+      res.set('X-Custom-Header', singleNormal)
+      res.json({ singleNormal, singleSpecial, arr })
     })
     const event = makeEvent({
       eventSourceName,
       path: '/users',
-      httpMethod: 'GET'
+      httpMethod: 'GET',
+      queryStringParameters,
+      multiValueQueryStringParameters
     })
     const response = await serverlessExpressInstance.handler(event)
     const expectedResponse = makeResponse({
       eventSourceName,
-      body: JSON.stringify(jsonResponse),
+      body: eventSourceName === 'lambdaEdge'
+        ? '{}'
+        : JSON.stringify({
+          ...queryStringParameters,
+          arr: multiValueQueryStringParameters.arr
+        }),
       multiValueHeaders: {
-        'content-length': ['25'],
-        etag: ['W/"19-dkLV0OMoaMM+tzXUD50EB/AHHoI"'],
-        'x-custom-header': ['test']
+        'content-length': ['82'],
+        etag: eventSourceName === 'lambdaEdge' ? ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"'] : ['W/"52-QR4hWttXm/4xeZPYy7nze/EjYXg"'],
+        'x-custom-header': eventSourceName === 'lambdaEdge' ? ['undefined'] : ['1']
       }
     })
     expect(response).toEqual(expectedResponse)

@@ -1,3 +1,4 @@
+const { URLSearchParams } = require('url')
 const clone = require('./clone')
 const mergeDeep = require('./merge-deep')
 
@@ -53,6 +54,19 @@ function makeApiGatewayV2Event (values = {}) {
   const mergedEvent = mergeDeep(baseEvent, values)
 
   if (!mergedEvent.rawPath) mergedEvent.rawPath = values.path
+
+  if (!mergedEvent.rawQueryString && values.multiValueQueryStringParameters) {
+    const multiValueQueryStringParametersToArray = []
+    Object.entries(values.multiValueQueryStringParameters)
+      .forEach(([qKey, qValues]) => {
+        qValues.forEach(qValue => {
+          multiValueQueryStringParametersToArray.push([qKey, qValue])
+        })
+      })
+    const rawQueryString = new URLSearchParams(multiValueQueryStringParametersToArray)
+    mergedEvent.rawQueryString = rawQueryString.toString()
+  }
+
   if (!mergedEvent.requestContext.http.path) mergedEvent.requestContext.http.path = values.path
   if (!mergedEvent.requestContext.http.method) mergedEvent.requestContext.http.method = values.httpMethod
 
