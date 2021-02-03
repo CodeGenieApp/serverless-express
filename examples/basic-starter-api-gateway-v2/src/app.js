@@ -34,8 +34,8 @@ router.get('/', (req, res) => {
   })
 })
 
-router.get('/sam', (req, res) => {
-  res.sendFile(path.join(__dirname, 'sam-logo.png'))
+router.get('/vendia', (req, res) => {
+  res.sendFile(path.join(__dirname, 'vendia-logo.png'))
 })
 
 router.get('/users', (req, res) => {
