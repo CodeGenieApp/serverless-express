@@ -9,3 +9,5 @@ dist/
 examples/nextjs
 examples/nestjs
 typescript-out
+.build
+.serverless
