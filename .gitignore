@@ -8,3 +8,4 @@ vendia-serverless-express-*.tgz
 dist/
 examples/nextjs
 examples/nestjs
+typescript-out
