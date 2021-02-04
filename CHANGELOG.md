@@ -1,3 +1,10 @@
+## [4.1.3](https://github.com/vendia/serverless-express/compare/v4.1.2...v4.1.3) (2021-02-04)
+
+
+### Bug Fixes
+
+* add query strings to lambda@edge ([b15a72c](https://github.com/vendia/serverless-express/commit/b15a72cbe31ee6799724837c182946c2f8937564))
+
 ## [4.1.2](https://github.com/vendia/serverless-express/compare/v4.1.1...v4.1.2) (2021-02-02)
 
 
