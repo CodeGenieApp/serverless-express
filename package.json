@@ -32,14 +32,14 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "lint-staged && npm test",
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test",
       "commit-msg": "commitlint -e $GIT_PARAMS"
     }
   },
   "lint-staged": {
     "*.js": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "commitlint": {
