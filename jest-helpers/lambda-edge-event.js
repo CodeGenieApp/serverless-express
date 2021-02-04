@@ -110,6 +110,19 @@ function makeLambdaEdgeEvent (values = {}) {
   const mergedEvent = mergeDeep(baseEvent, values)
 
   if (!mergedEvent.request.uri) mergedEvent.request.uri = values.path
+
+  if (!mergedEvent.request.querystring && values.multiValueQueryStringParameters) {
+    const multiValueQueryStringParametersToArray = []
+    Object.entries(values.multiValueQueryStringParameters)
+      .forEach(([qKey, qValues]) => {
+        qValues.forEach(qValue => {
+          multiValueQueryStringParametersToArray.push([qKey, qValue])
+        })
+      })
+    const querystring = new URLSearchParams(multiValueQueryStringParametersToArray)
+    mergedEvent.request.querystring = querystring.toString()
+  }
+
   if (!mergedEvent.request.method) mergedEvent.request.method = values.httpMethod
 
   if (!mergedEvent.request.body.data) {
@@ -165,7 +178,6 @@ function makeLambdaEdgeResponse (values = {}) {
   values.bodyEncoding = values.isBase64Encoded ? 'base64' : 'text'
   delete values.isBase64Encoded
   const mergedResponse = mergeDeep(baseResponse, values)
-
   if (values.body) {
     mergedResponse.body.data = values.body
   }

@@ -1,3 +1,4 @@
+const util = require('util')
 const ServerlessRequest = require('./request')
 const ServerlessResponse = require('./response')
 const { getEventSource } = require('./event-sources')
@@ -37,7 +38,7 @@ function forwardResponse ({
   })
 
   log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE', {
-    successResponse,
+    successResponse: util.inspect(successResponse, { depth: null }),
     body: logBody
   })
 

@@ -1,3 +1,4 @@
+const util = require('util')
 const { setCurrentInvoke } = require('./current-invoke')
 const { getEventSource } = require('./event-sources')
 const { getEventSourceNameBasedOnEvent } = require('./event-sources/utils')
@@ -30,8 +31,8 @@ function proxy ({
   respondWithErrors
 }) {
   log.debug('SERVERLESS_EXPRESS:PROXY', {
-    event,
-    context,
+    event: util.inspect(event, { depth: null }),
+    context: util.inspect(context, { depth: null }),
     resolutionMode,
     eventSourceName,
     binarySettings,

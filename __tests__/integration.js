@@ -5,7 +5,6 @@ const bodyParser = require('body-parser')
 const ejs = require('ejs').__express
 const serverlessExpress = require('../src/index')
 const {
-  log,
   makeEvent,
   makeResponse,
   EACH_MATRIX
@@ -20,7 +19,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     app = express()
     router = express.Router()
     app.use('/', router)
-    serverlessExpressInstance = serverlessExpress({ app, log })
+    serverlessExpressInstance = serverlessExpress({ app })
   })
 
   test('handler returns promise', () => {
@@ -66,7 +65,6 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
   })
 
   test('GET JSON', async () => {
-    // TODO: Fix lambdaEdge query strings
     const multiValueQueryStringParameters = {
       singleNormal: ['1'],
       singleSpecial: ['hello world!'],
@@ -92,16 +90,14 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     const response = await serverlessExpressInstance.handler(event)
     const expectedResponse = makeResponse({
       eventSourceName,
-      body: eventSourceName === 'lambdaEdge'
-        ? '{}'
-        : JSON.stringify({
-          ...queryStringParameters,
-          arr: multiValueQueryStringParameters.arr
-        }),
+      body: JSON.stringify({
+        ...queryStringParameters,
+        arr: multiValueQueryStringParameters.arr
+      }),
       multiValueHeaders: {
         'content-length': ['82'],
-        etag: eventSourceName === 'lambdaEdge' ? ['W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"'] : ['W/"52-QR4hWttXm/4xeZPYy7nze/EjYXg"'],
-        'x-custom-header': eventSourceName === 'lambdaEdge' ? ['undefined'] : ['1']
+        etag: ['W/"52-QR4hWttXm/4xeZPYy7nze/EjYXg"'],
+        'x-custom-header': ['1']
       }
     })
     expect(response).toEqual(expectedResponse)
@@ -130,7 +126,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       path: '/users',
       httpMethod: 'GET'
     })
-    const serverlessExpressInstanceWithCallbackResolutionMode = serverlessExpress({ app, log, resolutionMode: 'CALLBACK' })
+    const serverlessExpressInstanceWithCallbackResolutionMode = serverlessExpress({ app, resolutionMode: 'CALLBACK' })
     serverlessExpressInstanceWithCallbackResolutionMode.handler(event, {}, callback)
   })
 
@@ -157,7 +153,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       path: '/users',
       httpMethod: 'GET'
     })
-    const serverlessExpressInstanceWithContextResolutionMode = serverlessExpress({ app, log, resolutionMode: 'CONTEXT' })
+    const serverlessExpressInstanceWithContextResolutionMode = serverlessExpress({ app, resolutionMode: 'CONTEXT' })
     serverlessExpressInstanceWithContextResolutionMode.handler(event, context)
   })
 

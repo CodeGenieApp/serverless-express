@@ -1,17 +1,19 @@
+const url = require('url')
 const { getEventBody } = require('../utils')
 
 // Lambda@Edge fails if certain headers are returned
 const RESPONSE_HEADERS_DENY_LIST = ['content-length']
 
 function getRequestValuesFromLambdaEdgeEvent ({ event }) {
-  const cloudFormationRequest = event.Records[0].cf.request
+  const cloudFrontRequest = event.Records[0].cf.request
   const {
     headers: headersMap,
-    uri: path,
+    uri,
     method,
+    querystring,
     body: requestBodyObject = {},
     clientIp
-  } = cloudFormationRequest
+  } = cloudFrontRequest
   let body = null
 
   const headers = {}
@@ -29,7 +31,11 @@ function getRequestValuesFromLambdaEdgeEvent ({ event }) {
     headers['content-length'] = Buffer.byteLength(body, isBase64Encoded ? 'base64' : 'utf8')
   }
 
-  // TODO: include querystring params in path
+  const path = url.format({
+    pathname: uri,
+    search: querystring
+  })
+
   const { host } = headers
   return {
     method,

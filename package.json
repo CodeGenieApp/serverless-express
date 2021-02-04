@@ -60,6 +60,9 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**"
+    ],
+    "testPathIgnorePatterns": [
+      "examples/nestjs"
     ]
   },
   "devDependencies": {
