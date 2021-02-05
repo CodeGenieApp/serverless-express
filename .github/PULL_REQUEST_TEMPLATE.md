@@ -1,5 +1,3 @@
-Please ensure all pull requests are made against the `develop` branch.
-
 *Issue #, if available:*
 
 *Description of changes:*

@@ -7,7 +7,6 @@ sam-template.packaged.yaml
 vendia-serverless-express-*.tgz
 dist/
 examples/nextjs
-examples/nestjs
 typescript-out
 .build
 .serverless
