@@ -7,12 +7,11 @@ const context = {
     process.exit(0)
   }
 }
-const callback = (e, v) => {
+const server = lambdaFunction.handler(apiGatewayEvent, context).then((e, v) => {
   if (e) console.error(e)
   if (v) console.info(v)
   process.exit(0)
-}
-const server = lambdaFunction.handler(apiGatewayEvent, context, callback)
+})
 
 process.stdin.resume()
 

@@ -3,3 +3,4 @@ const { getCurrentInvoke } = require('./current-invoke')
 
 module.exports = configure
 module.exports.getCurrentInvoke = getCurrentInvoke
+module.exports.configure = configure

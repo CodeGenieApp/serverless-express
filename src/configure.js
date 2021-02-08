@@ -4,8 +4,9 @@ const proxy = require('./proxy')
 
 function configure ({
   app: configureApp,
-  log: configureLogger = logger,
-  framework: configureFramework = getFramework({ app: configureApp, log: configureLogger }),
+  logSettings,
+  log: configureLog = logger(logSettings),
+  framework: configureFramework = getFramework({ app: configureApp, log: configureLog }),
   binaryMimeTypes: configureBinaryMimeTypes,
   binarySettings: configureBinarySettings,
   resolutionMode: configureResolutionMode = 'PROMISE',
@@ -23,7 +24,7 @@ function configure ({
     binaryMimeTypes = configureBinaryMimeTypes,
     binarySettings = configureBinarySettings,
     eventSource = configureEventFns,
-    log = configureLogger,
+    log = configureLog,
     respondWithErrors = configureRespondWithErrors
   } = {}) => proxy({
     app: configureProxyApp,
@@ -48,7 +49,7 @@ function configure ({
   return {
     proxy: configureProxy,
     handler: configureHandler,
-    log: configureLogger
+    log: configureLog
   }
 }
 

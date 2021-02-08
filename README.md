@@ -136,6 +136,18 @@ serverlessExpress({
 })
 ```
 
+### logSettings
+
+Specify log settings that are passed to the default logger. Currently, you can only set the log `level`.
+
+```js
+{
+  logSettings: {
+    level: 'debug' // default: 'error'
+  }
+}
+```
+
 ### log
 
 Provide a custom `log` object with `info`, `debug` and `error` methods. For example, you could override the default with a [Winston log](https://www.npmjs.com/package/winston) instance.
