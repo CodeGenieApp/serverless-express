@@ -37,8 +37,8 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     app.engine('.ejs', ejs)
     app.set('views', path.join(jestHelpersPath, 'views'))
     router.get('/', (req, res) => {
-      const currentInvoke = serverlessExpress.getCurrentInvoke()
-      const eventPath = currentInvoke.event.path || currentInvoke.event.rawPath || currentInvoke.event.Records[0].cf.request.uri
+      const { event } = serverlessExpress.getCurrentInvoke()
+      const eventPath = event.path || event.rawPath || event.Records[0].cf.request.uri
       res.render('index', {
         path: eventPath
       })
@@ -450,5 +450,38 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     // serverlessExpressInstance = serverlessExpress({ app, log: customLogger })
     // await serverlessExpressInstance.handler(event)
     // expect(customLogger.debug.mock.calls.length).toBe(0)
+  })
+
+  test('legacy/deprecated usage', async () => {
+    const serverlessExpressMiddleware = require('../src/middleware')
+    app = express()
+    router = express.Router()
+    app.use('/', router)
+    router.use(serverlessExpressMiddleware.eventContext())
+    router.get('/users', (req, res) => {
+      const { event } = req.apiGateway
+      const eventPath = event.path || event.rawPath || event.Records[0].cf.request.uri
+      res.json({
+        path: eventPath
+      })
+    })
+    const event = makeEvent({
+      eventSourceName,
+      path: '/users',
+      httpMethod: 'GET'
+    })
+    const binaryMimeTypes = []
+    const server = serverlessExpress.createServer(app, null, binaryMimeTypes)
+    const response = await serverlessExpress.proxy(server, event)
+    const expectedResponse = makeResponse({
+      eventSourceName,
+      body: JSON.stringify({ path: '/users' }),
+      multiValueHeaders: {
+        'content-length': ['17'],
+        etag: ['W/"11-eM8YArY+qNwdvTL2ppeAaFc4Oq8"']
+      },
+      statusCode: 200
+    })
+    expect(response).toEqual(expectedResponse)
   })
 })
