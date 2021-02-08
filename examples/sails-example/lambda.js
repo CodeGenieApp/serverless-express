@@ -4,5 +4,5 @@ const appPromise = require('./app');
 
 exports.handler = async (event, context, callback) => {
   const app = await appPromise;
-  return serverlessExpress({ app }).handler(event, context, callback);
+  return serverlessExpress({ app })(event, context, callback);
 };

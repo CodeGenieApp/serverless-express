@@ -46,11 +46,10 @@ function configure ({
     callback
   })
 } = {}) {
-  return {
-    proxy: configureProxy,
-    handler: configureHandler,
-    log: configureLog
-  }
+  configureHandler.handler = configureHandler
+  configureHandler.proxy = configureProxy
+  configureHandler.log = configureLog
+  return configureHandler
 }
 
 module.exports = configure

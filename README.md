@@ -34,7 +34,7 @@ The only AWS Lambda specific code you need to write is a simple handler like bel
 // lambda.js
 const serverlessExpress = require('@vendia/serverless-express')
 const app = require('./app')
-exports.handler = serverlessExpress({ app }).handler
+exports.handler = serverlessExpress({ app })
 ```
 
 ## 4.x

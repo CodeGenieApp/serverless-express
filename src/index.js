@@ -29,7 +29,7 @@ function proxy (configureOptions, event, context, resolutionMode, callback) {
     ...configureOptions,
     resolutionMode
   })
-  return se.handler(event, context, callback)
+  return se(event, context, callback)
 }
 module.exports.createServer = createServer
 module.exports.proxy = proxy

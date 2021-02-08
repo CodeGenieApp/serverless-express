@@ -48,7 +48,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       path: '/',
       httpMethod: 'GET'
     })
-    const response = await serverlessExpressInstance.handler(event)
+    const response = await serverlessExpressInstance(event)
     const expected = '<!DOCTYPE html><html><body>/</body></html>'
     expect(response.body).toEqual(expected)
     const expectedResponse = makeResponse({
@@ -87,7 +87,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       queryStringParameters,
       multiValueQueryStringParameters
     })
-    const response = await serverlessExpressInstance.handler(event)
+    const response = await serverlessExpressInstance(event)
     const expectedResponse = makeResponse({
       eventSourceName,
       body: JSON.stringify({
@@ -127,7 +127,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       httpMethod: 'GET'
     })
     const serverlessExpressInstanceWithCallbackResolutionMode = serverlessExpress({ app, resolutionMode: 'CALLBACK' })
-    serverlessExpressInstanceWithCallbackResolutionMode.handler(event, {}, callback)
+    serverlessExpressInstanceWithCallbackResolutionMode(event, {}, callback)
   })
 
   test('resolutionMode = CONTEXT', (done) => {
@@ -154,7 +154,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       httpMethod: 'GET'
     })
     const serverlessExpressInstanceWithContextResolutionMode = serverlessExpress({ app, resolutionMode: 'CONTEXT' })
-    serverlessExpressInstanceWithContextResolutionMode.handler(event, context)
+    serverlessExpressInstanceWithContextResolutionMode(event, context)
   })
 
   test('GET missing route', async () => {
@@ -163,7 +163,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       path: '/nothing-here',
       httpMethod: 'GET'
     })
-    const response = await serverlessExpressInstance.handler(event)
+    const response = await serverlessExpressInstance(event)
     expect(response.body.startsWith('<!DOCTYPE html>')).toBe(true)
     const expectedResponse = makeResponse({
       eventSourceName,
@@ -189,7 +189,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       path: '/users/3',
       httpMethod: 'GET'
     })
-    const response = await serverlessExpressInstance.handler(event)
+    const response = await serverlessExpressInstance(event)
     const expectedResponse = makeResponse({
       eventSourceName,
       body: JSON.stringify({ id: '3' }),
@@ -213,7 +213,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       httpMethod: 'GET'
     })
 
-    const response = await serverlessExpressInstance.handler(event)
+    const response = await serverlessExpressInstance(event)
 
     const samLogoImage = fs.readFileSync(samLogoPath)
     const samLogoBase64 = Buffer.from(samLogoImage).toString('base64')
@@ -275,7 +275,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
         'content-type': ['application/json']
       }
     })
-    const response = await serverlessExpressInstance.handler(event)
+    const response = await serverlessExpressInstance(event)
     const expectedResponse = makeResponse({
       eventSourceName,
       body: JSON.stringify({ data: { name: name } }),
@@ -297,7 +297,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       path: '/users/1',
       httpMethod: 'DELETE'
     })
-    const response = await serverlessExpressInstance.handler(event)
+    const response = await serverlessExpressInstance(event)
     const expectedResponse = makeResponse({
       eventSourceName,
       body: '[]',
@@ -328,7 +328,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
         'content-type': ['application/json']
       }
     })
-    const response = await serverlessExpressInstance.handler(event)
+    const response = await serverlessExpressInstance(event)
     const expectedResponse = makeResponse({
       eventSourceName,
       body: JSON.stringify({ id: '2', name }),
@@ -360,7 +360,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
         'content-type': ['application/json']
       }
     })
-    const response = await serverlessExpressInstance.handler(event)
+    const response = await serverlessExpressInstance(event)
     const expectedResponse = makeResponse({
       eventSourceName,
       body: JSON.stringify({ id: '2', name }),
@@ -378,7 +378,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
   })
 
   test.skip('respondToEventSourceWithError', async () => {
-    const response = await serverlessExpressInstance.handler(null)
+    const response = await serverlessExpressInstance(null)
     expect(response).toEqual({
       statusCode: 500,
       body: '',
@@ -397,7 +397,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       path: '/cookie',
       httpMethod: 'GET'
     })
-    const response = await serverlessExpressInstance.handler(event)
+    const response = await serverlessExpressInstance(event)
 
     const expectedSetCookieHeaders = [
       'Foo=bar; Path=/',
@@ -437,7 +437,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       debug: jest.fn()
     }
     serverlessExpressInstance = serverlessExpress({ app, log: customLogger })
-    await serverlessExpressInstance.handler(event)
+    await serverlessExpressInstance(event)
 
     expect(customLogger.debug.mock.calls.length).toBe(6)
 
@@ -448,7 +448,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     // customLogger.debug = jest.fn()
 
     // serverlessExpressInstance = serverlessExpress({ app, log: customLogger })
-    // await serverlessExpressInstance.handler(event)
+    // await serverlessExpressInstance(event)
     // expect(customLogger.debug.mock.calls.length).toBe(0)
   })
 

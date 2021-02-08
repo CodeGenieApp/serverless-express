@@ -9,4 +9,4 @@ exports.handler = serverlessExpress({
     getRequest: mapDynamoDbEventToHttpRequest,
     getResponse: mapResponseToDynamoDb
   }
-}).handler
+})

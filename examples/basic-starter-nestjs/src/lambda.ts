@@ -20,7 +20,7 @@ async function bootstrap() {
 
     await nestApp.init();
 
-    cachedServer = serverlessExpress({ app: expressApp }).handler;
+    cachedServer = serverlessExpress({ app: expressApp });
   }
 
   return cachedServer;
