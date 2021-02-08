@@ -1,3 +1,10 @@
+# [4.2.0](https://github.com/vendia/serverless-express/compare/v4.1.3...v4.2.0) (2021-02-08)
+
+
+### Features
+
+* add logSettings to override log level and default log level to error ([a0e8bdb](https://github.com/vendia/serverless-express/commit/a0e8bdb60687946cf36fb1157b8c23aea1c0dae9)), closes [#360](https://github.com/vendia/serverless-express/issues/360)
+
 ## [4.1.3](https://github.com/vendia/serverless-express/compare/v4.1.2...v4.1.3) (2021-02-04)
 
 
