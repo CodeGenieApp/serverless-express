@@ -1,8 +1,8 @@
-require('source-map-support/register')
-const serverlessExpress = require('@vendia/serverless-express')
-const appPromise = require('./app')
+require('source-map-support/register');
+const serverlessExpress = require('@vendia/serverless-express');
+const appPromise = require('./app');
 
 exports.handler = async (event, context, callback) => {
-  const app = await appPromise
-  return serverlessExpress({ app }).handler(event, context, callback)
-}
+  const app = await appPromise;
+  return serverlessExpress({ app }).handler(event, context, callback);
+};

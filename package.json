@@ -103,7 +103,7 @@
     "release": "semantic-release",
     "release-local": "node -r dotenv/config node_modules/semantic-release/bin/semantic-release --no-ci --dry-run",
     "check-dependencies": "npx npm-check --skip-unused --update",
-    "lint": "eslint src examples"
+    "lint": "eslint src"
   },
   "config": {
     "commitizen": {
