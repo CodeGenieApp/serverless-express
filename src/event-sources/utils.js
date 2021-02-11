@@ -71,10 +71,10 @@ function getEventSourceNameBasedOnEvent ({
   event
 }) {
   if (event.requestContext && event.requestContext.elb) return 'AWS_ALB'
-  if (event.requestContext && event.requestContext.stage) {
+  if (event.Records) return 'AWS_LAMBDA_EDGE'
+  if (event.requestContext) {
     return event.version === '2.0' ? 'AWS_API_GATEWAY_V2' : 'AWS_API_GATEWAY_V1'
   }
-  if (event.Records) return 'AWS_LAMBDA_EDGE'
 
   throw new Error('Unable to determine event source based on event.')
 }
