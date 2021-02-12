@@ -25,7 +25,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@hapi/hapi": "^20.1.0",
-    "@vendia/serverless-express": "^4.0.0"
+    "@vendia/serverless-express": "^4.3.0"
   },
   "devDependencies": {
     "cross-var": "^1.1.0"
