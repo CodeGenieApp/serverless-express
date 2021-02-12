@@ -1,3 +1,11 @@
+# [4.3.0](https://github.com/vendia/serverless-express/compare/v4.2.0...v4.3.0) (2021-02-08)
+
+
+### Features
+
+* add backwards compatibility for most of v3 usage ([184f63e](https://github.com/vendia/serverless-express/commit/184f63e4e07f7b669d9b14917413523d5bcd6986))
+* serverlessExpress({ app }) can now be used as well as serverlessExpress({ app }).handler ([1eb3100](https://github.com/vendia/serverless-express/commit/1eb310079bbd0b80a457b482f8ce8c399c8f151e))
+
 # [4.2.0](https://github.com/vendia/serverless-express/compare/v4.1.3...v4.2.0) (2021-02-08)
 
 
