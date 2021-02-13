@@ -1,3 +1,10 @@
+## [4.3.1](https://github.com/vendia/serverless-express/compare/v4.3.0...v4.3.1) (2021-02-13)
+
+
+### Bug Fixes
+
+* fix sam local for httpapi ([#371](https://github.com/vendia/serverless-express/issues/371)) ([b9df473](https://github.com/vendia/serverless-express/commit/b9df4730b8f5a9a14cd4fda6895d28286bc62017))
+
 # [4.3.0](https://github.com/vendia/serverless-express/compare/v4.2.0...v4.3.0) (2021-02-08)
 
 
