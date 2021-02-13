@@ -74,6 +74,7 @@
     "@semantic-release/npm": "^7.0.10",
     "@semantic-release/release-notes-generator": "^9.0.1",
     "@types/aws-lambda": "^8.10.72",
+    "@types/jest": "^26.0.20",
     "acorn": "^8.0.5",
     "commitizen": "^4.2.3",
     "commitlint": "^11.0.0",
