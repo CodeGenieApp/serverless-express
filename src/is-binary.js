@@ -1,4 +1,5 @@
 // ATTRIBUTION: https://github.com/dougmoscrop/serverless-http
+const { DEFAULT_BINARY_ENCODINGS, DEFAULT_BINARY_CONTENT_TYPES } = require('./constants')
 
 function isContentEncodingBinary ({ headers, binaryEncodingTypes }) {
   const contentEncoding = headers['content-encoding']
@@ -37,6 +38,9 @@ module.exports = function isBinary ({ headers, binarySettings }) {
     return binarySettings.isBinary({ headers })
   }
 
-  return isContentEncodingBinary({ headers, binaryEncodingTypes: binarySettings.contentEncodings }) ||
-    isContentTypeBinary({ headers, binaryContentTypes: binarySettings.contentTypes })
+  const binaryEncodingTypes = binarySettings.contentEncodings || DEFAULT_BINARY_ENCODINGS
+  const binaryContentTypes = binarySettings.contentTypes || DEFAULT_BINARY_CONTENT_TYPES
+
+  return isContentEncodingBinary({ headers, binaryEncodingTypes }) ||
+    isContentTypeBinary({ headers, binaryContentTypes })
 }

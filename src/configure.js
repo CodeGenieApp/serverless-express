@@ -6,9 +6,7 @@ const { getEventSourceNameBasedOnEvent } = require('./event-sources/utils')
 const { getFramework } = require('./frameworks')
 const makeResolver = require('./make-resolver')
 const { forwardRequestToNodeServer, respondToEventSourceWithError } = require('./transport')
-
-const DEFAULT_BINARY_ENCODINGS = ['gzip', 'deflate', 'br']
-const DEFAULT_BINARY_CONTENT_TYPES = ['image/*']
+const { DEFAULT_BINARY_ENCODINGS, DEFAULT_BINARY_CONTENT_TYPES } = require('./constants')
 
 function getDefaultBinarySettings (deprecatedBinaryMimeTypes) {
   return {
