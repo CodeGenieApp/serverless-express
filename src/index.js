@@ -8,7 +8,7 @@ module.exports.configure = configure
 // Legacy/deprecated:
 
 function createServer (app, serverListenCallback, binaryMimeTypes) {
-  console.warn('You\'re using the deprecated createServer method that will be removed in the next major version. See https://github.com/vendia/serverless-express/blob/mainline/UPGRADE.md to upgrade.')
+  console.warn('[DEPRECATION NOTICE] You\'re using the deprecated createServer method that will be removed in the next major version. See https://github.com/vendia/serverless-express/blob/mainline/UPGRADE.md to upgrade.')
 
   if (serverListenCallback) {
     throw new Error('serverListenCallback is no longer supported.')

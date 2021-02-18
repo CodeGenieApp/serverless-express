@@ -22,13 +22,13 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     serverlessExpressInstance = serverlessExpress({ app })
   })
 
-  test('handler returns promise', () => {
+  test('serverlessExpressInstance returns promise', () => {
     const event = makeEvent({
       eventSourceName,
       path: '/',
       httpMethod: 'GET'
     })
-    const response = serverlessExpressInstance.handler(event)
+    const response = serverlessExpressInstance(event)
     expect(response.then).toBeTruthy()
   })
 
@@ -452,7 +452,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     // expect(customLogger.debug.mock.calls.length).toBe(0)
   })
 
-  test('legacy/deprecated usage', async () => {
+  test('legacy/deprecated createServer', async () => {
     const serverlessExpressMiddleware = require('../src/middleware')
     app = express()
     router = express.Router()
@@ -473,6 +473,62 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     const binaryMimeTypes = []
     const server = serverlessExpress.createServer(app, null, binaryMimeTypes)
     const response = await serverlessExpress.proxy(server, event)
+    const expectedResponse = makeResponse({
+      eventSourceName,
+      body: JSON.stringify({ path: '/users' }),
+      multiValueHeaders: {
+        'content-length': ['17'],
+        etag: ['W/"11-eM8YArY+qNwdvTL2ppeAaFc4Oq8"']
+      },
+      statusCode: 200
+    })
+    expect(response).toEqual(expectedResponse)
+  })
+
+  test('legacy/deprecated handler', async () => {
+    const serverlessExpressMiddleware = require('../src/middleware')
+    router.use(serverlessExpressMiddleware.eventContext())
+    router.get('/users', (req, res) => {
+      const { event } = req.apiGateway
+      const eventPath = event.path || event.rawPath || event.Records[0].cf.request.uri
+      res.json({
+        path: eventPath
+      })
+    })
+    const event = makeEvent({
+      eventSourceName,
+      path: '/users',
+      httpMethod: 'GET'
+    })
+    const response = await serverlessExpressInstance.handler(event)
+    const expectedResponse = makeResponse({
+      eventSourceName,
+      body: JSON.stringify({ path: '/users' }),
+      multiValueHeaders: {
+        'content-length': ['17'],
+        etag: ['W/"11-eM8YArY+qNwdvTL2ppeAaFc4Oq8"']
+      },
+      statusCode: 200
+    })
+    expect(response).toEqual(expectedResponse)
+  })
+
+  test('legacy/deprecated proxy', async () => {
+    const serverlessExpressMiddleware = require('../src/middleware')
+    router.use(serverlessExpressMiddleware.eventContext())
+    router.get('/users', (req, res) => {
+      const { event } = req.apiGateway
+      const eventPath = event.path || event.rawPath || event.Records[0].cf.request.uri
+      res.json({
+        path: eventPath
+      })
+    })
+    const event = makeEvent({
+      eventSourceName,
+      path: '/users',
+      httpMethod: 'GET'
+    })
+    const response = await serverlessExpressInstance.proxy({ event })
     const expectedResponse = makeResponse({
       eventSourceName,
       body: JSON.stringify({ path: '/users' }),
