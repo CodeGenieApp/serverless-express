@@ -1,3 +1,11 @@
+## [4.3.2](https://github.com/vendia/serverless-express/compare/v4.3.1...v4.3.2) (2021-02-18)
+
+
+### Bug Fixes
+
+* default contentEncodings and contentTypes to constants ([e0bd86e](https://github.com/vendia/serverless-express/commit/e0bd86e7b1ee5e2c26287ae6c8af54005df9e21d)), closes [#373](https://github.com/vendia/serverless-express/issues/373)
+* refactor proxy and add deprecation warnings ([d50b7e7](https://github.com/vendia/serverless-express/commit/d50b7e7acf715f0e34ce401b8704f2970d79e2fa))
+
 ## [4.3.1](https://github.com/vendia/serverless-express/compare/v4.3.0...v4.3.1) (2021-02-13)
 
 
