@@ -1,3 +1,10 @@
+## [4.3.3](https://github.com/vendia/serverless-express/compare/v4.3.2...v4.3.3) (2021-02-25)
+
+
+### Bug Fixes
+
+* fix types ([#375](https://github.com/vendia/serverless-express/issues/375)) ([d0aad6a](https://github.com/vendia/serverless-express/commit/d0aad6a0d5a8317a02f9f59565f96573bb807764))
+
 ## [4.3.2](https://github.com/vendia/serverless-express/compare/v4.3.1...v4.3.2) (2021-02-18)
 
 
