@@ -1,3 +1,10 @@
+## [4.3.4](https://github.com/vendia/serverless-express/compare/v4.3.3...v4.3.4) (2021-03-03)
+
+
+### Bug Fixes
+
+* **types:** enhance accuracy of type definitions ([#379](https://github.com/vendia/serverless-express/issues/379)) ([15e11d2](https://github.com/vendia/serverless-express/commit/15e11d28d3e74193e820a9504f77619f50f6019c))
+
 ## [4.3.3](https://github.com/vendia/serverless-express/compare/v4.3.2...v4.3.3) (2021-02-25)
 
 
