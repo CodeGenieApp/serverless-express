@@ -34,7 +34,7 @@ interface ConfigureResult {
   proxy: (proxyParams: ProxyParams) => Promise<Object>;
 }
 
-declare function configure(configureParams: ConfigureParams): ConfigureResult;
+declare function configure(configureParams: ConfigureParams): Handler & ConfigureResult;
 
 // declare function proxy(proxyParams: ProxyParams): Promise<any>
 

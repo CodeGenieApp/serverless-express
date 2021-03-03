@@ -1,3 +1,5 @@
-import Configure from "./configure"
+import configure from "./configure"
 
-export = Configure
+export default configure;
+export { default as configure } from "./configure"
+export { getCurrentInvoke } from "./current-invoke"
