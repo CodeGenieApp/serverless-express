@@ -18,7 +18,7 @@ function getRequestValuesFromApiGatewayEvent ({ event }) {
     search: rawQueryString
   })
 
-  const headers = []
+  const headers = {}
 
   if (cookies) {
     headers.cookie = cookies.join('; ')
