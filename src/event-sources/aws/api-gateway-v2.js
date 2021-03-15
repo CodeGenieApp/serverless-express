@@ -63,7 +63,8 @@ function getResponseToApiGateway ({
   }
 
   if (headers['set-cookie']) {
-    responseToApiGateway.cookies = headers['set-cookie']
+    responseToApiGateway.cookies = Array.isArray(headers['set-cookie']) ? headers['set-cookie'] : [headers['set-cookie']]
+    delete headers['set-cookie']
   }
 
   responseToApiGateway.headers = getCommaDelimitedHeaders({ headersMap: headers })
