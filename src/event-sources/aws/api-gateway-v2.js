@@ -62,8 +62,9 @@ function getResponseToApiGateway ({
     isBase64Encoded
   }
 
-  if (headers['set-cookie']) {
-    responseToApiGateway.cookies = Array.isArray(headers['set-cookie']) ? headers['set-cookie'] : [headers['set-cookie']]
+  const cookies = headers['set-cookie']
+  if (cookies) {
+    responseToApiGateway.cookies = Array.isArray(cookies) ? cookies : [cookies]
     delete headers['set-cookie']
   }
 
