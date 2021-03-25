@@ -28,13 +28,13 @@ interface BinarySettings {
   contentTypes?: string[];
 }
 
-interface ConfigureResult {
-  handler: Handler;
+interface ConfigureResult<TEvent = any, TResult = any> {
+  handler: Handler<TEvent, TResult>;
   log: Logger;
   proxy: (proxyParams: ProxyParams) => Promise<Object>;
 }
 
-declare function configure(configureParams: ConfigureParams): Handler & ConfigureResult;
+declare function configure<TEvent = any, TResult = any>(configureParams: ConfigureParams): Handler<TEvent, TResult> & ConfigureResult<TEvent, TResult>;
 
 // declare function proxy(proxyParams: ProxyParams): Promise<any>
 
