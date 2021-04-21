@@ -65,6 +65,9 @@
       "examples/nestjs"
     ]
   },
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.72"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
     "@semantic-release/changelog": "^5.0.1",
@@ -73,7 +76,6 @@
     "@semantic-release/github": "^7.2.0",
     "@semantic-release/npm": "^7.0.10",
     "@semantic-release/release-notes-generator": "^9.0.1",
-    "@types/aws-lambda": "^8.10.72",
     "@types/jest": "^26.0.20",
     "acorn": "^8.0.5",
     "commitizen": "^4.2.3",
