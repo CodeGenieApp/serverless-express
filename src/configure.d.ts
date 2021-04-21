@@ -1,5 +1,4 @@
-/// <reference types="@types/aws-lambda"/>
-
+import { Handler } from 'aws-lambda';
 import { RequestListener } from "http";
 import Logger from "./logger";
 
@@ -30,12 +29,12 @@ interface BinarySettings {
 }
 
 interface ConfigureResult {
-  handler: AWSLambda.Handler;
+  handler: Handler;
   log: Logger;
   proxy: (proxyParams: ProxyParams) => Promise<Object>;
 }
 
-declare function configure(configureParams: ConfigureParams): AWSLambda.Handler & ConfigureResult;
+declare function configure(configureParams: ConfigureParams): Handler & ConfigureResult;
 
 // declare function proxy(proxyParams: ProxyParams): Promise<any>
 
