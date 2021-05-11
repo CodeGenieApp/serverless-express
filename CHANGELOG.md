@@ -1,3 +1,10 @@
+## [4.3.6](https://github.com/vendia/serverless-express/compare/v4.3.5...v4.3.6) (2021-05-11)
+
+
+### Bug Fixes
+
+* **types:** update configure.d.ts ([#394](https://github.com/vendia/serverless-express/issues/394)) ([921319d](https://github.com/vendia/serverless-express/commit/921319dc4e2bf635bb02291de9fb961a2c7daa40))
+
 ## [4.3.5](https://github.com/vendia/serverless-express/compare/v4.3.4...v4.3.5) (2021-05-11)
 
 
