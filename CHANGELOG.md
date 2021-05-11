@@ -1,3 +1,10 @@
+## [4.3.7](https://github.com/vendia/serverless-express/compare/v4.3.6...v4.3.7) (2021-05-11)
+
+
+### Bug Fixes
+
+* **deps:** npm audit fix ([3a64de6](https://github.com/vendia/serverless-express/commit/3a64de6d25a1249e1c18e03ad336afc75253837c))
+
 ## [4.3.6](https://github.com/vendia/serverless-express/compare/v4.3.5...v4.3.6) (2021-05-11)
 
 
