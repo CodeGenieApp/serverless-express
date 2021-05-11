@@ -1,3 +1,10 @@
+## [4.3.5](https://github.com/vendia/serverless-express/compare/v4.3.4...v4.3.5) (2021-05-11)
+
+
+### Bug Fixes
+
+* fix aws api gateway v2 event source cookies handling ([#389](https://github.com/vendia/serverless-express/issues/389)) ([6e0868c](https://github.com/vendia/serverless-express/commit/6e0868cb7665cfbd8145205098c4945e0292d79b))
+
 ## [4.3.4](https://github.com/vendia/serverless-express/compare/v4.3.3...v4.3.4) (2021-03-03)
 
 
