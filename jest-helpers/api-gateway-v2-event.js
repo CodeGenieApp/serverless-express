@@ -102,6 +102,7 @@ function makeApiGatewayV2Response (values = {}, {
   }
   values.headers = convertMultiValueHeadersToHeaders({ multiValueHeaders: values.multiValueHeaders })
   delete values.multiValueHeaders
+  delete values.headers['set-cookie']
 
   if (shouldConvertContentLengthToInt) {
     // APIGWV2 returns content-length as a number instead of a string under certain conditions:
