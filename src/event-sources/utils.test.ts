@@ -50,3 +50,7 @@ describe("getEventSourceNameBasedOnEvent", () => {
     expect(result).toEqual("AWS_API_GATEWAY_V2");
   });
 });
+
+module.exports = {
+  sam_httpapi_event,
+};
