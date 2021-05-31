@@ -1,3 +1,10 @@
+## [4.3.8](https://github.com/vendia/serverless-express/compare/v4.3.7...v4.3.8) (2021-05-31)
+
+
+### Bug Fixes
+
+* make headers an object instead of an array ([#386](https://github.com/vendia/serverless-express/issues/386)) ([a987fee](https://github.com/vendia/serverless-express/commit/a987feee3f8b3d03972b0756b22f9f363f65e739))
+
 ## [4.3.7](https://github.com/vendia/serverless-express/compare/v4.3.6...v4.3.7) (2021-05-11)
 
 
