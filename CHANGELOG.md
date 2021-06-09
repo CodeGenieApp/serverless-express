@@ -1,3 +1,10 @@
+## [4.3.9](https://github.com/vendia/serverless-express/compare/v4.3.8...v4.3.9) (2021-06-09)
+
+
+### Bug Fixes
+
+* auto-unescape query parameters on ALB ([#219](https://github.com/vendia/serverless-express/issues/219), [#241](https://github.com/vendia/serverless-express/issues/241)) ([#393](https://github.com/vendia/serverless-express/issues/393)) ([8cb4206](https://github.com/vendia/serverless-express/commit/8cb4206103e730e61a3acb38fceba4cc9c355d91))
+
 ## [4.3.8](https://github.com/vendia/serverless-express/compare/v4.3.7...v4.3.8) (2021-05-31)
 
 
