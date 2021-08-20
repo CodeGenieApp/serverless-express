@@ -1,0 +1,99 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless Express Application/API powered by API Gateway and Lambda
+Parameters:
+  DomainName:
+    Type: String
+    Description: API Domain name
+    Default: ''
+
+Conditions:
+  UseDomainName:
+    !Not
+      - !Equals
+        - !Ref DomainName
+        - ''
+
+Resources:
+  ExpressApi:
+    Type: AWS::Serverless::HttpApi
+
+  ExpressLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist
+      PackageType: Zip
+      Runtime: nodejs14.x
+      Handler: lambda.handler
+      MemorySize: 1024
+      Timeout: 30
+      Events:
+        ProxyApiRoot:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ExpressApi
+
+  MyApiCertificate:
+    Type: 'AWS::CertificateManager::Certificate'
+    Condition: UseDomainName
+    Properties:
+      DomainName: !Sub '*.${DomainName}'
+      DomainValidationOptions:
+        - DomainName: !Sub '*.${DomainName}'
+          ValidationDomain: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Ref DomainName
+
+  MyApiDomainName:
+    Type: 'AWS::ApiGateway::DomainName'
+    Condition: UseDomainName
+    Properties:
+      CertificateArn: !Ref MyApiCertificate
+      DomainName: !Ref DomainName
+
+  MyApiBasePathMapping:
+    Type: 'AWS::ApiGateway::BasePathMapping'
+    Condition: UseDomainName
+    Properties:
+      RestApiId: !Ref ExpressApi
+      DomainName: !Ref MyApiDomainName
+      BasePath: '(none)'
+      Stage: prod
+
+  Route53HostedZone:
+    Type: AWS::Route53::HostedZone
+    Condition: UseDomainName
+    Properties:
+      Name: !Ref DomainName
+
+  MyApiRoute53RecordSetGroup:
+    Type: AWS::Route53::RecordSetGroup
+    Condition: UseDomainName
+    Properties:
+      HostedZoneId: !Ref Route53HostedZone
+      RecordSets:
+        - Name: !Sub ${DomainName}.
+          Type: A
+          AliasTarget:
+            EvaluateTargetHealth: false
+            HostedZoneId: !GetAtt MyApiDomainName.DistributionHostedZoneId
+            DNSName: !GetAtt MyApiDomainName.DistributionDomainName
+
+Outputs:
+  LambdaFunctionConsoleUrl:
+    Description: Console URL for the Lambda Function.
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/lambda/home?region=${AWS::Region}#/functions/${ExpressLambdaFunction}
+
+  ApiGatewayApiConsoleUrl:
+    Description: Console URL for the API Gateway API's Stage.
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/apigateway/home?region=${AWS::Region}#/apis/${ExpressApi}/stages/prod
+
+  ApiUrl:
+    Description: Invoke URL for your API. Clicking this link will perform a GET request
+      on the root resource of your API.
+    Value: !Sub https://${ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/
+
+  LambdaFunctionName:
+    Description: Name of the Serverless Express Lambda Function
+    Value: !Ref ExpressLambdaFunction
