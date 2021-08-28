@@ -1,3 +1,10 @@
+## [4.3.10](https://github.com/vendia/serverless-express/compare/v4.3.9...v4.3.10) (2021-08-28)
+
+
+### Bug Fixes
+
+* fix for non-root proxy+ ([45edbfa](https://github.com/vendia/serverless-express/commit/45edbfa79bac97ce3429dda68add5ee16ab45d5b))
+
 ## [4.3.9](https://github.com/vendia/serverless-express/compare/v4.3.8...v4.3.9) (2021-06-09)
 
 
