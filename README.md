@@ -37,6 +37,40 @@ const app = require('./app')
 exports.handler = serverlessExpress({ app })
 ```
 
+## Async setup Lambda handler
+
+If your application needs to perform some common bootstrap tasks such as connecting to a database before the request is forward to the API, you can use the following pattern (also available in [this example](https://github.com/vendia/serverless-express/blob/mainline/examples/basic-starter-api-gateway-v2/src/lambda-async-setup.js)):
+
+```js
+// lambda.js
+require('source-map-support/register')
+const serverlessExpress = require('@vendia/serverless-express')
+const app = require('./app')
+
+let serverlessExpressInstance
+
+function asyncTask () {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve('connected to database'), 1000)
+  })
+}
+
+async function setup (event, context) {
+  const asyncValue = await asyncTask()
+  console.log(asyncValue)
+  serverlessExpressInstance = serverlessExpress({ app })
+  return serverlessExpressInstance(event, context)
+}
+
+function handler (event, context) {
+  if (serverlessExpressInstance) return serverlessExpressInstance(event, context)
+
+  return setup(event, context)
+}
+
+exports.handler = handler
+```
+
 ## 4.x
 
 1. Improved API - Simpler for end-user to use and configure.
