@@ -62,7 +62,8 @@
       "src/**"
     ],
     "testPathIgnorePatterns": [
-      "examples/nestjs"
+      "examples/nestjs",
+      "examples/basic-starter-api-gateway-v2-typescript"
     ]
   },
   "devDependencies": {
