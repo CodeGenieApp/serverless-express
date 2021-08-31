@@ -3,12 +3,8 @@ const url = require('url')
 function getPathWithQueryStringParams ({
   event,
   query = event.multiValueQueryStringParameters,
-  // NOTE: Always use event.path, if the API gateway has custom route setup, for example if my controllers path is
-  // something like employee/services/service1, employee/services/service2 etc, if I dont have any custom path/resources  setup
-  // and directly have root/{proxy+} it works as expected, if i have a resource like /employee and child to that if there
-  // is a resource like {proxy+} it is not working as expected and errors out with 404. This change is required to address that
-  // specific issue.
-  path = event.path,
+  // NOTE: Use `event.pathParameters.proxy` if available ({proxy+}); fall back to `event.path`
+  path = (event.pathParameters && event.pathParameters.proxy && `/${event.pathParameters.proxy}`) || event.path,
   // NOTE: Strip base path for custom domains
   stripBasePath = '',
   replaceRegex = new RegExp(`^${stripBasePath}`)
