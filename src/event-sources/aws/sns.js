@@ -2,15 +2,13 @@ const { emptyResponseMapper } = require('../utils')
 
 const getRequestValuesFromSns = ({ event }) => {
   const method = 'POST'
-  const headers = {}
+  const headers = { Host: 'sns.amazonaws.com' }
   const body = event
-  const host = 'sns.amazonaws.com'
 
   return {
     method,
     headers,
-    body,
-    host
+    body
   }
 }
 

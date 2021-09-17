@@ -2,15 +2,13 @@ const { emptyResponseMapper } = require('../utils')
 
 const getRequestValuesFromDynamoDB = ({ event }) => {
   const method = 'POST'
-  const headers = {}
+  const headers = { Host: 'dynamodb.amazonaws.com' }
   const body = event
-  const host = 'dynamodb.amazonaws.com'
 
   return {
     method,
     headers,
-    body,
-    host
+    body
   }
 }
 
