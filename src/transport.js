@@ -128,9 +128,15 @@ async function forwardRequestToNodeServer ({
   eventSourceName,
   binarySettings,
   eventSource = getEventSource({ eventSourceName }),
+  eventSourceRoutes,
   log
 }) {
   const requestValues = eventSource.getRequest({ event, context, log })
+
+  if (!requestValues.path && eventSourceRoutes[eventSourceName]) {
+    requestValues.path = eventSourceRoutes[eventSourceName]
+  }
+
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:REQUEST_VALUES', { requestValues })
   const { request, response } = await getRequestResponse(requestValues)
   await framework.sendRequest({ app, request, response })

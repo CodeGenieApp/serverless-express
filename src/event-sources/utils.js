@@ -71,7 +71,16 @@ function getEventSourceNameBasedOnEvent ({
   event
 }) {
   if (event.requestContext && event.requestContext.elb) return 'AWS_ALB'
-  if (event.Records) return 'AWS_LAMBDA_EDGE'
+  if (event.Records) {
+    const eventSource = event.Records[0] ? event.Records[0].EventSource || event.Records[0].eventSource : undefined
+    if (eventSource === 'aws:sns') {
+      return 'AWS_SNS'
+    }
+    if (eventSource === 'aws:dynamodb') {
+      return 'AWS_DYNAMODB'
+    }
+    return 'AWS_LAMBDA_EDGE'
+  }
   if (event.requestContext) {
     return event.version === '2.0' ? 'AWS_API_GATEWAY_V2' : 'AWS_API_GATEWAY_V1'
   }
@@ -95,11 +104,14 @@ function getCommaDelimitedHeaders ({ headersMap, separator = ',', lowerCaseKey =
   return commaDelimitedHeaders
 }
 
+const emptyResponseMapper = () => () => {}
+
 module.exports = {
   getPathWithQueryStringParams,
   getRequestValuesFromEvent,
   getMultiValueHeaders,
   getEventSourceNameBasedOnEvent,
   getEventBody,
-  getCommaDelimitedHeaders
+  getCommaDelimitedHeaders,
+  emptyResponseMapper
 }
