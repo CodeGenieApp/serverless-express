@@ -2,7 +2,7 @@ import { RequestListener } from "http";
 import { Handler } from "aws-lambda";
 import Logger from "./logger";
 
-type EventSources = "aws:sns" | "aws:dynamodb";
+type EventSources = "AWS_SNS" | "AWS_DYNAMODB";
 
 interface EventSource {
   getRequest?: any; // TODO:

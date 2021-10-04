@@ -52,9 +52,20 @@ function respondToEventSourceWithError ({
   resolver,
   log,
   respondWithErrors,
+  eventSourceName,
   eventSource
 }) {
   log.error('SERVERLESS_EXPRESS:RESPOND_TO_EVENT_SOURCE_WITH_ERROR', error)
+
+  if (
+    eventSourceName !== 'AWS_ALB' &&
+    eventSourceName !== 'AWS_LAMBDA_EDGE' &&
+    eventSourceName !== 'AWS_API_GATEWAY_V1' &&
+    eventSourceName !== 'AWS_API_GATEWAY_V2'
+  ) {
+    resolver.fail({ error })
+    return
+  }
 
   const body = respondWithErrors ? error.stack : ''
   const errorResponse = eventSource.getResponse({

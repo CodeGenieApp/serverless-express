@@ -104,7 +104,7 @@ function getCommaDelimitedHeaders ({ headersMap, separator = ',', lowerCaseKey =
   return commaDelimitedHeaders
 }
 
-const emptyResponseMapper = () => () => {}
+const emptyResponseMapper = () => {}
 
 module.exports = {
   getPathWithQueryStringParams,

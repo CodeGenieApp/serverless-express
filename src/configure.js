@@ -88,6 +88,7 @@ function configure ({
           resolver,
           log,
           respondWithErrors,
+          eventSourceName,
           eventSource
         })
       }
