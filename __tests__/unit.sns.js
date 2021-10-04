@@ -8,7 +8,7 @@ const snsEventSource = eventSources.getEventSource({
 test('request is correct', () => {
   const req = getReq()
   expect(typeof req).toEqual('object')
-  expect(req.headers).toEqual({ Host: 'sns.amazonaws.com' })
+  expect(req.headers).toEqual({ host: 'sns.amazonaws.com' })
   expect(req.body).toEqual(testUtils.snsEvent)
   expect(req.method).toEqual('POST')
 })
