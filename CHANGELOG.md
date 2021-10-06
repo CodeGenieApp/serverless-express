@@ -1,3 +1,10 @@
+# [4.4.0](https://github.com/vendia/serverless-express/compare/v4.3.12...v4.4.0) (2021-10-06)
+
+
+### Features
+
+* add support for SNS and DynamoDB event sources ([#468](https://github.com/vendia/serverless-express/issues/468)) ([276a6da](https://github.com/vendia/serverless-express/commit/276a6da64d22acec931dc0d567993f1e1f65597f))
+
 ## [4.3.12](https://github.com/vendia/serverless-express/compare/v4.3.11...v4.3.12) (2021-10-06)
 
 
