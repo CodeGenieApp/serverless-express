@@ -1,0 +1,28 @@
+{
+    "Records": [
+        {
+            "eventID": "93eea905b34daefbe0fe8a21858065a8",
+            "eventName": "INSERT",
+            "eventVersion": "1.1",
+            "eventSource": "aws:dynamodb",
+            "awsRegion": "us-east-1",
+            "dynamodb": {
+                "ApproximateCreationDateTime": 1560902007,
+                "Keys": {
+                    "id": {
+                        "S": "b"
+                    }
+                },
+                "NewImage": {
+                    "id": {
+                        "S": "b"
+                    }
+                },
+                "SequenceNumber": "200000000000235577791",
+                "SizeBytes": 6,
+                "StreamViewType": "NEW_IMAGE"
+            },
+            "eventSourceARN": "arn:aws:dynamodb:us-east-1:123123123:table/serverless-express-dynamodb-example-Table-191RH2M1OU01V/stream/2019-06-18T23:42:52.038"
+        }
+    ]
+}
