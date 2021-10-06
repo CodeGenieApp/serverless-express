@@ -29,12 +29,17 @@ const log = {
 }
 
 class MockContext {
-  constructor (resolve) {
+  constructor (resolve, reject) {
     this.resolve = resolve
+    this.reject = reject
   }
 
   succeed (successResponse) {
     this.resolve(successResponse)
+  }
+
+  fail (error) {
+    this.reject(error)
   }
 }
 

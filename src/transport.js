@@ -52,9 +52,20 @@ function respondToEventSourceWithError ({
   resolver,
   log,
   respondWithErrors,
+  eventSourceName,
   eventSource
 }) {
   log.error('SERVERLESS_EXPRESS:RESPOND_TO_EVENT_SOURCE_WITH_ERROR', error)
+
+  if (
+    eventSourceName !== 'AWS_ALB' &&
+    eventSourceName !== 'AWS_LAMBDA_EDGE' &&
+    eventSourceName !== 'AWS_API_GATEWAY_V1' &&
+    eventSourceName !== 'AWS_API_GATEWAY_V2'
+  ) {
+    resolver.fail({ error })
+    return
+  }
 
   const body = respondWithErrors ? error.stack : ''
   const errorResponse = eventSource.getResponse({
@@ -128,9 +139,15 @@ async function forwardRequestToNodeServer ({
   eventSourceName,
   binarySettings,
   eventSource = getEventSource({ eventSourceName }),
+  eventSourceRoutes,
   log
 }) {
   const requestValues = eventSource.getRequest({ event, context, log })
+
+  if (!requestValues.path && eventSourceRoutes[eventSourceName]) {
+    requestValues.path = eventSourceRoutes[eventSourceName]
+  }
+
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:REQUEST_VALUES', { requestValues })
   const { request, response } = await getRequestResponse(requestValues)
   await framework.sendRequest({ app, request, response })

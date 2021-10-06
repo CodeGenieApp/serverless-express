@@ -170,6 +170,50 @@ serverlessExpress({
 })
 ```
 
+#### eventSourceRoutes
+
+Introduced in `@vendia/serverless-express@4.4.0` native support for `aws:sns` and `aws:dynamodb` events were introduced.
+
+A single function can be configured to handle events from SNS and DynamoDB, as well as the previously supported events.
+
+Assuming the following function configuration in `serverless.yml`:
+
+```yaml
+functions:
+  lambda-handler:
+    handler: src/lambda.handler
+    events:
+      - http:
+          path: /
+          method: get
+      - sns:
+          topicName: my-topic
+      - stream:
+          type: dynamodb
+          arn: arn:aws:dynamodb:us-east-1:012345678990:table/my-table/stream/2021-07-15T15:05:51.683
+```
+
+And the following configuration:
+
+```js
+serverlessExpress({
+  app,
+  eventSourceRoutes: {
+    'AWS_SNS': '/sns',
+    'AWS_DYNAMODB': '/dynamodb'
+  }
+})
+```
+
+Events from SNS and DynamoDB will `POST` to the routes configured in Express to handle `/sns` and `/dynamodb`,
+respectively.
+
+Also, to ensure the events propagated from an internal event and not externally, it is **highly recommended** to 
+ensure the `Host` header matches:
+
+ - SNS: `sns.amazonaws.com`
+ - DynamoDB: `dynamodb.amazonaws.com`
+
 ### logSettings
 
 Specify log settings that are passed to the default logger. Currently, you can only set the log `level`.

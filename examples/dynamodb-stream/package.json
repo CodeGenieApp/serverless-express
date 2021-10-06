@@ -1,0 +1,22 @@
+{
+  "name": "@vendia/dynamodb-stream",
+  "version": "1.0.0",
+  "description": "Example application for capturing DynamoDB stream events",
+  "main": "src/index.js",
+  "scripts": {
+    "#postinstall": "mv node_modules src/node_modules",
+    "package": "aws cloudformation package --template-file ./template.yaml --output-template-file template.packaged.yaml --s3-bucket artifacts-123nsef",
+    "deploy": "aws cloudformation deploy --template-file ./template.packaged.yaml --stack-name ServerlessExpressDynamoDbExample --capabilities CAPABILITY_IAM",
+    "package-deploy": "npm run package && npm run deploy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@vendia/serverless-express": "^4.4.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "pug": "^3.0.1"
+  }
+}
