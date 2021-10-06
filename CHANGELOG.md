@@ -1,3 +1,11 @@
+## [4.3.12](https://github.com/vendia/serverless-express/compare/v4.3.11...v4.3.12) (2021-10-06)
+
+
+### Bug Fixes
+
+* change workflow to release under 14.x instead of 12.x ([#472](https://github.com/vendia/serverless-express/issues/472)) ([f949200](https://github.com/vendia/serverless-express/commit/f9492006f4d046023f6f3387f5ab36d2dd45691f))
+* npm audit fix --force ([#469](https://github.com/vendia/serverless-express/issues/469)) ([35c686c](https://github.com/vendia/serverless-express/commit/35c686c95795ad146dc53f4a919c40adea5ffe0f))
+
 ## [4.3.11](https://github.com/vendia/serverless-express/compare/v4.3.10...v4.3.11) (2021-08-31)
 
 
