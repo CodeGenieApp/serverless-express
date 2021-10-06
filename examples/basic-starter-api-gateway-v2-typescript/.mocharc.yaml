@@ -1,0 +1,10 @@
+---
+require:
+  - ts-node/register
+extensions:
+  - ts
+spec:
+  - tests/**/*.test.*
+watch-files:
+  - src
+  - tests

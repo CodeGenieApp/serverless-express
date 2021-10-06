@@ -1,0 +1,59 @@
+{
+  "name": "basic-starter-api-gateway-v2-typescript",
+  "version": "2.1.1",
+  "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
+  "main": "lambda.js",
+  "config": {
+    "s3BucketName": "sls-express-v2-ts",
+    "region": "us-east-1",
+    "cloudFormationStackName": "ServerlessExpressHttpApiStack",
+    "functionName": "",
+    "domain": ""
+  },
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "cp -R src/views dist/ && cp package*json dist/ && cp src/vendia-logo.png dist/ ",
+    "create-bucket": "cross-var aws s3 mb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
+    "delete-bucket": "cross-var aws s3 rb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
+    "delete-stack": "cross-var aws cloudformation delete-stack --stack-name $npm_package_config_cloudFormationStackName --region $npm_package_config_region",
+    "develop": "nodemon --config nodemon.json",
+    "invoke-lambda": "cross-var aws lambda invoke --function-name $npm_package_config_functionName --region $npm_package_config_region --cli-binary-format raw-in-base64-out --payload file://api-gateway-event.json lambda-invoke-response.json && cat lambda-invoke-response.json",
+    "local": "ts-node scripts/local",
+    "sam:build": "sam build --template ./sam-template.yaml",
+    "sam:deploy": "cross-var sam deploy --stack-name $npm_package_config_cloudFormationStackName --capabilities CAPABILITY_IAM --s3-bucket $npm_package_config_s3BucketName --s3-prefix $npm_package_name --parameter-overrides DomainName=$npm_package_config_domain --region $npm_package_config_region --no-fail-on-empty-changeset",
+    "package-deploy": "npm run build && npm run sam:build && npm run sam:deploy",
+    "setup": "npm install && (cross-var aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket) && npm run package-deploy",
+    "start": "cross-env DEBUG=http NODE_ENV=production ts-node src/app.local",
+    "test": "cross-env NODE_ENV=test mocha",
+    "test:watch": "npm test -- -- -w"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@vendia/serverless-express": "^4.3.10",
+    "body-parser": "^1.17.1",
+    "compression": "^1.6.2",
+    "cors": "^2.8.3",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "source-map-support": "^0.5.19",
+    "tslib": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.21",
+    "@types/compression": "^1.7.1",
+    "@types/cors": "^2.8.12",
+    "@types/ejs": "^3.1.0",
+    "@types/express": "^4.17.13",
+    "@types/helmet": "^4.0.0",
+    "@types/mocha": "^9.0.0",
+    "@types/supertest": "^2.0.11",
+    "chai": "^4.3.4",
+    "cross-env": "^7.0.3",
+    "cross-var": "^1.1.0",
+    "mocha": "^9.1.1",
+    "nodemon": "^2.0.12",
+    "supertest": "^6.1.6",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.3.5"
+  }
+}
