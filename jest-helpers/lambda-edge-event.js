@@ -126,7 +126,7 @@ function makeLambdaEdgeEvent (values = {}) {
   if (!mergedEvent.request.method) mergedEvent.request.method = values.httpMethod
 
   if (!mergedEvent.request.body.data) {
-    mergedEvent.request.body.data = values.isBase64Encoded ? values.body : global.btoa(values.body)
+    mergedEvent.request.body.data = values.isBase64Encoded ? values.body : Buffer.from(values.body || '', 'binary').toString('base64')
   }
   // if (!mergedEvent.request.querysting) mergedEvent.request.querysting = values.httpMethod
   return {

@@ -82,7 +82,7 @@ function getReqRes (multiValueHeaders = {}) {
   return requestResponse
 }
 
-test('getRequestResponse: with headers', async (done) => {
+test('getRequestResponse: with headers', async () => {
   const { request } = await getReqRes({ 'x-foo': ['foo'] })
   expect(request).toBeInstanceOf(ServerlessRequest)
   expect(request.body).toBeInstanceOf(Buffer)
@@ -94,10 +94,9 @@ test('getRequestResponse: with headers', async (done) => {
     'x-foo': 'foo',
     'content-length': Buffer.byteLength('Hello serverless!')
   })
-  done()
 })
 
-test('getRequestResponse: without headers', async (done) => {
+test('getRequestResponse: without headers', async () => {
   const requestResponse = await getReqRes()
   expect(requestResponse.request).toBeInstanceOf(ServerlessRequest)
   expect(requestResponse.request.body).toBeInstanceOf(Buffer)
@@ -108,7 +107,6 @@ test('getRequestResponse: without headers', async (done) => {
   expect(requestResponse.request.headers).toEqual({
     'content-length': Buffer.byteLength('Hello serverless!')
   })
-  done()
 })
 
 describe('respondToEventSourceWithError', () => {

@@ -354,7 +354,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       eventSourceName,
       path: '/users/2',
       httpMethod: 'PUT',
-      body: global.btoa(JSON.stringify({ name })),
+      body: Buffer.from(JSON.stringify({ name }), 'binary').toString('base64'),
       isBase64Encoded: true,
       multiValueHeaders: {
         'content-type': ['application/json']
