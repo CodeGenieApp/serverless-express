@@ -32,7 +32,7 @@ function getRequestValuesFromEvent ({
 
   if (event.multiValueHeaders) {
     headers = getCommaDelimitedHeaders({ headersMap: event.multiValueHeaders, lowerCaseKey: true })
-  } else {
+  } else if (event.headers) {
     headers = event.headers
   }
 
