@@ -10,6 +10,7 @@ function forwardResponse ({
   response,
   resolver,
   eventSource,
+  event,
   log
 }) {
   const statusCode = response.statusCode
@@ -30,6 +31,7 @@ function forwardResponse ({
   })
 
   const successResponse = eventSource.getResponse({
+    event,
     statusCode,
     body,
     headers,
@@ -158,6 +160,7 @@ async function forwardRequestToNodeServer ({
     response,
     resolver,
     eventSource,
+    event,
     log
   })
   return response
