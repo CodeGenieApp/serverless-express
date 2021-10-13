@@ -1,3 +1,10 @@
+# [4.5.0](https://github.com/vendia/serverless-express/compare/v4.4.0...v4.5.0) (2021-10-13)
+
+
+### Features
+
+* support both enable/disable attribute for multi value headers on ALB ([#392](https://github.com/vendia/serverless-express/issues/392)) ([a5cb5b5](https://github.com/vendia/serverless-express/commit/a5cb5b5c6f0a9dfa17e23c4759a286483a80f45d))
+
 # [4.4.0](https://github.com/vendia/serverless-express/compare/v4.3.12...v4.4.0) (2021-10-06)
 
 
