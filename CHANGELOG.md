@@ -1,3 +1,10 @@
+## [4.5.1](https://github.com/vendia/serverless-express/compare/v4.5.0...v4.5.1) (2021-10-13)
+
+
+### Bug Fixes
+
+* bug when empty event headers ([#462](https://github.com/vendia/serverless-express/issues/462)) ([#463](https://github.com/vendia/serverless-express/issues/463)) ([2b66164](https://github.com/vendia/serverless-express/commit/2b661640c23940fc873f70409c4c9689b65e512d))
+
 # [4.5.0](https://github.com/vendia/serverless-express/compare/v4.4.0...v4.5.0) (2021-10-13)
 
 
