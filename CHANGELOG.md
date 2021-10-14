@@ -1,3 +1,10 @@
+## [4.5.2](https://github.com/vendia/serverless-express/compare/v4.5.1...v4.5.2) (2021-10-14)
+
+
+### Bug Fixes
+
+* ensure response header value is string type ([#474](https://github.com/vendia/serverless-express/issues/474)) ([cb4b0e8](https://github.com/vendia/serverless-express/commit/cb4b0e82642c0110095f267c66751ed01370f768))
+
 ## [4.5.1](https://github.com/vendia/serverless-express/compare/v4.5.0...v4.5.1) (2021-10-13)
 
 
