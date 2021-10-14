@@ -59,7 +59,7 @@ function getMultiValueHeaders ({ headers }) {
   const multiValueHeaders = {}
 
   Object.entries(headers).forEach(([headerKey, headerValue]) => {
-    const headerArray = Array.isArray(headerValue) ? headerValue : [headerValue]
+    const headerArray = Array.isArray(headerValue) ? headerValue.map(String) : [String(headerValue)]
 
     multiValueHeaders[headerKey.toLowerCase()] = headerArray
   })
