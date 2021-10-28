@@ -28,9 +28,5 @@ function getEventSource ({ eventSourceName }) {
 }
 
 module.exports = {
-  getEventSource,
-  awsApiGatewayV1EventSource,
-  awsApiGatewayV2EventSource,
-  awsAlbEventSource,
-  awsLambdaEdgeEventSource
+  getEventSource
 }

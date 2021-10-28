@@ -1,21 +1,9 @@
 const configure = require('./configure')
 const { getCurrentInvoke } = require('./current-invoke')
-const {
-  getEventSource,
-  awsAlbEventSource,
-  awsApiGatewayV1EventSource,
-  awsApiGatewayV2EventSource,
-  awsLambdaEdgeEventSource
-} = require('./event-sources')
 
 module.exports = configure
 module.exports.getCurrentInvoke = getCurrentInvoke
 module.exports.configure = configure
-module.exports.getEventSource = getEventSource
-module.exports.awsAlbEventSource = awsAlbEventSource
-module.exports.awsApiGatewayV1EventSource = awsApiGatewayV1EventSource
-module.exports.awsApiGatewayV2EventSource = awsApiGatewayV2EventSource
-module.exports.awsLambdaEdgeEventSource = awsLambdaEdgeEventSource
 
 // Legacy/deprecated:
 
