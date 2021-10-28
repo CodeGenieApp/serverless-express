@@ -98,7 +98,7 @@
   },
   "scripts": {
     "test": "jest && npm run tsc",
-    "tsc": "tsc ./src/**/*.ts --outDir typescript-out",
+    "tsc": "tsc ./src/*.ts --outDir typescript-out",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "cz": "git-cz",
