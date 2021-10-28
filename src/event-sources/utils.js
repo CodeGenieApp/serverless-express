@@ -100,7 +100,7 @@ function getEventSourceNameBasedOnEvent ({
     typeof event.detail === 'object' &&
     !Array.isArray(event.detail)
   ) {
-    // AWS doesn't have a defining EventSource here, so we're being incredibly selective on the structure
+    // AWS doesn't have a defining Event Source here, so we're being incredibly selective on the structure
     // Ref: https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents.html
     return 'AWS_EVENTBRIDGE'
   }
