@@ -25,6 +25,7 @@ function configure ({
   resolutionMode: configureResolutionMode = 'PROMISE',
   eventSourceName: configureEventSourceName,
   eventSource: configureEventFns,
+  eventSourceRoutes: configureEventSourceRoutes,
   respondWithErrors: configureRespondWithErrors = process.env.NODE_ENV === 'development'
 } = {}) {
   function proxy ({
@@ -38,6 +39,7 @@ function configure ({
     binaryMimeTypes = configureBinaryMimeTypes,
     binarySettings = configureBinarySettings || getDefaultBinarySettings(binaryMimeTypes),
     eventSource = configureEventFns || getEventSource({ eventSourceName }),
+    eventSourceRoutes = configureEventSourceRoutes || {},
     log = configureLog,
     respondWithErrors = configureRespondWithErrors
   }) {
@@ -77,6 +79,7 @@ function configure ({
           eventSourceName,
           binarySettings,
           eventSource,
+          eventSourceRoutes,
           log
         })
       } catch (error) {
@@ -85,6 +88,7 @@ function configure ({
           resolver,
           log,
           respondWithErrors,
+          eventSourceName,
           eventSource
         })
       }

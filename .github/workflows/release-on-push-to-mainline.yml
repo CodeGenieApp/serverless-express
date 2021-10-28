@@ -33,7 +33,7 @@ jobs:
       run: npm run lint
 
     - name: Release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/mainline' && matrix.node-version == '12.x'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/mainline' && matrix.node-version == '14.x'
       run: npm run release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -168,7 +168,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     const expectedResponse = makeResponse({
       eventSourceName,
       multiValueHeaders: {
-        'content-length': [151],
+        'content-length': ['151'],
         'content-security-policy': ["default-src 'none'"],
         'content-type': ['text/html; charset=utf-8'],
         'x-content-type-options': ['nosniff']
@@ -223,7 +223,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       multiValueHeaders: {
         'accept-ranges': ['bytes'],
         'cache-control': ['public, max-age=0'],
-        'content-length': [15933],
+        'content-length': ['15933'],
         'content-type': ['image/png']
       },
       isBase64Encoded: true
@@ -354,7 +354,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       eventSourceName,
       path: '/users/2',
       httpMethod: 'PUT',
-      body: global.btoa(JSON.stringify({ name })),
+      body: Buffer.from(JSON.stringify({ name }), 'binary').toString('base64'),
       isBase64Encoded: true,
       multiValueHeaders: {
         'content-type': ['application/json']

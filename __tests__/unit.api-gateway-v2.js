@@ -1,5 +1,5 @@
 const eventSources = require('../src/event-sources')
-const testUtils = require('../src/event-sources/utils.test')
+const testUtils = require('./utils')
 
 const apiGatewayEventSource = eventSources.getEventSource({
   eventSourceName: 'AWS_API_GATEWAY_V2'
@@ -15,7 +15,7 @@ test('request has correct headers', () => {
 })
 
 function getReq () {
-  const event = testUtils.sam_httpapi_event
+  const event = testUtils.samHttpApiEvent
   const request = apiGatewayEventSource.getRequest({ event })
   return request
 }

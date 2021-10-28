@@ -1,6 +1,6 @@
 {
   "name": "@vendia/serverless-express",
-  "version": "4.3.11",
+  "version": "4.5.2",
   "description": "This library enables you to utilize AWS Lambda and Amazon API Gateway to respond to web and API requests using your existing Node.js application framework.",
   "keywords": [
     "aws",
@@ -62,7 +62,8 @@
       "src/**"
     ],
     "testPathIgnorePatterns": [
-      "examples/nestjs"
+      "examples/nestjs",
+      "examples/basic-starter-api-gateway-v2-typescript"
     ]
   },
   "devDependencies": {
@@ -80,7 +81,7 @@
     "commitlint": "^11.0.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
-    "cz-conventional-changelog": "^3.3.0",
+    "cz-conventional-changelog": "^3.0.1",
     "ejs": "^3.1.6",
     "eslint": "^7.26.0",
     "eslint-config-standard": "^16.0.2",
@@ -89,7 +90,7 @@
     "eslint-plugin-promise": "^4.3.1",
     "express": "^4.17.1",
     "husky": "^4.3.8",
-    "jest": "^26.6.3",
+    "jest": "^27.2.4",
     "lint-staged": "^10.5.4",
     "node-notifier": "^9.0.1",
     "semantic-release": "^17.4.2",

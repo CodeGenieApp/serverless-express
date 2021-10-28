@@ -1,3 +1,39 @@
+## [4.5.2](https://github.com/vendia/serverless-express/compare/v4.5.1...v4.5.2) (2021-10-14)
+
+
+### Bug Fixes
+
+* ensure response header value is string type ([#474](https://github.com/vendia/serverless-express/issues/474)) ([cb4b0e8](https://github.com/vendia/serverless-express/commit/cb4b0e82642c0110095f267c66751ed01370f768))
+
+## [4.5.1](https://github.com/vendia/serverless-express/compare/v4.5.0...v4.5.1) (2021-10-13)
+
+
+### Bug Fixes
+
+* bug when empty event headers ([#462](https://github.com/vendia/serverless-express/issues/462)) ([#463](https://github.com/vendia/serverless-express/issues/463)) ([2b66164](https://github.com/vendia/serverless-express/commit/2b661640c23940fc873f70409c4c9689b65e512d))
+
+# [4.5.0](https://github.com/vendia/serverless-express/compare/v4.4.0...v4.5.0) (2021-10-13)
+
+
+### Features
+
+* support both enable/disable attribute for multi value headers on ALB ([#392](https://github.com/vendia/serverless-express/issues/392)) ([a5cb5b5](https://github.com/vendia/serverless-express/commit/a5cb5b5c6f0a9dfa17e23c4759a286483a80f45d))
+
+# [4.4.0](https://github.com/vendia/serverless-express/compare/v4.3.12...v4.4.0) (2021-10-06)
+
+
+### Features
+
+* add support for SNS and DynamoDB event sources ([#468](https://github.com/vendia/serverless-express/issues/468)) ([276a6da](https://github.com/vendia/serverless-express/commit/276a6da64d22acec931dc0d567993f1e1f65597f))
+
+## [4.3.12](https://github.com/vendia/serverless-express/compare/v4.3.11...v4.3.12) (2021-10-06)
+
+
+### Bug Fixes
+
+* change workflow to release under 14.x instead of 12.x ([#472](https://github.com/vendia/serverless-express/issues/472)) ([f949200](https://github.com/vendia/serverless-express/commit/f9492006f4d046023f6f3387f5ab36d2dd45691f))
+* npm audit fix --force ([#469](https://github.com/vendia/serverless-express/issues/469)) ([35c686c](https://github.com/vendia/serverless-express/commit/35c686c95795ad146dc53f4a919c40adea5ffe0f))
+
 ## [4.3.11](https://github.com/vendia/serverless-express/compare/v4.3.10...v4.3.11) (2021-08-31)
 
 

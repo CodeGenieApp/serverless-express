@@ -82,7 +82,7 @@ function getReqRes (multiValueHeaders = {}) {
   return requestResponse
 }
 
-test('getRequestResponse: with headers', async (done) => {
+test('getRequestResponse: with headers', async () => {
   const { request } = await getReqRes({ 'x-foo': ['foo'] })
   expect(request).toBeInstanceOf(ServerlessRequest)
   expect(request.body).toBeInstanceOf(Buffer)
@@ -94,10 +94,9 @@ test('getRequestResponse: with headers', async (done) => {
     'x-foo': 'foo',
     'content-length': Buffer.byteLength('Hello serverless!')
   })
-  done()
 })
 
-test('getRequestResponse: without headers', async (done) => {
+test('getRequestResponse: without headers', async () => {
   const requestResponse = await getReqRes()
   expect(requestResponse.request).toBeInstanceOf(ServerlessRequest)
   expect(requestResponse.request.body).toBeInstanceOf(Buffer)
@@ -108,21 +107,22 @@ test('getRequestResponse: without headers', async (done) => {
   expect(requestResponse.request.headers).toEqual({
     'content-length': Buffer.byteLength('Hello serverless!')
   })
-  done()
 })
 
 describe('respondToEventSourceWithError', () => {
   test('responds with 500 status', () => {
     return new Promise(
-      (resolve) => {
-        const context = new MockContext(resolve)
+      (resolve, reject) => {
+        const context = new MockContext(resolve, reject)
         const contextResolver = {
-          succeed: (p) => context.succeed(p.response)
+          succeed: (p) => context.succeed(p.response),
+          fail: (p) => context.fail(p.error)
         }
         serverlessExpressTransport.respondToEventSourceWithError({
           error: new Error('ERROR'),
           resolver: contextResolver,
           log,
+          eventSourceName: 'AWS_API_GATEWAY_V1',
           eventSource: apiGatewayEventSource
         })
       }
@@ -135,16 +135,18 @@ describe('respondToEventSourceWithError', () => {
   })
   test('responds with 500 status and stack trace', () => {
     return new Promise(
-      (resolve) => {
-        const context = new MockContext(resolve)
+      (resolve, reject) => {
+        const context = new MockContext(resolve, reject)
         const contextResolver = {
-          succeed: (p) => context.succeed(p.response)
+          succeed: (p) => context.succeed(p.response),
+          fail: (p) => context.fail(p.error)
         }
         serverlessExpressTransport.respondToEventSourceWithError({
           error: new Error('There was an error...'),
           resolver: contextResolver,
           log,
           respondWithErrors: true,
+          eventSourceName: 'AWS_API_GATEWAY_V1',
           eventSource: apiGatewayEventSource
         })
       }
@@ -160,10 +162,11 @@ describe('respondToEventSourceWithError', () => {
   })
 })
 
-function getContextResolver (resolve) {
-  const context = new MockContext(resolve)
+function getContextResolver (resolve, reject) {
+  const context = new MockContext(resolve, reject)
   const contextResolver = {
-    succeed: (p) => context.succeed(p.response)
+    succeed: (p) => context.succeed(p.response),
+    fail: (p) => context.fail(p.error)
   }
 
   return contextResolver
@@ -176,8 +179,8 @@ describe.skip('forwardResponse: content-type encoding', () => {
     const { requestResponse } = await getReqRes(multiValueHeaders)
     const response = new ServerlessResponse(requestResponse.request)
     return new Promise(
-      (resolve) => {
-        const contextResolver = getContextResolver(resolve)
+      (resolve, reject) => {
+        const contextResolver = getContextResolver(resolve, reject)
         serverlessExpressTransport.forwardResponse({
           binaryMimeTypes,
           response,
@@ -201,8 +204,8 @@ describe.skip('forwardResponse: content-type encoding', () => {
     const body = 'hello world'
     const response = new ServerlessResponse(200, multiValueHeaders, body)
     return new Promise(
-      (resolve) => {
-        const contextResolver = getContextResolver(resolve)
+      (resolve, reject) => {
+        const contextResolver = getContextResolver(resolve, reject)
         serverlessExpressTransport.forwardResponse({
           binaryMimeTypes,
           response,
@@ -225,8 +228,8 @@ describe.skip('forwardResponse: content-type encoding', () => {
     const body = JSON.stringify({ hello: 'world' })
     const response = new ServerlessResponse(200, multiValueHeaders, body)
     return new Promise(
-      (resolve) => {
-        const contextResolver = getContextResolver(resolve)
+      (resolve, reject) => {
+        const contextResolver = getContextResolver(resolve, reject)
         serverlessExpressTransport.forwardResponse({
           binaryMimeTypes,
           response,
@@ -249,8 +252,8 @@ describe.skip('forwardResponse: content-type encoding', () => {
     const body = 'hello world'
     const response = new ServerlessResponse(200, multiValueHeaders, body)
     return new Promise(
-      (resolve) => {
-        const contextResolver = getContextResolver(resolve)
+      (resolve, reject) => {
+        const contextResolver = getContextResolver(resolve, reject)
         serverlessExpressTransport.forwardResponse({
           binaryMimeTypes,
           response,
@@ -273,8 +276,8 @@ describe.skip('forwardResponse: content-type encoding', () => {
     const body = 'hello world'
     const response = new ServerlessResponse(200, multiValueHeaders, body)
     return new Promise(
-      (resolve) => {
-        const contextResolver = getContextResolver(resolve)
+      (resolve, reject) => {
+        const contextResolver = getContextResolver(resolve, reject)
         serverlessExpressTransport.forwardResponse({
           binaryMimeTypes,
           response,
@@ -295,8 +298,8 @@ describe.skip('forwardResponse: content-type encoding', () => {
 describe('makeResolver', () => {
   test('CONTEXT (specified)', () => {
     return new Promise(
-      (resolve) => {
-        const context = new MockContext(resolve)
+      (resolve, reject) => {
+        const context = new MockContext(resolve, reject)
         const contextResolver = makeResolver({
           context,
           resolutionMode: 'CONTEXT'

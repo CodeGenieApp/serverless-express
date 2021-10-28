@@ -2,6 +2,8 @@ import { RequestListener } from "http";
 import { Handler } from "aws-lambda";
 import Logger from "./logger";
 
+type EventSources = "AWS_SNS" | "AWS_DYNAMODB";
+
 interface EventSource {
   getRequest?: any; // TODO:
   getResponse?: any; // TODO:
@@ -21,6 +23,7 @@ interface ConfigureParams {
   binaryMimeTypes?: string[];
   binarySettings?: BinarySettings;
   eventSource?: EventSource; // TODO:
+  eventSourceRoutes?: { [key in EventSources]?: string };
 }
 
 interface BinarySettings {
