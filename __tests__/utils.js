@@ -140,6 +140,38 @@ const snsEvent = {
   ]
 }
 
+// Sample event from https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents.html
+const eventbridgeEvent = {
+  version: '0',
+  id: 'fe8d3c65-xmpl-c5c3-2c87-81584709a377',
+  'detail-type': 'RDS DB Instance Event',
+  source: 'aws.rds',
+  account: '123456789012',
+  time: '2020-04-28T07:20:20Z',
+  region: 'us-east-2',
+  resources: ['arn:aws:rds:us-east-2:123456789012:db:rdz6xmpliljlb1'],
+  detail: {
+    EventCategories: ['backup'],
+    SourceType: 'DB_INSTANCE',
+    SourceArn: 'arn:aws:rds:us-east-2:123456789012:db:rdz6xmpliljlb1',
+    Date: '2020-04-28T07:20:20.112Z',
+    Message: 'Finished DB Instance backup',
+    SourceIdentifier: 'rdz6xmpliljlb1'
+  }
+}
+
+const eventbridgeScheduledEvent = {
+  version: '0',
+  account: '123456789012',
+  region: 'us-east-2',
+  detail: {},
+  'detail-type': 'Scheduled Event',
+  source: 'aws.events',
+  time: '2019-03-01T01:23:45Z',
+  id: 'cdc73f9d-aea9-11e3-9d5a-835b769c0d9c',
+  resources: ['arn:aws:events:us-east-2:123456789012:rule/my-schedule']
+}
+
 describe('getEventSourceNameBasedOnEvent', () => {
   test('throws error on empty event', () => {
     expect(() => getEventSourceNameBasedOnEvent({ event: {} })).toThrow(
@@ -161,10 +193,22 @@ describe('getEventSourceNameBasedOnEvent', () => {
     const result = getEventSourceNameBasedOnEvent({ event: snsEvent })
     expect(result).toEqual('AWS_SNS')
   })
+
+  test('recognizes eventbridge event', () => {
+    const result = getEventSourceNameBasedOnEvent({ event: eventbridgeEvent })
+    expect(result).toEqual('AWS_EVENTBRIDGE')
+  })
+
+  test('recognizes eventbridge scheduled event', () => {
+    const result = getEventSourceNameBasedOnEvent({ event: eventbridgeScheduledEvent })
+    expect(result).toEqual('AWS_EVENTBRIDGE')
+  })
 })
 
 module.exports = {
   samHttpApiEvent,
   dynamoDbEvent,
-  snsEvent
+  snsEvent,
+  eventbridgeEvent,
+  eventbridgeScheduledEvent
 }
