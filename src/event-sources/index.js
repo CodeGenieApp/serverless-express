@@ -4,6 +4,7 @@ const awsAlbEventSource = require('./aws/alb')
 const awsLambdaEdgeEventSource = require('./aws/lambda-edge')
 const awsSnsEventSource = require('./aws/sns')
 const awsDynamoDbEventSource = require('./aws/dynamodb')
+const azureHttpFunctionV3EventSource = require('./azure/http-function-runtime-v3')
 
 function getEventSource ({ eventSourceName }) {
   switch (eventSourceName) {
@@ -19,6 +20,8 @@ function getEventSource ({ eventSourceName }) {
       return awsDynamoDbEventSource
     case 'AWS_SNS':
       return awsSnsEventSource
+    case 'AZURE_HTTP_FUNCTION_V3':
+      return azureHttpFunctionV3EventSource
     default:
       throw new Error('Couldn\'t detect valid event source.')
   }

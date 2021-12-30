@@ -240,6 +240,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
         delete response.multiValueHeaders.etag
         delete response.multiValueHeaders['last-modified']
         break
+      case 'azureHttpFunctionV3':
       case 'apiGatewayV2':
         expect(response.headers.etag).toMatch(etagRegex)
         expect(response.headers['last-modified']).toMatch(lastModifiedRegex)
@@ -388,7 +389,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
 
   test('set-cookie', async () => {
     router.get('/cookie', (req, res) => {
-      res.cookie('Foo', 'bar')
+      res.cookie('Foo', 'bar', { domain: 'example.com', secure: true, httpOnly: true, sameSite: 'Strict' })
       res.cookie('Fizz', 'buzz')
       res.json({})
     })
@@ -400,7 +401,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     const response = await serverlessExpressInstance(event)
 
     const expectedSetCookieHeaders = [
-      'Foo=bar; Path=/',
+      'Foo=bar; Domain=example.com; Path=/; HttpOnly; Secure; SameSite=Strict',
       'Fizz=buzz; Path=/'
     ]
     const expectedResponse = makeResponse({
@@ -414,6 +415,24 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       },
       statusCode: 200
     })
+
+    switch (eventSourceName) {
+      case 'azureHttpFunctionV3':
+        expectedResponse.cookies = [
+          {
+            domain: 'example.com',
+            httpOnly: true,
+            name: 'Foo',
+            path: '/',
+            sameSite: 'Strict',
+            secure: true,
+            value: 'bar'
+          },
+          { name: 'Fizz', path: '/', value: 'buzz' }
+        ]
+        break
+    }
+
     expect(response).toEqual(expectedResponse)
   })
 

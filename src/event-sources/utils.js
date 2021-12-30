@@ -84,6 +84,17 @@ function getEventSourceNameBasedOnEvent ({
   if (event.requestContext) {
     return event.version === '2.0' ? 'AWS_API_GATEWAY_V2' : 'AWS_API_GATEWAY_V1'
   }
+  if (event.traceContext) {
+    const functionsExtensionVersion = process.env.FUNCTIONS_EXTENSION_VERSION
+
+    if (!functionsExtensionVersion) {
+      console.warn('The environment variable \'FUNCTIONS_EXTENSION_VERSION\' is not set. Only the function runtime \'~3\' is supported.')
+    } else if (functionsExtensionVersion !== '~3') {
+      console.warn('Only the function runtime \'~3\' is supported.')
+    }
+
+    return 'AZURE_HTTP_FUNCTION_V3'
+  }
 
   throw new Error('Unable to determine event source based on event.')
 }
@@ -106,6 +117,17 @@ function getCommaDelimitedHeaders ({ headersMap, separator = ',', lowerCaseKey =
 
 const emptyResponseMapper = () => {}
 
+const parseCookie = (str) =>
+  str.split(';')
+    .map((v) => v.split('='))
+    .reduce((acc, v) => {
+      if (!v[1]) {
+        return acc
+      }
+      acc[decodeURIComponent(v[0].trim().toLowerCase())] = decodeURIComponent(v[1].trim())
+      return acc
+    }, {})
+
 module.exports = {
   getPathWithQueryStringParams,
   getRequestValuesFromEvent,
@@ -113,5 +135,6 @@ module.exports = {
   getEventSourceNameBasedOnEvent,
   getEventBody,
   getCommaDelimitedHeaders,
-  emptyResponseMapper
+  emptyResponseMapper,
+  parseCookie
 }
