@@ -36,6 +36,11 @@ function getResponseToHttpFunction ({ statusCode, body, headers = {}, isBase64En
     isBase64Encoded
   }
 
+  if (isBase64Encoded) {
+    responseToHttpFunction.body = Buffer.from(body, 'base64')
+    responseToHttpFunction.isBase64Encoded = false
+  }
+
   const cookies = []
   const headerCookies = headers['set-cookie']
 

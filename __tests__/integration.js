@@ -241,6 +241,13 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
         delete response.multiValueHeaders['last-modified']
         break
       case 'azureHttpFunctionV3':
+        expectedResponse.body = Buffer.from(samLogoBase64, 'base64')
+        expectedResponse.isBase64Encoded = false
+        expect(response.headers.etag).toMatch(etagRegex)
+        expect(response.headers['last-modified']).toMatch(lastModifiedRegex)
+        delete response.headers.etag
+        delete response.headers['last-modified']
+        break
       case 'apiGatewayV2':
         expect(response.headers.etag).toMatch(etagRegex)
         expect(response.headers['last-modified']).toMatch(lastModifiedRegex)
