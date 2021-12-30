@@ -9,7 +9,7 @@
   </a>
 </p>
 
-Run REST APIs and other web applications using your existing [Node.js](https://nodejs.org/) application framework (Express, Koa, Hapi, Sails, etc.), on top of [AWS Lambda](https://aws.amazon.com/lambda/) and [Amazon API Gateway](https://aws.amazon.com/api-gateway/).
+Run REST APIs and other web applications using your existing [Node.js](https://nodejs.org/) application framework (Express, Koa, Hapi, Sails, etc.), on top of [AWS Lambda](https://aws.amazon.com/lambda/) and [Amazon API Gateway](https://aws.amazon.com/api-gateway/) or [Azure Function](https://docs.microsoft.com/en-us/azure/azure-functions/).
 
 ```bash
 npm install @vendia/serverless-express
@@ -26,7 +26,9 @@ Want to get up and running quickly? [Check out our basic starter example](exampl
 
 If you want to migrate an existing application to AWS Lambda, it's advised to get the minimal example up and running first, and then copy your application source in.
 
-## Minimal Lambda handler wrapper
+## AWS
+
+### Minimal Lambda handler wrapper
 
 The only AWS Lambda specific code you need to write is a simple handler like below. All other code you can write as you normally do.
 
@@ -37,7 +39,7 @@ const app = require('./app')
 exports.handler = serverlessExpress({ app })
 ```
 
-## Async setup Lambda handler
+### Async setup Lambda handler
 
 If your application needs to perform some common bootstrap tasks such as connecting to a database before the request is forward to the API, you can use the following pattern (also available in [this example](https://github.com/vendia/serverless-express/blob/mainline/examples/basic-starter-api-gateway-v2/src/lambda-async-setup.js)):
 
@@ -69,6 +71,45 @@ function handler (event, context) {
 }
 
 exports.handler = handler
+```
+
+## Azure
+
+### Async Azure Function (v3) handler wrapper
+
+The only Azure Function specific code you need to write is a simple `index.js` and a `function.json` like below.
+
+```js
+// index.js
+const serverlessExpress = require('@vendia/serverless-express')
+const app = require('./app')
+const cachedServerlessExpress = serverlessExpress({ app })
+
+module.exports = async function (context, req) {
+  return cachedServerlessExpress(context, req)
+}
+```
+
+The _out-binding_ parameter `"name": "$return"` is important for Serverless Express to work.
+
+```json
+// function.json
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "route": "{*segments}"
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "$return"
+    }
+  ]
+}
 ```
 
 ## 4.x
