@@ -1,3 +1,10 @@
+## [4.5.3](https://github.com/vendia/serverless-express/compare/v4.5.2...v4.5.3) (2022-01-23)
+
+
+### Bug Fixes
+
+* **types:** add missing config params ([#486](https://github.com/vendia/serverless-express/issues/486)) ([#488](https://github.com/vendia/serverless-express/issues/488)) ([093af02](https://github.com/vendia/serverless-express/commit/093af02839d36be0806c7113eac83208590c9e2b))
+
 ## [4.5.2](https://github.com/vendia/serverless-express/compare/v4.5.1...v4.5.2) (2021-10-14)
 
 
