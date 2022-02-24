@@ -1,3 +1,10 @@
+## [4.5.4](https://github.com/vendia/serverless-express/compare/v4.5.3...v4.5.4) (2022-02-24)
+
+
+### Bug Fixes
+
+* npm audit fix ([81c52af](https://github.com/vendia/serverless-express/commit/81c52afdc8b3b658b765349255e381fffa664e6a))
+
 ## [4.5.3](https://github.com/vendia/serverless-express/compare/v4.5.2...v4.5.3) (2022-01-23)
 
 
