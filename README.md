@@ -1,7 +1,6 @@
 # Serverless Express by [Vendia](https://vendia.net/)
 
-![Build Status](https://github.com/vendia/serverless-express/workflows/CICD/badge.svg) [![npm](https://img.shields.io/npm/v/@vendia/serverless-express.svg)]() [![npm](https://img.shields.io/npm/dm/aws-serverless-express.svg)]() [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
-<!-- [![dependencies Status](https://david-dm.org/vendia/serverless-express/status.svg)](https://david-dm.org/vendia/serverless-express) -->
+![Build Status](https://github.com/vendia/serverless-express/workflows/CICD/badge.svg) [![npm](https://img.shields.io/npm/v/@vendia/serverless-express.svg)]() [![npm](https://img.shields.io/npm/dm/aws-serverless-express.svg)]() [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)[![dependencies Status](https://img.shields.io/librariesio/github/vendia/serverless-express)](https://github.com/vendia/serverless-express/blob/master/package.json)
 
 <p align="center">
   <a href="https://vendia.net/">
