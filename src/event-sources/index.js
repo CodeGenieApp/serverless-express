@@ -4,6 +4,7 @@ const awsAlbEventSource = require('./aws/alb')
 const awsLambdaEdgeEventSource = require('./aws/lambda-edge')
 const awsSnsEventSource = require('./aws/sns')
 const awsDynamoDbEventSource = require('./aws/dynamodb')
+const awsEventBridgeEventSource = require('./aws/eventbridge')
 
 function getEventSource ({ eventSourceName }) {
   switch (eventSourceName) {
@@ -19,6 +20,8 @@ function getEventSource ({ eventSourceName }) {
       return awsDynamoDbEventSource
     case 'AWS_SNS':
       return awsSnsEventSource
+    case 'AWS_EVENTBRIDGE':
+      return awsEventBridgeEventSource
     default:
       throw new Error('Couldn\'t detect valid event source.')
   }

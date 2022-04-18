@@ -84,6 +84,26 @@ function getEventSourceNameBasedOnEvent ({
   if (event.requestContext) {
     return event.version === '2.0' ? 'AWS_API_GATEWAY_V2' : 'AWS_API_GATEWAY_V1'
   }
+  if (
+    event.version &&
+    event.version === '0' &&
+    event.id &&
+    event['detail-type'] &&
+    event.source &&
+    event.source.startsWith('aws.') && // Might need to adjust this for "Partner Sources", e.g. Auth0, Datadog, etc
+    event.account &&
+    event.time &&
+    event.region &&
+    event.resources &&
+    Array.isArray(event.resources) &&
+    event.detail &&
+    typeof event.detail === 'object' &&
+    !Array.isArray(event.detail)
+  ) {
+    // AWS doesn't have a defining Event Source here, so we're being incredibly selective on the structure
+    // Ref: https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents.html
+    return 'AWS_EVENTBRIDGE'
+  }
 
   throw new Error('Unable to determine event source based on event.')
 }
