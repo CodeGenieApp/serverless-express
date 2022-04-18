@@ -1,7 +1,6 @@
 # Serverless Express by [Vendia](https://vendia.net/)
 
-![Build Status](https://github.com/vendia/serverless-express/workflows/CICD/badge.svg) [![npm](https://img.shields.io/npm/v/@vendia/serverless-express.svg)]() [![npm](https://img.shields.io/npm/dm/aws-serverless-express.svg)]() [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
-<!-- [![dependencies Status](https://david-dm.org/vendia/serverless-express/status.svg)](https://david-dm.org/vendia/serverless-express) -->
+![Build Status](https://github.com/vendia/serverless-express/workflows/CICD/badge.svg) [![npm](https://img.shields.io/npm/v/@vendia/serverless-express.svg)]() [![npm](https://img.shields.io/npm/dm/aws-serverless-express.svg)]() [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)[![dependencies Status](https://img.shields.io/librariesio/github/vendia/serverless-express)](https://github.com/vendia/serverless-express/blob/master/package.json)
 
 <p align="center">
   <a href="https://vendia.net/">
@@ -176,6 +175,7 @@ A single function can be configured to handle additional kinds of AWS events:
 - SNS
 - DynamoDB Streams
 - SQS
+ - EventBridge Events (formerlly CloudWatch Events)
 
 Assuming the following function configuration in `serverless.yml`:
 
@@ -194,6 +194,10 @@ functions:
           arn: arn:aws:dynamodb:us-east-1:012345678990:table/my-table/stream/2021-07-15T15:05:51.683
       - sqs:
           arn: arn:aws:sqs:us-east-1:012345678990:myQueue
+      - eventBridge:
+          pattern:
+            source:
+              - aws.cloudformation
 ```
 
 And the following configuration:
@@ -205,6 +209,18 @@ serverlessExpress({
     'AWS_SNS': '/sns',
     'AWS_DYNAMODB': '/dynamodb',
     'AWS_SQS': '/sqs'
+    'AWS_EVENTBRIDGE': '/eventbridge',
+  }
+})
+```
+
+Alternatively, to handle only SNS events (the keys in the map are **optional**)
+
+```js
+serverlessExpress({
+  app,
+  eventSourceRoutes: {
+    'AWS_SNS': '/sns',
   }
 })
 ```
@@ -214,9 +230,11 @@ Events will `POST` to the routes configured.
 Also, to ensure the events propagated from an internal event and not externally, it is **highly recommended** to 
 ensure the `Host` header matches:
 
+
 - SNS: `sns.amazonaws.com`
 - DynamoDB: `dynamodb.amazonaws.com`
 - SQS: `sqs.amazonaws.com`
+- EventBridge: `events.amazonaws.com`
 
 ### logSettings
 
