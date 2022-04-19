@@ -1,3 +1,10 @@
+# [4.7.0](https://github.com/vendia/serverless-express/compare/v4.6.0...v4.7.0) (2022-04-19)
+
+
+### Features
+
+* added sqs as event source ([#483](https://github.com/vendia/serverless-express/issues/483)) ([3f86b23](https://github.com/vendia/serverless-express/commit/3f86b23d234bf1f814d2a79630f78302f0f8deae))
+
 # [4.6.0](https://github.com/vendia/serverless-express/compare/v4.5.4...v4.6.0) (2022-04-19)
 
 
