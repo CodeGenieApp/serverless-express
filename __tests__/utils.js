@@ -160,6 +160,8 @@ const sqsEvent = {
       awsRegion: 'us-east-2'
     }
   ]
+}
+
 // Sample event from https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents.html
 const eventbridgeEvent = {
   version: '0',
@@ -217,6 +219,8 @@ describe('getEventSourceNameBasedOnEvent', () => {
   test('recognizes sqs event', () => {
     const result = getEventSourceNameBasedOnEvent({ event: sqsEvent })
     expect(result).toEqual('AWS_SQS')
+  })
+
   test('recognizes eventbridge event', () => {
     const result = getEventSourceNameBasedOnEvent({ event: eventbridgeEvent })
     expect(result).toEqual('AWS_EVENTBRIDGE')
@@ -232,7 +236,7 @@ module.exports = {
   samHttpApiEvent,
   dynamoDbEvent,
   snsEvent,
-  sqsEvent
+  sqsEvent,
   eventbridgeEvent,
   eventbridgeScheduledEvent
 }
