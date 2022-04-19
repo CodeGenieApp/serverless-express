@@ -79,6 +79,9 @@ function getEventSourceNameBasedOnEvent ({
     if (eventSource === 'aws:dynamodb') {
       return 'AWS_DYNAMODB'
     }
+    if (eventSource === 'aws:sqs') {
+      return 'AWS_SQS'
+    }
     return 'AWS_LAMBDA_EDGE'
   }
   if (event.requestContext) {

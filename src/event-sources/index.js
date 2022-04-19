@@ -3,6 +3,7 @@ const awsApiGatewayV2EventSource = require('./aws/api-gateway-v2')
 const awsAlbEventSource = require('./aws/alb')
 const awsLambdaEdgeEventSource = require('./aws/lambda-edge')
 const awsSnsEventSource = require('./aws/sns')
+const awsSqsEventSource = require('./aws/sqs')
 const awsDynamoDbEventSource = require('./aws/dynamodb')
 const awsEventBridgeEventSource = require('./aws/eventbridge')
 
@@ -20,6 +21,8 @@ function getEventSource ({ eventSourceName }) {
       return awsDynamoDbEventSource
     case 'AWS_SNS':
       return awsSnsEventSource
+    case 'AWS_SQS':
+      return awsSqsEventSource
     case 'AWS_EVENTBRIDGE':
       return awsEventBridgeEventSource
     default:

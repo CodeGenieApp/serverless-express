@@ -3,7 +3,7 @@ import { Handler } from "aws-lambda";
 import Logger from "./logger";
 import Framework from "./frameworks";
 
-type EventSources = "AWS_SNS" | "AWS_DYNAMODB" | "AWS_EVENTBRIDGE";
+type EventSources = "AWS_SNS" | "AWS_DYNAMODB" | "AWS_EVENTBRIDGE" | "AWS_SQS";
 
 interface EventSource {
   getRequest?: any; // TODO:

@@ -172,8 +172,9 @@ serverlessExpress({
 #### eventSourceRoutes
 
 A single function can be configured to handle additional kinds of AWS events:
- - SNS
- - DynamoDB Streams
+- SNS
+- DynamoDB Streams
+- SQS
  - EventBridge Events (formerlly CloudWatch Events)
 
 Assuming the following function configuration in `serverless.yml`:
@@ -191,6 +192,8 @@ functions:
       - stream:
           type: dynamodb
           arn: arn:aws:dynamodb:us-east-1:012345678990:table/my-table/stream/2021-07-15T15:05:51.683
+      - sqs:
+          arn: arn:aws:sqs:us-east-1:012345678990:myQueue
       - eventBridge:
           pattern:
             source:
@@ -205,6 +208,7 @@ serverlessExpress({
   eventSourceRoutes: {
     'AWS_SNS': '/sns',
     'AWS_DYNAMODB': '/dynamodb',
+    'AWS_SQS': '/sqs'
     'AWS_EVENTBRIDGE': '/eventbridge',
   }
 })
@@ -226,9 +230,11 @@ Events will `POST` to the routes configured.
 Also, to ensure the events propagated from an internal event and not externally, it is **highly recommended** to 
 ensure the `Host` header matches:
 
- - SNS: `sns.amazonaws.com`
- - DynamoDB: `dynamodb.amazonaws.com`
- - EventBridge: `events.amazonaws.com`
+
+- SNS: `sns.amazonaws.com`
+- DynamoDB: `dynamodb.amazonaws.com`
+- SQS: `sqs.amazonaws.com`
+- EventBridge: `events.amazonaws.com`
 
 ### logSettings
 
