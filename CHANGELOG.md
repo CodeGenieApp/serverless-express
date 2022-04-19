@@ -1,3 +1,16 @@
+# [4.6.0](https://github.com/vendia/serverless-express/compare/v4.5.4...v4.6.0) (2022-04-19)
+
+
+### Bug Fixes
+
+* fix minimist security issue ([9be1f96](https://github.com/vendia/serverless-express/commit/9be1f96bc589e82d690dd7b0a5e15eba5929bf9c))
+* npm audit fix ([0495697](https://github.com/vendia/serverless-express/commit/049569796d84019ca582cd5a200a3ad0bcb29a11))
+
+
+### Features
+
+* add Eventbridge events ([#477](https://github.com/vendia/serverless-express/issues/477)) ([a25cbad](https://github.com/vendia/serverless-express/commit/a25cbad4d81bbafafb00366d8554b8e2312ad78c))
+
 ## [4.5.4](https://github.com/vendia/serverless-express/compare/v4.5.3...v4.5.4) (2022-02-24)
 
 
