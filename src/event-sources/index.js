@@ -5,6 +5,7 @@ const awsLambdaEdgeEventSource = require('./aws/lambda-edge')
 const awsSnsEventSource = require('./aws/sns')
 const awsSqsEventSource = require('./aws/sqs')
 const awsDynamoDbEventSource = require('./aws/dynamodb')
+const azureHttpFunctionV3EventSource = require('./azure/http-function-runtime-v3')
 const awsEventBridgeEventSource = require('./aws/eventbridge')
 
 function getEventSource ({ eventSourceName }) {
@@ -21,6 +22,8 @@ function getEventSource ({ eventSourceName }) {
       return awsDynamoDbEventSource
     case 'AWS_SNS':
       return awsSnsEventSource
+    case 'AZURE_HTTP_FUNCTION_V3':
+      return azureHttpFunctionV3EventSource
     case 'AWS_SQS':
       return awsSqsEventSource
     case 'AWS_EVENTBRIDGE':

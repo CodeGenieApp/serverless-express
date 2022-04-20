@@ -63,7 +63,8 @@ function respondToEventSourceWithError ({
     eventSourceName !== 'AWS_ALB' &&
     eventSourceName !== 'AWS_LAMBDA_EDGE' &&
     eventSourceName !== 'AWS_API_GATEWAY_V1' &&
-    eventSourceName !== 'AWS_API_GATEWAY_V2'
+    eventSourceName !== 'AWS_API_GATEWAY_V2' &&
+    eventSourceName !== 'AZURE_HTTP_FUNCTION_V3'
   ) {
     resolver.fail({ error })
     return

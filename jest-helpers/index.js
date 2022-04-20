@@ -2,12 +2,14 @@ const { makeApiGatewayV1Event, makeApiGatewayV1Response } = require('./api-gatew
 const { makeApiGatewayV2Event, makeApiGatewayV2Response } = require('./api-gateway-v2-event')
 const { makeAlbEvent, makeAlbResponse } = require('./alb-event')
 const { makeLambdaEdgeEvent, makeLambdaEdgeResponse } = require('./lambda-edge-event.js')
+const { makeAzureHttpFunctionV3Event, makeAzureHttpFunctionV3Response } = require('./azure-http-function-v3-event')
 
 const EVENT_SOURCE_NAMES = [
   'alb',
   'apiGatewayV1',
   'apiGatewayV2',
-  'lambdaEdge'
+  'lambdaEdge',
+  'azureHttpFunctionV3'
 ]
 
 const FRAMEWORK_NAMES = [
@@ -53,6 +55,8 @@ function makeEvent ({ eventSourceName, ...rest }) {
       return makeApiGatewayV2Event(rest)
     case 'lambdaEdge':
       return makeLambdaEdgeEvent(rest)
+    case 'azureHttpFunctionV3':
+      return makeAzureHttpFunctionV3Event(rest)
     default:
       throw new Error(`Unknown eventSourceName ${eventSourceName}`)
   }
@@ -68,6 +72,8 @@ function makeResponse ({ eventSourceName, ...rest }, { shouldConvertContentLengt
       return makeApiGatewayV2Response(rest, { shouldConvertContentLengthToInt })
     case 'lambdaEdge':
       return makeLambdaEdgeResponse(rest)
+    case 'azureHttpFunctionV3':
+      return makeAzureHttpFunctionV3Response(rest, { shouldConvertContentLengthToInt })
     default:
       throw new Error(`Unknown eventSourceName ${eventSourceName}`)
   }
