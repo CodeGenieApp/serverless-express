@@ -1,3 +1,10 @@
+## [4.7.1](https://github.com/vendia/serverless-express/compare/v4.7.0...v4.7.1) (2022-04-20)
+
+
+### Bug Fixes
+
+* remove npm-force-resolutions ([9f23265](https://github.com/vendia/serverless-express/commit/9f23265b4c5f0f45c108acbffa67a8d8425366fb))
+
 # [4.7.0](https://github.com/vendia/serverless-express/compare/v4.6.0...v4.7.0) (2022-04-19)
 
 
