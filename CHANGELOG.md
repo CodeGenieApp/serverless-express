@@ -1,3 +1,44 @@
+## [4.7.1](https://github.com/vendia/serverless-express/compare/v4.7.0...v4.7.1) (2022-04-20)
+
+
+### Bug Fixes
+
+* remove npm-force-resolutions ([9f23265](https://github.com/vendia/serverless-express/commit/9f23265b4c5f0f45c108acbffa67a8d8425366fb))
+
+# [4.7.0](https://github.com/vendia/serverless-express/compare/v4.6.0...v4.7.0) (2022-04-19)
+
+
+### Features
+
+* added sqs as event source ([#483](https://github.com/vendia/serverless-express/issues/483)) ([3f86b23](https://github.com/vendia/serverless-express/commit/3f86b23d234bf1f814d2a79630f78302f0f8deae))
+
+# [4.6.0](https://github.com/vendia/serverless-express/compare/v4.5.4...v4.6.0) (2022-04-19)
+
+
+### Bug Fixes
+
+* fix minimist security issue ([9be1f96](https://github.com/vendia/serverless-express/commit/9be1f96bc589e82d690dd7b0a5e15eba5929bf9c))
+* npm audit fix ([0495697](https://github.com/vendia/serverless-express/commit/049569796d84019ca582cd5a200a3ad0bcb29a11))
+
+
+### Features
+
+* add Eventbridge events ([#477](https://github.com/vendia/serverless-express/issues/477)) ([a25cbad](https://github.com/vendia/serverless-express/commit/a25cbad4d81bbafafb00366d8554b8e2312ad78c))
+
+## [4.5.4](https://github.com/vendia/serverless-express/compare/v4.5.3...v4.5.4) (2022-02-24)
+
+
+### Bug Fixes
+
+* npm audit fix ([81c52af](https://github.com/vendia/serverless-express/commit/81c52afdc8b3b658b765349255e381fffa664e6a))
+
+## [4.5.3](https://github.com/vendia/serverless-express/compare/v4.5.2...v4.5.3) (2022-01-23)
+
+
+### Bug Fixes
+
+* **types:** add missing config params ([#486](https://github.com/vendia/serverless-express/issues/486)) ([#488](https://github.com/vendia/serverless-express/issues/488)) ([093af02](https://github.com/vendia/serverless-express/commit/093af02839d36be0806c7113eac83208590c9e2b))
+
 ## [4.5.2](https://github.com/vendia/serverless-express/compare/v4.5.1...v4.5.2) (2021-10-14)
 
 
