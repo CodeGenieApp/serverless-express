@@ -42,53 +42,53 @@ function getResponseToHttpFunction ({ statusCode, body, headers = {}, isBase64En
   }
 
   const cookies = []
-  const headerCookies = headers['set-cookie']
-
+  // headers['set-cookie'] can be a string of one cookie, or an array of cookies
+  // headerCookies should always be an array
+  const headerCookies = [].concat(headers['set-cookie'] || [])
+  
   // Convert 'set-cookie' to Azure Function 3.x cookie object array
   // https://github.com/Azure/azure-functions-nodejs-worker/blob/v3.x/types/index.d.ts#L150
-  if (headerCookies) {
-    for (const headerCookie of headerCookies) {
-      const parsedCookie = parseCookie(headerCookie)
-      const nameValueTuple = headerCookie.split(';')[0].split('=')
+  for (const headerCookie of headerCookies) {
+    const parsedCookie = parseCookie(headerCookie)
+    const nameValueTuple = headerCookie.split(';')[0].split('=')
 
-      const cookie = { name: nameValueTuple[0], value: nameValueTuple[1] }
+    const cookie = { name: nameValueTuple[0], value: nameValueTuple[1] }
 
-      if (headerCookie.toLowerCase().includes('httponly')) {
-        cookie.httpOnly = true
-      }
-
-      if (headerCookie.toLowerCase().includes('secure')) {
-        cookie.secure = true
-      }
-
-      if (parsedCookie['max-age']) {
-        cookie.maxAge = parsedCookie['max-age']
-      }
-
-      if (parsedCookie.samesite) {
-        cookie.sameSite = parsedCookie.samesite
-      }
-
-      if (parsedCookie.expires && typeof parsedCookie.expires === 'string') {
-        cookie.expires = new Date(parsedCookie.expires)
-      } else if (parsedCookie.expires && typeof value === 'number') {
-        cookie.expires = parsedCookie.expires
-      }
-
-      if (parsedCookie.path) {
-        cookie.path = parsedCookie.path
-      }
-
-      if (parsedCookie.domain) {
-        cookie.domain = parsedCookie.domain
-      }
-
-      cookies.push(cookie)
+    if (headerCookie.toLowerCase().includes('httponly')) {
+      cookie.httpOnly = true
     }
 
-    responseToHttpFunction.cookies = cookies
-    delete headers['set-cookie']
+    if (headerCookie.toLowerCase().includes('secure')) {
+      cookie.secure = true
+    }
+
+    if (parsedCookie['max-age']) {
+      cookie.maxAge = parsedCookie['max-age']
+    }
+
+    if (parsedCookie.samesite) {
+      cookie.sameSite = parsedCookie.samesite
+    }
+
+    if (parsedCookie.expires && typeof parsedCookie.expires === 'string') {
+      cookie.expires = new Date(parsedCookie.expires)
+    } else if (parsedCookie.expires && typeof value === 'number') {
+      cookie.expires = parsedCookie.expires
+    }
+
+    if (parsedCookie.path) {
+      cookie.path = parsedCookie.path
+    }
+
+    if (parsedCookie.domain) {
+      cookie.domain = parsedCookie.domain
+    }
+
+    cookies.push(cookie)
   }
+
+  responseToHttpFunction.cookies = cookies
+  delete headers['set-cookie']
 
   responseToHttpFunction.headers = getCommaDelimitedHeaders({ headersMap: headers })
 
