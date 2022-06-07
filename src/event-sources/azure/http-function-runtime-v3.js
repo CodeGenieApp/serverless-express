@@ -45,7 +45,7 @@ function getResponseToHttpFunction ({ statusCode, body, headers = {}, isBase64En
   // headers['set-cookie'] can be a string of one cookie, or an array of cookies
   // headerCookies should always be an array
   const headerCookies = [].concat(headers['set-cookie'] || [])
-  
+
   // Convert 'set-cookie' to Azure Function 3.x cookie object array
   // https://github.com/Azure/azure-functions-nodejs-worker/blob/v3.x/types/index.d.ts#L150
   if (headerCookies.length > 0) {
