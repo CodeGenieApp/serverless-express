@@ -1,3 +1,10 @@
+## [4.8.1](https://github.com/vendia/serverless-express/compare/v4.8.0...v4.8.1) (2022-06-07)
+
+
+### Bug Fixes
+
+* npm audit fix --force ([3961751](https://github.com/vendia/serverless-express/commit/39617516967e8e9e3d2903c314ab808ef353bc01))
+
 # [4.8.0](https://github.com/vendia/serverless-express/compare/v4.7.1...v4.8.0) (2022-04-20)
 
 
