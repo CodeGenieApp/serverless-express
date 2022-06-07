@@ -1,3 +1,10 @@
+## [4.8.2](https://github.com/vendia/serverless-express/compare/v4.8.1...v4.8.2) (2022-06-07)
+
+
+### Bug Fixes
+
+* **azure-function:** handle single or multiple cookies at once ([#525](https://github.com/vendia/serverless-express/issues/525)) ([d10f49a](https://github.com/vendia/serverless-express/commit/d10f49a29e43430b9c54a222271a8710d0542c20))
+
 ## [4.8.1](https://github.com/vendia/serverless-express/compare/v4.8.0...v4.8.1) (2022-06-07)
 
 
