@@ -16,7 +16,7 @@
     "@sailshq/lodash": "^3.10.4",
     "@sailshq/socket.io-redis": "^5.2.0",
     "@vendia/serverless-express": "^4.3.0",
-    "grunt": "1.3.0",
+    "grunt": "1.5.3",
     "sails": "^1.4.0",
     "sails-hook-grunt": "^4.0.0",
     "sails-hook-orm": "^2.1.1",
