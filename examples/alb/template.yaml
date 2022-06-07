@@ -64,7 +64,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Scheme: internet-facing
-      Subnets: 
+      Subnets:
         - !Ref SubnetA
         - !Ref SubnetB
       SecurityGroups:
@@ -104,9 +104,9 @@ Resources:
       CodeUri: ./src
       Handler: lambda.handler
       MemorySize: 1024
-      Runtime: nodejs12.x
+      Runtime: nodejs16.x
       Timeout: 30
-  
+
   AlbSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -118,10 +118,10 @@ Resources:
           ToPort: 80
           CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
-        - IpProtocol : tcp
-          FromPort : 80
-          ToPort : 80
-          CidrIp : 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
         # - IpProtocol: -1
         #   CidrIp: 0.0.0.0/0
 Outputs:
@@ -131,4 +131,3 @@ Outputs:
 
   AlbDnsName:
     Value: !Sub http://${Alb.DNSName}
-

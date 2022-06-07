@@ -41,7 +41,7 @@ Resources:
       CodeUri: ./dist
       Handler: main.handler
       MemorySize: 128
-      Runtime: nodejs12.x
+      Runtime: nodejs16.x
       Timeout: 5
       Role: !GetAtt ExpressLambdaRole.Arn
       AutoPublishAlias: live
@@ -67,9 +67,9 @@ Outputs:
       - ''
       - - https://
         - !Ref AWS::Region
-        - ".console.aws.amazon.com/lambda/home?region="
+        - '.console.aws.amazon.com/lambda/home?region='
         - !Ref AWS::Region
-        - "#/functions/"
+        - '#/functions/'
         - !Ref ExpressLambdaFunction
 
   CloudFrontDistributionConsoleUrl:

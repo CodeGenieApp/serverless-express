@@ -9,11 +9,10 @@ Parameters:
     Default: ''
 
 Conditions:
-  UseDomainName:
-    !Not
-      - !Equals
-        - !Ref DomainName
-        - ''
+  UseDomainName: !Not
+    - !Equals
+      - !Ref DomainName
+      - ''
 
 Resources:
   ExpressApi:
@@ -24,7 +23,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       PackageType: Zip
-      Runtime: nodejs14.x
+      Runtime: nodejs16.x
       Handler: lambda.handler
       MemorySize: 1024
       Timeout: 30
@@ -90,7 +89,8 @@ Outputs:
     Value: !Sub https://${AWS::Region}.console.aws.amazon.com/apigateway/home?region=${AWS::Region}#/apis/${ExpressApi}/stages/prod
 
   ApiUrl:
-    Description: Invoke URL for your API. Clicking this link will perform a GET request
+    Description:
+      Invoke URL for your API. Clicking this link will perform a GET request
       on the root resource of your API.
     Value: !Sub https://${ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/
 

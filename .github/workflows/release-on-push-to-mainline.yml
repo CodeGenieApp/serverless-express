@@ -2,7 +2,7 @@ name: CICD
 
 on:
   push:
-    branches: [ mainline ]
+    branches: [mainline]
   pull_request:
 
 jobs:
@@ -10,31 +10,31 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [12.x, 14.x, 16.x]
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Audit
-      run: npm audit --audit-level critical
-    
-    - name: Install
-      run: npm ci
+      - name: Audit
+        run: npm audit --audit-level critical
 
-    - name: Test
-      run: npm test
+      - name: Install
+        run: npm ci
 
-    - name: Lint
-      run: npm run lint
+      - name: Test
+        run: npm test
 
-    - name: Release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/mainline' && matrix.node-version == '14.x'
-      run: npm run release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }} 
+      - name: Lint
+        run: npm run lint
+
+      - name: Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/mainline' && matrix.node-version == '14.x'
+        run: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
