@@ -74,7 +74,7 @@ exports.handler = handler
 
 ## Azure
 
-### Async Azure Function (v3) handler wrapper
+### Async Azure Function v3/v4 handler wrapper
 
 The only Azure Function specific code you need to write is a simple `index.js` and a `function.json` like below.
 
