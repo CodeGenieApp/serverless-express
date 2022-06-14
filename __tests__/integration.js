@@ -240,6 +240,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
         delete response.multiValueHeaders.etag
         delete response.multiValueHeaders['last-modified']
         break
+      case 'azureHttpFunctionV4':
       case 'azureHttpFunctionV3':
         expectedResponse.body = Buffer.from(samLogoBase64, 'base64')
         expectedResponse.isBase64Encoded = false
@@ -424,6 +425,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     })
 
     switch (eventSourceName) {
+      case 'azureHttpFunctionV4':
       case 'azureHttpFunctionV3':
         expectedResponse.cookies = [
           {
