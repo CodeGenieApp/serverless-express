@@ -82,6 +82,9 @@ function getEventSourceNameBasedOnEvent ({
     if (eventSource === 'aws:sqs') {
       return 'AWS_SQS'
     }
+    if (eventSource === 'aws:kinesis') {
+      return 'AWS_KINESIS_DATA_STREAM'
+    }
     return 'AWS_LAMBDA_EDGE'
   }
   if (event.requestContext) {
