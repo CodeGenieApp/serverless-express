@@ -194,6 +194,28 @@ const eventbridgeScheduledEvent = {
   resources: ['arn:aws:events:us-east-2:123456789012:rule/my-schedule']
 }
 
+// Sample event from https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis-example.html
+const kinesisDataStreamEvent = {
+  Records: [
+    {
+      kinesis: {
+        kinesisSchemaVersion: '1.0',
+        partitionKey: '1',
+        sequenceNumber: '49590338271490256608559692538361571095921575989136588898',
+        data: 'SGVsbG8sIHRoaXMgaXMgYSB0ZXN0Lg==',
+        approximateArrivalTimestamp: 1545084650.987
+      },
+      eventSource: 'aws:kinesis',
+      eventVersion: '1.0',
+      eventID: 'shardId-000000000006:49590338271490256608559692538361571095921575989136588898',
+      eventName: 'aws:kinesis:record',
+      invokeIdentityArn: 'arn:aws:iam::123456789012:role/lambda-kinesis-role',
+      awsRegion: 'us-east-2',
+      eventSourceARN: 'arn:aws:kinesis:us-east-2:123456789012:stream/lambda-stream'
+    }
+  ]
+}
+
 describe('getEventSourceNameBasedOnEvent', () => {
   test('throws error on empty event', () => {
     expect(() => getEventSourceNameBasedOnEvent({ event: {} })).toThrow(
@@ -221,6 +243,11 @@ describe('getEventSourceNameBasedOnEvent', () => {
     expect(result).toEqual('AWS_SQS')
   })
 
+  test('recognizes kinesis data stream event', () => {
+    const result = getEventSourceNameBasedOnEvent({ event: kinesisDataStreamEvent })
+    expect(result).toEqual('AWS_KINESIS_DATA_STREAM')
+  })
+
   test('recognizes eventbridge event', () => {
     const result = getEventSourceNameBasedOnEvent({ event: eventbridgeEvent })
     expect(result).toEqual('AWS_EVENTBRIDGE')
@@ -238,5 +265,6 @@ module.exports = {
   snsEvent,
   sqsEvent,
   eventbridgeEvent,
-  eventbridgeScheduledEvent
+  eventbridgeScheduledEvent,
+  kinesisDataStreamEvent
 }
