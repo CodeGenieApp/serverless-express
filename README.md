@@ -74,7 +74,7 @@ exports.handler = handler
 
 ## Azure
 
-### Async Azure Function (v3) handler wrapper
+### Async Azure Function v3/v4 handler wrapper
 
 The only Azure Function specific code you need to write is a simple `index.js` and a `function.json` like below.
 
@@ -251,6 +251,7 @@ serverlessExpress({
     'AWS_DYNAMODB': '/dynamodb',
     'AWS_SQS': '/sqs'
     'AWS_EVENTBRIDGE': '/eventbridge',
+    'AWS_KINESIS_DATA_STREAM': '/kinesis',
   }
 })
 ```
@@ -276,6 +277,7 @@ ensure the `Host` header matches:
 - DynamoDB: `dynamodb.amazonaws.com`
 - SQS: `sqs.amazonaws.com`
 - EventBridge: `events.amazonaws.com`
+- KinesisDataStream: `kinesis.amazonaws.com`
 
 ### logSettings
 

@@ -1,3 +1,18 @@
+# [4.9.0](https://github.com/vendia/serverless-express/compare/v4.8.3...v4.9.0) (2022-06-30)
+
+
+### Features
+
+* add support for azure function v4 event source ([#529](https://github.com/vendia/serverless-express/issues/529)) ([503c9d0](https://github.com/vendia/serverless-express/commit/503c9d0c34b829282c9b8b6292b093a806e1ceb5))
+
+## [4.8.3](https://github.com/vendia/serverless-express/compare/v4.8.2...v4.8.3) (2022-06-30)
+
+
+### Bug Fixes
+
+* migrate to commitizen fork ([ec1ca7e](https://github.com/vendia/serverless-express/commit/ec1ca7eb1a61db36a5b1424106721c2e5dabb40f)), closes [#issuecomment-1131383383](https://github.com/vendia/serverless-express/issues/issuecomment-1131383383)
+* npm update ([1e45c11](https://github.com/vendia/serverless-express/commit/1e45c1143167bed59b913a1120c912f9ac15d6ae))
+
 ## [4.8.2](https://github.com/vendia/serverless-express/compare/v4.8.1...v4.8.2) (2022-06-07)
 
 
