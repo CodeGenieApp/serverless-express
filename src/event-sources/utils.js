@@ -82,6 +82,9 @@ function getEventSourceNameBasedOnEvent ({
     if (eventSource === 'aws:sqs') {
       return 'AWS_SQS'
     }
+    if (eventSource === 'aws:kinesis') {
+      return 'AWS_KINESIS_DATA_STREAM'
+    }
     return 'AWS_LAMBDA_EDGE'
   }
   if (event.requestContext) {
@@ -92,11 +95,13 @@ function getEventSourceNameBasedOnEvent ({
 
     if (!functionsExtensionVersion) {
       console.warn('The environment variable \'FUNCTIONS_EXTENSION_VERSION\' is not set. Only the function runtime \'~3\' is supported.')
-    } else if (functionsExtensionVersion !== '~3') {
-      console.warn('Only the function runtime \'~3\' is supported.')
+    } else if (functionsExtensionVersion === '~3') {
+      return 'AZURE_HTTP_FUNCTION_V3'
+    } else if (functionsExtensionVersion === '~4') {
+      return 'AZURE_HTTP_FUNCTION_V4'
+    } else {
+      console.warn('The function runtime \'' + functionsExtensionVersion + '\' is not supported. Only \'~3\' and \'~4\' are supported.')
     }
-
-    return 'AZURE_HTTP_FUNCTION_V3'
   }
   if (
     event.version &&
