@@ -1,3 +1,10 @@
+# [4.9.0](https://github.com/vendia/serverless-express/compare/v4.8.3...v4.9.0) (2022-06-30)
+
+
+### Features
+
+* add support for azure function v4 event source ([#529](https://github.com/vendia/serverless-express/issues/529)) ([503c9d0](https://github.com/vendia/serverless-express/commit/503c9d0c34b829282c9b8b6292b093a806e1ceb5))
+
 ## [4.8.3](https://github.com/vendia/serverless-express/compare/v4.8.2...v4.8.3) (2022-06-30)
 
 
