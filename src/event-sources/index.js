@@ -7,6 +7,7 @@ const awsSqsEventSource = require('./aws/sqs')
 const awsDynamoDbEventSource = require('./aws/dynamodb')
 const azureHttpFunctionV3EventSource = require('./azure/http-function-runtime-v3')
 const awsEventBridgeEventSource = require('./aws/eventbridge')
+const awsKinesisEventSource = require('./aws/kinesis')
 
 function getEventSource ({ eventSourceName }) {
   switch (eventSourceName) {
@@ -28,6 +29,8 @@ function getEventSource ({ eventSourceName }) {
       return awsSqsEventSource
     case 'AWS_EVENTBRIDGE':
       return awsEventBridgeEventSource
+    case 'AWS_KINESIS_DATA_STREAM':
+      return awsKinesisEventSource
     default:
       throw new Error('Couldn\'t detect valid event source.')
   }
