@@ -1,3 +1,10 @@
+# [4.10.0](https://github.com/vendia/serverless-express/compare/v4.9.0...v4.10.0) (2022-07-25)
+
+
+### Features
+
+* **response:** added support to Uint8Array ([#540](https://github.com/vendia/serverless-express/issues/540)) ([8b76331](https://github.com/vendia/serverless-express/commit/8b76331e047c1a761ca6754303c253261e87840e))
+
 # [4.9.0](https://github.com/vendia/serverless-express/compare/v4.8.3...v4.9.0) (2022-06-30)
 
 
