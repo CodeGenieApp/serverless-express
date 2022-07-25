@@ -9,7 +9,6 @@ const {
   makeResponse,
   EACH_MATRIX
 } = require('../jest-helpers')
-
 const jestHelpersPath = path.join(__dirname, '..', 'jest-helpers')
 
 let app, router, serverlessExpressInstance

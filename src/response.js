@@ -12,13 +12,15 @@ function getString (data) {
     return data.toString('utf8')
   } else if (typeof data === 'string') {
     return data
+  } else if (data instanceof Uint8Array) {
+    return new TextDecoder().decode(data)
   } else {
     throw new Error(`response.write() of unexpected type: ${typeof data}`)
   }
 }
 
 function addData (stream, data) {
-  if (Buffer.isBuffer(data) || typeof data === 'string') {
+  if (Buffer.isBuffer(data) || typeof data === 'string' || data instanceof Uint8Array) {
     stream[BODY].push(Buffer.from(data))
   } else {
     throw new Error(`response.write() of unexpected type: ${typeof data}`)
