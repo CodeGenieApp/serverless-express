@@ -64,7 +64,7 @@ function getResponseToHttpFunction ({ statusCode, body, headers = {}, isBase64En
       }
 
       if (parsedCookie['max-age']) {
-        cookie.maxAge = parsedCookie['max-age']
+        cookie.maxAge = +parsedCookie['max-age']
       }
 
       if (parsedCookie.samesite) {
@@ -73,7 +73,7 @@ function getResponseToHttpFunction ({ statusCode, body, headers = {}, isBase64En
 
       if (parsedCookie.expires && typeof parsedCookie.expires === 'string') {
         cookie.expires = new Date(parsedCookie.expires)
-      } else if (parsedCookie.expires && typeof value === 'number') {
+      } else if (parsedCookie.expires && typeof parsedCookie.expires === 'number') {
         cookie.expires = parsedCookie.expires
       }
 
