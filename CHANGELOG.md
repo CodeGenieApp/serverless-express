@@ -1,3 +1,10 @@
+## [4.10.1](https://github.com/vendia/serverless-express/compare/v4.10.0...v4.10.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* **http-function-runtime-v3:** fix undeclared variable and added improve tests for set-cookie ([#534](https://github.com/vendia/serverless-express/issues/534)) ([34bd7da](https://github.com/vendia/serverless-express/commit/34bd7da3fa20d754a98a59324a2bf7dc1e73a30c))
+
 # [4.10.0](https://github.com/vendia/serverless-express/compare/v4.9.0...v4.10.0) (2022-07-25)
 
 
