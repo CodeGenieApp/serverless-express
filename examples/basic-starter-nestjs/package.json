@@ -24,9 +24,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^7.6.12",
+    "@nestjs/common": "^9.1.4",
     "@nestjs/core": "^7.6.12",
-    "@nestjs/platform-express": "^7.6.12",
+    "@nestjs/platform-express": "^9.1.4",
     "@nestjs/platform-fastify": "^7.6.12",
     "@vendia/serverless-express": "^4.3.0",
     "aws-lambda": "^1.0.6",
