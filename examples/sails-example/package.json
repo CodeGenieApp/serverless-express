@@ -20,7 +20,7 @@
     "sails": "^1.4.0",
     "sails-hook-grunt": "^4.0.0",
     "sails-hook-orm": "^2.1.1",
-    "sails-hook-sockets": "^2.0.0"
+    "sails-hook-sockets": "^2.0.3"
   },
   "devDependencies": {
     "cross-var": "^1.1.0",
