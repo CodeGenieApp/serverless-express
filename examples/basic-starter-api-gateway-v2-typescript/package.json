@@ -30,11 +30,11 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@vendia/serverless-express": "^4.3.10",
-    "body-parser": "^1.17.1",
+    "body-parser": "^1.20.1",
     "compression": "^1.6.2",
     "cors": "^2.8.3",
     "ejs": "^3.1.6",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "source-map-support": "^0.5.19",
     "tslib": "^2.3.1"
   },
