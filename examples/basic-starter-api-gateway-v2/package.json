@@ -30,7 +30,7 @@
     "compression": "^1.6.2",
     "cors": "^2.8.3",
     "ejs": "^3.1.6",
-    "express": "^4.15.2"
+    "express": "^4.17.3"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^7.0.0",
