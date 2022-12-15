@@ -218,9 +218,8 @@ const kinesisDataStreamEvent = {
 
 describe('getEventSourceNameBasedOnEvent', () => {
   test('throws error on empty event', () => {
-    expect(() => getEventSourceNameBasedOnEvent({ event: {} })).toThrow(
-      'Unable to determine event source based on event.'
-    )
+    const result = getEventSourceNameBasedOnEvent({ event: {} })
+    expect(result).toEqual('AWS_LAMBDA')
   })
 
   test('recognizes sam local HttpApi event', () => {

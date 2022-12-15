@@ -59,9 +59,7 @@ function getMultiValueHeaders ({ headers }) {
   const multiValueHeaders = {}
 
   Object.entries(headers).forEach(([headerKey, headerValue]) => {
-    const headerArray = Array.isArray(headerValue) ? headerValue.map(String) : [String(headerValue)]
-
-    multiValueHeaders[headerKey.toLowerCase()] = headerArray
+    multiValueHeaders[headerKey.toLowerCase()] = Array.isArray(headerValue) ? headerValue.map(String) : [String(headerValue)]
   })
 
   return multiValueHeaders
@@ -124,7 +122,7 @@ function getEventSourceNameBasedOnEvent ({
     return 'AWS_EVENTBRIDGE'
   }
 
-  throw new Error('Unable to determine event source based on event.')
+  return 'AWS_LAMBDA'
 }
 
 function getCommaDelimitedHeaders ({ headersMap, separator = ',', lowerCaseKey = false }) {
