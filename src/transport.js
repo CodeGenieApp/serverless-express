@@ -151,6 +151,8 @@ async function forwardRequestToNodeServer ({
   if (!requestValues.path && eventSourceRoutes[eventSourceName]) {
     requestValues.path = eventSourceRoutes[eventSourceName]
   }
+  // Handle Event like as AWS_EVENTBRIDGE (Lambda getting closed with 404)
+  requestValues.path= requestValues.path  || '*'
 
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:REQUEST_VALUES', { requestValues })
   const { request, response } = await getRequestResponse(requestValues)
