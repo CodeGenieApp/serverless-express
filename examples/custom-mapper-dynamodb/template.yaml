@@ -8,7 +8,7 @@ Resources:
       CodeUri: ./src
       Handler: lambda.handler
       MemorySize: 1024
-      Runtime: nodejs16.x
+      Runtime: nodejs18.x
       Timeout: 3
       Events:
         DynamoDB1:

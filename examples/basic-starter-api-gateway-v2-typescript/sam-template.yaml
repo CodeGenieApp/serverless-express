@@ -23,7 +23,7 @@ Resources:
     Properties:
       CodeUri: ./dist
       PackageType: Zip
-      Runtime: nodejs16.x
+      Runtime: nodejs18.x
       Handler: lambda.handler
       MemorySize: 1024
       Timeout: 30
