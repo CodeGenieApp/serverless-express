@@ -43,14 +43,14 @@ function configure ({
     log = configureLog,
     respondWithErrors = configureRespondWithErrors
   }) {
-    log.debug('SERVERLESS_EXPRESS:PROXY', {
+    log.debug('SERVERLESS_EXPRESS:PROXY', () => ({
       event: util.inspect(event, { depth: null }),
       context: util.inspect(context, { depth: null }),
       resolutionMode,
       eventSourceName,
       binarySettings,
       respondWithErrors
-    })
+    }))
 
     if (binaryMimeTypes) {
       console.warn('[DEPRECATION NOTICE] { binaryMimeTypes: [] } is deprecated. base64 encoding is now automatically determined based on response content-type and content-encoding. If you need to manually set binary content types, instead, use { binarySettings: { contentTypes: [] } }')

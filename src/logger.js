@@ -1,40 +1,46 @@
+const lazyPrint = (value) => {
+  if (typeof value === 'function') { return value() }
+
+  return value
+}
+
 function logger ({
   level = 'error'
 } = {}) {
   return {
-    error (message, additional) {
+    error (message, ...additional) {
       if (!level.includes('debug', 'verbose', 'info', 'warn', 'error')) return
       console.error({
-        message,
-        ...additional
+        message: lazyPrint(message),
+        ...additional.map(lazyPrint)
       })
     },
-    warn (message, additional) {
+    warn (message, ...additional) {
       if (!level.includes('debug', 'verbose', 'info', 'warn')) return
       console.warn({
-        message,
-        ...additional
+        message: lazyPrint(message),
+        ...additional.map(lazyPrint)
       })
     },
     info (message, additional) {
       if (!level.includes('debug', 'verbose', 'info')) return
       console.info({
-        message,
-        ...additional
+        message: lazyPrint(message),
+        ...additional.map(lazyPrint)
       })
     },
     verbose (message, additional) {
       if (!level.includes('debug', 'verbose')) return
       console.debug({
-        message,
-        ...additional
+        message: lazyPrint(message),
+        ...additional.map(lazyPrint)
       })
     },
     debug (message, additional) {
       if (level !== 'debug') return
       console.debug({
-        message,
-        ...additional
+        message: lazyPrint(message),
+        ...additional.map(lazyPrint)
       })
     }
   }
