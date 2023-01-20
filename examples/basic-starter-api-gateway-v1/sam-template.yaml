@@ -27,7 +27,7 @@ Resources:
       CodeUri: ./dist
       Handler: main.handler
       MemorySize: 1024
-      Runtime: nodejs16.x
+      Runtime: nodejs18.x
       Timeout: 30
       Events:
         ProxyApiRoot:
