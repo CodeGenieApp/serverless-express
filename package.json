@@ -79,7 +79,7 @@
     "@types/aws-lambda": "^8.10.76",
     "@types/jest": "^26.0.20",
     "acorn": "^8.2.4",
-    "commitlint": "^11.0.0",
+    "commitlint": "^17.6.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "ejs": "^3.1.6",
@@ -89,11 +89,11 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "express": "^4.17.1",
-    "husky": "^4.3.8",
+    "husky": "^8.0.3",
     "jest": "^27.2.4",
-    "lint-staged": "^10.5.4",
+    "lint-staged": "^13.2.1",
     "node-notifier": "^9.0.1",
-    "semantic-release": "^19.0.2",
+    "semantic-release": "^21.0.1",
     "typescript": "^4.2.4"
   },
   "scripts": {
