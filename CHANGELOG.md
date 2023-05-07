@@ -1,3 +1,10 @@
+## [4.10.2](https://github.com/vendia/serverless-express/compare/v4.10.1...v4.10.2) (2023-05-07)
+
+
+### Performance Improvements
+
+* **logger:** defer execution of expensive logging calls ([#614](https://github.com/vendia/serverless-express/issues/614)) ([7d42c6d](https://github.com/vendia/serverless-express/commit/7d42c6d55cb9c27d6ace81f62b3f90d882480d35))
+
 ## [4.10.1](https://github.com/vendia/serverless-express/compare/v4.10.0...v4.10.1) (2022-07-26)
 
 
