@@ -4,6 +4,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const ejs = require('ejs').__express
 const serverlessExpress = require('../src/index')
+const serverlessExpressLogger = require('../src/logger')
 const {
   makeEvent,
   makeResponse,
@@ -467,39 +468,75 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     expect(response).toEqual(expectedResponse)
   })
 
-  test('custom logger', async () => {
-    app = express()
-    router = express.Router()
-    app.use('/', router)
-    router.get('/users', (req, res) => {
-      res.json({})
+  describe('logger', () => {
+    const mocks = []
+
+    beforeEach(() => {
+      const mockMethods = [
+        'error',
+        'info',
+        'warn',
+        'log',
+        'debug'
+      ]
+
+      for (const method of mockMethods) { mocks.push(jest.spyOn(global.console, method).mockImplementation()) }
     })
-    const event = makeEvent({
-      eventSourceName,
-      path: '/users',
-      httpMethod: 'GET'
+
+    afterEach(() => {
+      for (const mock of mocks) mock.mockRestore()
     })
-    const customLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
-      info: jest.fn(),
-      verbose: jest.fn(),
-      debug: jest.fn()
-    }
-    serverlessExpressInstance = serverlessExpress({ app, log: customLogger })
-    await serverlessExpressInstance(event)
 
-    expect(customLogger.debug.mock.calls.length).toBe(6)
+    test('custom logger', async () => {
+      app = express()
+      router = express.Router()
+      app.use('/', router)
+      router.get('/users', (req, res) => {
+        res.json({})
+      })
+      const event = makeEvent({
+        eventSourceName,
+        path: '/users',
+        httpMethod: 'GET'
+      })
+      const customLogger = {
+        error: jest.fn(),
+        warn: jest.fn(),
+        info: jest.fn(),
+        verbose: jest.fn(),
+        debug: jest.fn()
+      }
+      serverlessExpressInstance = serverlessExpress({ app, log: customLogger })
+      await serverlessExpressInstance(event)
 
-    // TODO: test log levels
-    // customLogger.level = 'error'
-    // customLogger.debug.mockClear()
-    // customLogger.debug.mockReset()
-    // customLogger.debug = jest.fn()
+      expect(customLogger.debug.mock.calls.length).toBe(6)
 
-    // serverlessExpressInstance = serverlessExpress({ app, log: customLogger })
-    // await serverlessExpressInstance(event)
-    // expect(customLogger.debug.mock.calls.length).toBe(0)
+      // TODO: test log levels
+      // customLogger.level = 'error'
+      // customLogger.debug.mockClear()
+      // customLogger.debug.mockReset()
+      // customLogger.debug = jest.fn()
+
+      // serverlessExpressInstance = serverlessExpress({ app, log: customLogger })
+      // await serverlessExpressInstance(event)
+      // expect(customLogger.debug.mock.calls.length).toBe(0)
+    })
+
+    test('lazy print of logger', async () => {
+      const logger = serverlessExpressLogger()
+
+      logger.debug('debug', () => '=true', ' works')
+      logger.debug(() => 'debug')
+
+      expect(global.console.debug).not.toHaveBeenNthCalledWith(
+        1,
+        'debug=true works'
+      )
+      expect(global.console.debug).not.toHaveBeenNthCalledWith(
+        2,
+        'debug'
+      )
+    })
   })
 
   test('legacy/deprecated createServer', async () => {
