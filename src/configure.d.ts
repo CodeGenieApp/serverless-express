@@ -43,7 +43,7 @@ interface BinarySettings {
   contentTypes?: string[];
 }
 
-interface ConfigureResult<TEvent = any, TResult = any> {
+export interface ConfigureResult<TEvent = any, TResult = any> {
   handler: Handler<TEvent, TResult>;
   log: Logger;
   proxy: (proxyParams: ProxyParams) => Promise<Object>;
