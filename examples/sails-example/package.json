@@ -49,6 +49,6 @@
   "author": "brett",
   "license": "",
   "engines": {
-    "node": "^12.4"
+    "node": ">=18"
   }
 }
