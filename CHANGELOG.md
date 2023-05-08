@@ -1,3 +1,10 @@
+## [4.10.3](https://github.com/vendia/serverless-express/compare/v4.10.2...v4.10.3) (2023-05-08)
+
+
+### Bug Fixes
+
+* upgrade json5 dependency ([f20ec47](https://github.com/vendia/serverless-express/commit/f20ec470c1d436a955972c172a752fa62614e286))
+
 ## [4.10.2](https://github.com/vendia/serverless-express/compare/v4.10.1...v4.10.2) (2023-05-07)
 
 
