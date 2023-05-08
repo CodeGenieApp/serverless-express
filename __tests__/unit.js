@@ -10,6 +10,7 @@ const apiGatewayEventSource = eventSources.getEventSource({ eventSourceName: 'AW
 
 test('getPathWithQueryStringParams: no params', () => {
   const event = {
+    resource: '/',
     path: '/foo/bar'
   }
   const pathWithQueryStringParams = serverlessExpressEventSourcesUtils.getPathWithQueryStringParams({ event })
@@ -18,6 +19,7 @@ test('getPathWithQueryStringParams: no params', () => {
 
 test('getPathWithQueryStringParams: 1 param', () => {
   const event = {
+    resource: '/',
     path: '/foo/bar',
     multiValueQueryStringParameters: {
       bizz: 'bazz'
@@ -29,6 +31,7 @@ test('getPathWithQueryStringParams: 1 param', () => {
 
 test('getPathWithQueryStringParams: to be url-encoded param', () => {
   const event = {
+    resource: '/',
     path: '/foo/bar',
     multiValueQueryStringParameters: {
       redirect_uri: 'http://lvh.me:3000/cb'
@@ -40,6 +43,7 @@ test('getPathWithQueryStringParams: to be url-encoded param', () => {
 
 test('getPathWithQueryStringParams: 2 params', () => {
   const event = {
+    resource: '/',
     path: '/foo/bar',
     multiValueQueryStringParameters: {
       bizz: 'bazz',
@@ -52,6 +56,7 @@ test('getPathWithQueryStringParams: 2 params', () => {
 
 test('getPathWithQueryStringParams: array param', () => {
   const event = {
+    resource: '/',
     path: '/foo/bar',
     multiValueQueryStringParameters: {
       bizz: [
@@ -64,8 +69,52 @@ test('getPathWithQueryStringParams: array param', () => {
   expect(pathWithQueryStringParams).toEqual('/foo/bar?bizz=bazz&bizz=buzz')
 })
 
+test('getPathWithQueryStringParams: pathParameters.proxy', () => {
+  const event = {
+    resource: '/foo/{proxy+}',
+    path: '/foo/123',
+    pathParameters: {
+      proxy: '123'
+    }
+  }
+  const pathWithQueryStringParams = serverlessExpressEventSourcesUtils.getPathWithQueryStringParams({ event })
+  expect(pathWithQueryStringParams).toEqual('/123')
+})
+
+test('getPathWithQueryStringParams: customDomain and no path parameters', () => {
+  const event = {
+    resource: '/foo',
+    path: '/baz/foo',
+    requestContext: {
+      customDomain: {
+        basePathMatched: 'baz'
+      }
+    }
+  }
+  const pathWithQueryStringParams = serverlessExpressEventSourcesUtils.getPathWithQueryStringParams({ event })
+  expect(pathWithQueryStringParams).toEqual('/')
+})
+
+test('getPathWithQueryStringParams: customDomain and path parameters', () => {
+  const event = {
+    resource: '/foo/{proxy+}',
+    path: '/baz/foo/123',
+    pathParameters: {
+      proxy: '123'
+    },
+    requestContext: {
+      customDomain: {
+        basePathMatched: 'baz'
+      }
+    }
+  }
+  const pathWithQueryStringParams = serverlessExpressEventSourcesUtils.getPathWithQueryStringParams({ event })
+  expect(pathWithQueryStringParams).toEqual('/123')
+})
+
 function getReqRes (multiValueHeaders = {}) {
   const event = {
+    resource: '/',
     path: '/foo',
     httpMethod: 'GET',
     body: 'Hello serverless!',
