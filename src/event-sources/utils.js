@@ -1,8 +1,8 @@
 const url = require('url')
 
 function getDefalutStripBasePath (event) {
-  const basePathMatched = (event.requestContext && event.requestContext.customDomain && event.requestContext.customDomain.basePathMatched) || ''
-  const resource = event.pathParameters && event.pathParameters.proxy ? '' : event.resource
+  const basePathMatched = event?.requestContext?.customDomain?.basePathMatched || ''
+  const resource = event?.pathParameters?.proxy ? '' : event.resource
   return basePathMatched ? `/${basePathMatched}${resource}` : resource
 }
 
