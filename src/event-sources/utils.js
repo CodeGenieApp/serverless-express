@@ -12,7 +12,7 @@ function getPathWithQueryStringParams ({
   // NOTE: Use `event.pathParameters.proxy` if available ({proxy+}); fall back to `event.path`
   path = (event.pathParameters && event.pathParameters.proxy && `/${event.pathParameters.proxy}`) || event.path,
   // NOTE: Strip base path for custom domains
-  stripBasePath = getDefalutStripBasePath(event),
+  stripBasePath = getDefaultStripBasePath(event),
   replaceRegex = new RegExp(`^${stripBasePath}`)
 }) {
   const pathname = path.replace(replaceRegex, '')
