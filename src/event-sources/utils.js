@@ -1,16 +1,23 @@
 const url = require('url')
 
+function getDefaultStripBasePath (event) {
+  const basePathMatched = event?.requestContext?.customDomain?.basePathMatched || ''
+  const resource = event?.pathParameters?.proxy ? '' : event.resource
+  return basePathMatched ? `/${basePathMatched}${resource}` : resource
+}
+
 function getPathWithQueryStringParams ({
   event,
   query = event.multiValueQueryStringParameters,
   // NOTE: Use `event.pathParameters.proxy` if available ({proxy+}); fall back to `event.path`
   path = (event.pathParameters && event.pathParameters.proxy && `/${event.pathParameters.proxy}`) || event.path,
   // NOTE: Strip base path for custom domains
-  stripBasePath = '',
+  stripBasePath = getDefaultStripBasePath(event),
   replaceRegex = new RegExp(`^${stripBasePath}`)
 }) {
+  const pathname = path.replace(replaceRegex, '')
   return url.format({
-    pathname: path.replace(replaceRegex, ''),
+    pathname: pathname.startsWith('/') ? pathname : `/${pathname}`,
     query
   })
 }
