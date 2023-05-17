@@ -522,19 +522,130 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       // expect(customLogger.debug.mock.calls.length).toBe(0)
     })
 
-    test('lazy print of logger', async () => {
-      const logger = serverlessExpressLogger()
+    test('custom levels', () => {
+      const loggerError = serverlessExpressLogger({ level: 'error' })
 
+      loggerError.error('error')
+      loggerError.info('nocall')
+      loggerError.warn('nocall')
+      loggerError.debug('nocall')
+      loggerError.verbose('nocall')
+      expect(global.console.warn).not.toHaveBeenCalled()
+      expect(global.console.debug).not.toHaveBeenCalled()
+      expect(global.console.info).not.toHaveBeenCalled()
+      expect(global.console.error).toHaveBeenLastCalledWith({
+        message: 'error'
+      })
+
+      const loggerWarn = serverlessExpressLogger({ level: 'warn' })
+
+      loggerWarn.error('error2')
+      loggerWarn.warn('warn2')
+      loggerWarn.info('nocall')
+      loggerWarn.debug('nocall')
+      loggerWarn.verbose('nocall')
+      expect(global.console.debug).not.toHaveBeenCalled()
+      expect(global.console.info).not.toHaveBeenCalled()
+      expect(global.console.error).toHaveBeenLastCalledWith({
+        message: 'error2'
+      })
+      expect(global.console.warn).toHaveBeenLastCalledWith({
+        message: 'warn2'
+      })
+
+      const loggerInfo = serverlessExpressLogger({ level: 'info' })
+
+      loggerInfo.error('error3')
+      loggerInfo.warn('warn3')
+      loggerInfo.info('info3')
+      loggerInfo.debug('nocall')
+      loggerInfo.verbose('nocall')
+      expect(global.console.debug).not.toHaveBeenCalled()
+      expect(global.console.error).toHaveBeenLastCalledWith({
+        message: 'error3'
+      })
+      expect(global.console.warn).toHaveBeenLastCalledWith({
+        message: 'warn3'
+      })
+      expect(global.console.info).toHaveBeenLastCalledWith({
+        message: 'info3'
+      })
+
+      const loggerVerbose = serverlessExpressLogger({ level: 'verbose' })
+
+      loggerVerbose.error('error4')
+      loggerVerbose.warn('warn4')
+      loggerVerbose.info('info4')
+      loggerVerbose.verbose('verbose4')
+      loggerVerbose.debug('nocall')
+      expect(global.console.error).toHaveBeenLastCalledWith({
+        message: 'error4'
+      })
+      expect(global.console.warn).toHaveBeenLastCalledWith({
+        message: 'warn4'
+      })
+      expect(global.console.info).toHaveBeenLastCalledWith({
+        message: 'info4'
+      })
+      expect(global.console.debug).toHaveBeenLastCalledWith({
+        message: 'verbose4'
+      })
+
+      const loggerDebug = serverlessExpressLogger({ level: 'debug' })
+
+      loggerDebug.error('error5')
+      loggerDebug.warn('warn5')
+      loggerDebug.info('info5')
+      loggerDebug.verbose('verbose5')
+      loggerDebug.debug('debug5')
+      expect(global.console.error).toHaveBeenLastCalledWith({
+        message: 'error5'
+      })
+      expect(global.console.warn).toHaveBeenLastCalledWith({
+        message: 'warn5'
+      })
+      expect(global.console.info).toHaveBeenLastCalledWith({
+        message: 'info5'
+      })
+      expect(global.console.debug).toHaveBeenLastCalledWith({
+        message: 'debug5'
+      })
+    })
+
+    test('lazy print of logger', async () => {
+      const logger = serverlessExpressLogger({ level: 'debug' })
+
+      logger.debug('simple message')
       logger.debug('debug', () => '=true', ' works')
       logger.debug(() => 'debug')
+      logger.debug('array', ['message'])
 
-      expect(global.console.debug).not.toHaveBeenNthCalledWith(
+      expect(global.console.debug).toHaveBeenNthCalledWith(
         1,
-        'debug=true works'
+        {
+          message: 'simple message'
+        }
       )
-      expect(global.console.debug).not.toHaveBeenNthCalledWith(
+      expect(global.console.debug).toHaveBeenNthCalledWith(
         2,
-        'debug'
+        {
+          message: 'debug',
+          0: '=true',
+          1: ' works'
+        }
+      )
+      expect(global.console.debug).toHaveBeenNthCalledWith(
+        3,
+        {
+          message: 'debug'
+        }
+      )
+      expect(global.console.debug).toHaveBeenNthCalledWith(
+        4,
+        {
+          message: 'array',
+          0: ['message']
+        }
       )
     })
   })
