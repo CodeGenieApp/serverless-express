@@ -1,3 +1,10 @@
+## [4.10.4](https://github.com/vendia/serverless-express/compare/v4.10.3...v4.10.4) (2023-05-21)
+
+
+### Bug Fixes
+
+* logging ([#652](https://github.com/vendia/serverless-express/issues/652)) ([dfcb71a](https://github.com/vendia/serverless-express/commit/dfcb71a59b29f1249cd1f8f58476620ef0f276a4)), closes [#651](https://github.com/vendia/serverless-express/issues/651)
+
 ## [4.10.3](https://github.com/vendia/serverless-express/compare/v4.10.2...v4.10.3) (2023-05-08)
 
 
