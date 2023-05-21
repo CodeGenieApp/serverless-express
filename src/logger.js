@@ -1,49 +1,64 @@
-const lazyPrint = (value) => {
-  if (typeof value === 'function') { return value() }
+const lazyPrint = value => {
+  if (typeof value === 'function') {
+    return value()
+  }
 
   return value
 }
 
-function logger ({
-  level = 'error'
-} = {}) {
-  return {
-    error (message, ...additional) {
-      if (!level.includes('debug', 'verbose', 'info', 'warn', 'error')) return
-      console.error({
+const logLevels = {
+  debug: [
+    ['debug', 'debug'],
+    ['verbose', 'debug'],
+    ['info', 'info'],
+    ['error', 'error'],
+    ['warn', 'warn']
+  ],
+  verbose: [
+    ['verbose', 'debug'],
+    ['info', 'info'],
+    ['error', 'error'],
+    ['warn', 'warn']
+  ],
+  info: [
+    ['info', 'info'],
+    ['error', 'error'],
+    ['warn', 'warn']
+  ],
+  warn: [
+    ['warn', 'warn'],
+    ['error', 'error']
+  ],
+  error: [['error', 'error']],
+  none: []
+}
+
+const print =
+  fn =>
+    (message, ...additional) =>
+      console[fn]({
         message: lazyPrint(message),
-        ...additional.map(lazyPrint)
+        ...(Array.isArray(additional) ? additional.map(lazyPrint) : [])
       })
-    },
-    warn (message, ...additional) {
-      if (!level.includes('debug', 'verbose', 'info', 'warn')) return
-      console.warn({
-        message: lazyPrint(message),
-        ...additional.map(lazyPrint)
-      })
-    },
-    info (message, additional) {
-      if (!level.includes('debug', 'verbose', 'info')) return
-      console.info({
-        message: lazyPrint(message),
-        ...additional.map(lazyPrint)
-      })
-    },
-    verbose (message, additional) {
-      if (!level.includes('debug', 'verbose')) return
-      console.debug({
-        message: lazyPrint(message),
-        ...additional.map(lazyPrint)
-      })
-    },
-    debug (message, additional) {
-      if (level !== 'debug') return
-      console.debug({
-        message: lazyPrint(message),
-        ...additional.map(lazyPrint)
-      })
-    }
+
+const NO_OP = () => {}
+
+function logger ({ level = 'error' } = {}) {
+  const levels = logLevels[level]
+
+  const logger = {
+    error: NO_OP,
+    debug: NO_OP,
+    info: NO_OP,
+    verbose: NO_OP,
+    warn: NO_OP
   }
+
+  if (!levels) return logger
+
+  for (const [level2, consoleMethod] of levels) logger[level2] = print(consoleMethod)
+
+  return logger
 }
 
 module.exports = logger
