@@ -13,13 +13,13 @@ function getPathWithQueryStringUseUnescapeParams ({
   // decode everything back into utf-8 text.
   if (event.multiValueQueryStringParameters) {
     for (const key in event.multiValueQueryStringParameters) {
-      const formattedKey = decodeURIComponent(key)
-      query[formattedKey] = event.multiValueQueryStringParameters[key].map(value => decodeURIComponent(value))
+      const formattedKey = decodeUrlencoded(key)
+      query[formattedKey] = event.multiValueQueryStringParameters[key].map(value => decodeUrlencoded(value))
     }
   } else {
     for (const key in event.queryStringParameters) {
-      const formattedKey = decodeURIComponent(key)
-      query[formattedKey] = decodeURIComponent(event.queryStringParameters[key])
+      const formattedKey = decodeUrlencoded(key)
+      query[formattedKey] = decodeUrlencoded(event.queryStringParameters[key])
     }
   }
 
@@ -27,6 +27,11 @@ function getPathWithQueryStringUseUnescapeParams ({
     pathname: path.replace(replaceRegex, ''),
     query
   })
+}
+
+// Decode an "application/x-www-form-urlencoded" encoded string.
+function decodeUrlencoded (val) {
+  return decodeURIComponent(val.replace(/\+/g, '%20'))
 }
 
 const getRequestValuesFromAlbEvent = ({ event }) => {
