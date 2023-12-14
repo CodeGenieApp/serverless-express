@@ -1,3 +1,10 @@
+## [4.11.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.11.0...v4.11.1) (2023-12-14)
+
+
+### Bug Fixes
+
+* update badges ([20ee4c4](https://github.com/CodeGenieApp/serverless-express/commit/20ee4c4dcd1c44d26462f34232c531b88a8f7def))
+
 # [4.11.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.10.7...v4.11.0) (2023-12-14)
 
 
