@@ -1,3 +1,10 @@
+## [4.10.7](https://github.com/CodeGenieApp/serverless-express/compare/v4.10.6...v4.10.7) (2023-12-14)
+
+
+### Bug Fixes
+
+* fix logo for npm page ([e0b5c83](https://github.com/CodeGenieApp/serverless-express/commit/e0b5c83519e64c82c273cf52b4988e3f0da3ce6f))
+
 ## [4.10.6](https://github.com/CodeGenieApp/serverless-express/compare/v4.10.5...v4.10.6) (2023-12-14)
 
 
