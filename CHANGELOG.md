@@ -1,3 +1,10 @@
+## [4.10.6](https://github.com/CodeGenieApp/serverless-express/compare/v4.10.5...v4.10.6) (2023-12-14)
+
+
+### Bug Fixes
+
+* release ([a7e1b59](https://github.com/CodeGenieApp/serverless-express/commit/a7e1b59fe776ecdf02a2547cfc5ed05cb081317c))
+
 ## [4.10.5](https://github.com/CodeGenieApp/serverless-express/compare/v4.10.4...v4.10.5) (2023-12-14)
 
 
