@@ -2,7 +2,7 @@
 <h2 align="center">Serverless Express by</h1>
 <p align="center">
   <a href="https://codegenie.codes">
-    <img src="https://raw.githubusercontent.com/CodeGenieApp/serverless-express/mainline/code-genie-logo.png" alt="Code Genie Logo" style="background-color: #0d1116;">
+    <img src="https://raw.githubusercontent.com/CodeGenieApp/serverless-express/mainline/code-genie-logo.jpg" alt="Code Genie Logo">
   </a>
 </p>
 <p width=200>
