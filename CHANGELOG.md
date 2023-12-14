@@ -1,3 +1,10 @@
+# [4.11.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.10.7...v4.11.0) (2023-12-14)
+
+
+### Features
+
+* add S3 event source with auto-detection ([c83b74c](https://github.com/CodeGenieApp/serverless-express/commit/c83b74c5dd53c7471b8fc281d46e533a8f7331dc))
+
 ## [4.10.7](https://github.com/CodeGenieApp/serverless-express/compare/v4.10.6...v4.10.7) (2023-12-14)
 
 
