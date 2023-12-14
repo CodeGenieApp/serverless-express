@@ -14,12 +14,12 @@ const getResponseToS3 = ({
   statusCode,
   body,
   headers,
-  isBase64Encoded,
+  isBase64Encoded
 }) => ({
   statusCode,
   headers,
   body,
-  isBase64Encoded,
+  isBase64Encoded
 })
 
 module.exports = {
