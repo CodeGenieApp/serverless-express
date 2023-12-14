@@ -20,9 +20,6 @@ Starting a new software project? Check out Code Genie - a <a href="https://codeg
 # Serverless Express
 
 <p align="center">
-  <a aria-label="Made by Code Genie" href="https://codegenie.codes">
-    <img src="https://img.shields.io/badge/MADE%20BY%20Code%20Genie-000000.svg?style=for-the-badge&logo=Code%20Genie&labelColor=000">
-  </a>
   <a aria-label="NPM version" href="https://www.npmjs.com/package/@codegenie/serverless-express">
     <img alt="" src="https://img.shields.io/npm/v/@codegenie/serverless-express.svg?style=for-the-badge&labelColor=000000">
   </a>
@@ -30,11 +27,14 @@ Starting a new software project? Check out Code Genie - a <a href="https://codeg
     <img alt="" src="https://img.shields.io/npm/l/@codegenie/serverless-express.svg?style=for-the-badge&labelColor=000000">
   </a>
   <a aria-label="Number of Downloads" href="https://www.npmjs.com/package/@codegenie/serverless-express">
-    <img alt="" src="https://img.shields.io/npm/dm/@codegenie/serverless-express.svg?style=for-the-badge&labelColor=000000">
-  </a><!--
+    <img alt="" src="https://img.shields.io/npm/dm/@vendia/serverless-express.svg?style=for-the-badge&labelColor=000000">
+  </a>
   <a aria-label="Contributor Covenant" href="CODE_OF_CONDUCT.md">
     <img alt="" src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg?style=for-the-badge&labelColor=000000">
-  </a> -->
+  </a>
+  <a aria-label="Made by Code Genie" href="https://codegenie.codes">
+    <img src="https://img.shields.io/badge/MADE%20BY%20Code%20Genie-000000.svg?style=for-the-badge&logo=Code%20Genie&labelColor=000">
+  </a>
 </p>
 
 Run REST APIs and other web applications using your existing [Node.js](https://nodejs.org/) application framework (Express, Koa, Hapi, Sails, etc.), on top of [AWS Lambda](https://aws.amazon.com/lambda/) and [Amazon API Gateway](https://aws.amazon.com/api-gateway/) or [Azure Function](https://docs.microsoft.com/en-us/azure/azure-functions/).
