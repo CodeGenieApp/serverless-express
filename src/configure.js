@@ -43,14 +43,14 @@ function configure ({
     log = configureLog,
     respondWithErrors = configureRespondWithErrors
   }) {
-    log.debug('SERVERLESS_EXPRESS:PROXY', {
+    log.debug('SERVERLESS_EXPRESS:PROXY', () => ({
       event: util.inspect(event, { depth: null }),
       context: util.inspect(context, { depth: null }),
       resolutionMode,
       eventSourceName,
       binarySettings,
       respondWithErrors
-    })
+    }))
 
     if (binaryMimeTypes) {
       console.warn('[DEPRECATION NOTICE] { binaryMimeTypes: [] } is deprecated. base64 encoding is now automatically determined based on response content-type and content-encoding. If you need to manually set binary content types, instead, use { binarySettings: { contentTypes: [] } }')
@@ -104,12 +104,12 @@ function configure ({
   }
 
   handler.handler = (...params) => {
-    console.warn('[DEPRECATION NOTICE] You\'re using the deprecated `serverlessExpress({...}).handler({...})` method. This will be removed in a future version of @vendia/serverless-express. Instead, simply return `serverlessExpress({...})` as your handler.')
+    console.warn('[DEPRECATION NOTICE] You\'re using the deprecated `serverlessExpress({...}).handler({...})` method. This will be removed in a future version of @codegenie/serverless-express. Instead, simply return `serverlessExpress({...})` as your handler.')
     return handler(...params)
   }
 
   handler.proxy = (...params) => {
-    console.warn('[DEPRECATION NOTICE] You\'re using the deprecated `serverlessExpress({...}).proxy({...})` method. This will be removed in a future version of @vendia/serverless-express. Instead, simply return `serverlessExpress({...})` as your handler.')
+    console.warn('[DEPRECATION NOTICE] You\'re using the deprecated `serverlessExpress({...}).proxy({...})` method. This will be removed in a future version of @codegenie/serverless-express. Instead, simply return `serverlessExpress({...})` as your handler.')
     return proxy(...params)
   }
 

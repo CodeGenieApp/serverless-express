@@ -5,6 +5,7 @@ module.exports = {
     expect: true,
     describe: true,
     beforeEach: true,
+    afterEach: true,
     jest: true
   }
 }

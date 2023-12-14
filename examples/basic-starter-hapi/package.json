@@ -1,5 +1,5 @@
 {
-  "name": "@vendia/serverless-express-hapi-example",
+  "name": "@codegenie/serverless-express-hapi-example",
   "version": "2.1.1",
   "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
   "main": "lambda.js",
@@ -25,7 +25,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@hapi/hapi": "^20.1.0",
-    "@vendia/serverless-express": "^4.3.0"
+    "@codegenie/serverless-express": "^4.3.0"
   },
   "devDependencies": {
     "cross-var": "^1.1.0"

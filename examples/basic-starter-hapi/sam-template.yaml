@@ -27,7 +27,7 @@ Resources:
       CodeUri: ./src
       Handler: lambda.handler
       MemorySize: 1024
-      Runtime: nodejs18.x
+      Runtime: nodejs20.x
       Timeout: 30
       Events:
         ProxyApiRoot:

@@ -1,4 +1,4 @@
 lambda-invoke-response.json
 sam-template.packaged.yaml
-@vendia/serverless-express-*.tgz
+@codegenie/serverless-express-*.tgz
 dist/

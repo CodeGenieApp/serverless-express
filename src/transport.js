@@ -39,10 +39,10 @@ function forwardResponse ({
     response
   })
 
-  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE', {
+  log.debug('SERVERLESS_EXPRESS:FORWARD_RESPONSE:EVENT_SOURCE_RESPONSE', () => ({
     successResponse: util.inspect(successResponse, { depth: null }),
     body: logBody
-  })
+  }))
 
   resolver.succeed({
     response: successResponse

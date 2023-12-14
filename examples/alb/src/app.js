@@ -2,7 +2,7 @@ const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const { getCurrentInvoke } = require('@vendia/serverless-express')
+const { getCurrentInvoke } = require('@codegenie/serverless-express')
 const app = express()
 const router = express.Router()
 
@@ -22,8 +22,8 @@ router.get('/', (req, res) => {
   })
 })
 
-router.get('/vendia', (req, res) => {
-  res.sendFile(path.join(__dirname, 'vendia-logo.png'))
+router.get('/code-genie-logo', (req, res) => {
+  res.sendFile(path.join(__dirname, 'code-genie-logo.png'))
 })
 
 router.get('/users', (req, res) => {

@@ -16,7 +16,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: './src/views', to: 'views' },
-        { from: './src/vendia-logo.png' }
+        { from: './src/code-genie-logo.png' }
       ]
     })
   ]

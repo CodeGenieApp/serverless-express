@@ -1,17 +1,46 @@
-# Serverless Express by [Vendia](https://vendia.net/)
 
-![Build Status](https://github.com/vendia/serverless-express/workflows/CICD/badge.svg) [![npm](https://img.shields.io/npm/v/@vendia/serverless-express.svg)]() [![npm](https://img.shields.io/npm/dm/aws-serverless-express.svg)]() [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)[![dependencies Status](https://img.shields.io/librariesio/github/vendia/serverless-express)](https://github.com/vendia/serverless-express/blob/master/package.json)
+<h2 align="center">Serverless Express by</h1>
+<p align="center">
+  <a href="https://codegenie.codes">
+    <img src="https://raw.githubusercontent.com/CodeGenieApp/serverless-express/mainline/code-genie-logo.jpg" alt="Code Genie Logo">
+  </a>
+</p>
+<p width=200>
+
+Starting a new software project? Check out Code Genie - a <a href="https://codegenie.codes">Full Stack App Generator</a> that delivers a complete AWS Serverless project with source code, based on your data model. Including:
+
+1. A React Next.js Web App hosted on Amplify Hosting
+1. Serverless Express REST API running on API Gateway and Lambda
+1. Cognito User Pools for Identity/Authentication
+1. DynamoDB Database
+1. Cloud Development Kit (CDK) for Infrastructure as Code (IAC)
+1. Continuous Integration/Delivery (CI/CD) with GitHub Actions
+</p>
+
+# Serverless Express
 
 <p align="center">
-  <a href="https://vendia.net/">
-    <img src="https://raw.githubusercontent.com/vendia/serverless-express/mainline/vendia-logo.png" alt="vendia logo" width="100px">
+  <a aria-label="Made by Code Genie" href="https://codegenie.codes">
+    <img src="https://img.shields.io/badge/MADE%20BY%20Code%20Genie-000000.svg?style=for-the-badge&logo=Code%20Genie&labelColor=000">
   </a>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/@codegenie/serverless-express">
+    <img alt="" src="https://img.shields.io/npm/v/@codegenie/serverless-express.svg?style=for-the-badge&labelColor=000000">
+  </a>
+  <a aria-label="License" href="https://github.com/CodeGenieApp/serverless-express/blob/mainline/LICENSE">
+    <img alt="" src="https://img.shields.io/npm/l/@codegenie/serverless-express.svg?style=for-the-badge&labelColor=000000">
+  </a>
+  <a aria-label="Number of Downloads" href="https://www.npmjs.com/package/@codegenie/serverless-express">
+    <img alt="" src="https://img.shields.io/npm/dm/@codegenie/serverless-express.svg?style=for-the-badge&labelColor=000000">
+  </a><!--
+  <a aria-label="Contributor Covenant" href="CODE_OF_CONDUCT.md">
+    <img alt="" src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg?style=for-the-badge&labelColor=000000">
+  </a> -->
 </p>
 
 Run REST APIs and other web applications using your existing [Node.js](https://nodejs.org/) application framework (Express, Koa, Hapi, Sails, etc.), on top of [AWS Lambda](https://aws.amazon.com/lambda/) and [Amazon API Gateway](https://aws.amazon.com/api-gateway/) or [Azure Function](https://docs.microsoft.com/en-us/azure/azure-functions/).
 
 ```bash
-npm install @vendia/serverless-express
+npm install @codegenie/serverless-express
 ```
 
 ## Quick Start/Example
@@ -33,19 +62,19 @@ The only AWS Lambda specific code you need to write is a simple handler like bel
 
 ```js
 // lambda.js
-const serverlessExpress = require('@vendia/serverless-express')
+const serverlessExpress = require('@codegenie/serverless-express')
 const app = require('./app')
 exports.handler = serverlessExpress({ app })
 ```
 
 ### Async setup Lambda handler
 
-If your application needs to perform some common bootstrap tasks such as connecting to a database before the request is forward to the API, you can use the following pattern (also available in [this example](https://github.com/vendia/serverless-express/blob/mainline/examples/basic-starter-api-gateway-v2/src/lambda-async-setup.js)):
+If your application needs to perform some common bootstrap tasks such as connecting to a database before the request is forward to the API, you can use the following pattern (also available in [this example](https://github.com/CodeGenieApp/serverless-express/blob/mainline/examples/basic-starter-api-gateway-v2/src/lambda-async-setup.js)):
 
 ```js
 // lambda.js
 require('source-map-support/register')
-const serverlessExpress = require('@vendia/serverless-express')
+const serverlessExpress = require('@codegenie/serverless-express')
 const app = require('./app')
 
 let serverlessExpressInstance
@@ -80,7 +109,7 @@ The only Azure Function specific code you need to write is a simple `index.js` a
 
 ```js
 // index.js
-const serverlessExpress = require('@vendia/serverless-express')
+const serverlessExpress = require('@codegenie/serverless-express')
 const app = require('./app')
 const cachedServerlessExpress = serverlessExpress({ app })
 
@@ -123,7 +152,7 @@ The _out-binding_ parameter `"name": "$return"` is important for Serverless Expr
 1. Node.js 12+
 1. Improved support for custom domain names
 
-See [UPGRADE.md](UPGRADE.md) to upgrade from aws-serverless-express and @vendia/serverless-express 3.x
+See [UPGRADE.md](UPGRADE.md) to upgrade from aws-serverless-express and @codegenie/serverless-express 3.x
 
 ## API
 
@@ -316,7 +345,7 @@ Provide a custom `log` object with `info`, `debug` and `error` methods. For exam
 This package exposes a function to easily get the `event` and `context` objects Lambda receives from the event source.
 
 ```js
-const { getCurrentInvoke } = require('@vendia/serverless-express')
+const { getCurrentInvoke } = require('@codegenie/serverless-express')
 app.get('/', (req, res) => {
   const { event, context } = getCurrentInvoke()
 
@@ -342,11 +371,11 @@ app.get('/', (req, res) => {
 
 `npx loadtest --rps 100 -k -n 1500 -c 50 https://xxxx.execute-api.us-east-1.amazonaws.com/prod/users`
 
-# AWS Serverless Express has moved
+# AWS Serverless Express is now under the stewardship of Vendia
 
-On 11/30, the AWS Serverless Express library moved from AWS to [Vendia](https://github.com/vendia/serverless-express) and will be rebranded to `@vendia/serverless-express`. Similarly, the [`aws-serverless-express` NPM package](https://www.npmjs.com/package/aws-serverless-express) will be deprecated in favor of [@vendia/serverless-express](https://www.npmjs.com/package/@vendia/serverless-express). 
+On 11/30, the AWS Serverless Express library moved from AWS to [Vendia](https://github.com/CodeGenieApp/serverless-express) and will be rebranded to `@codegenie/serverless-express`. Similarly, the [`aws-serverless-express` NPM package](https://www.npmjs.com/package/aws-serverless-express) will be deprecated in favor of [@codegenie/serverless-express](https://www.npmjs.com/package/@codegenie/serverless-express). 
 
-[Brett](https://github.com/brettstack), the original creator of the Serverless Express library, will continue maintaining the repository and give it the attention and care it deserves. At the same time, we will be looking for additional contributors to participate in the development and stewardship of the Serverless Express library. AWS and the [SAM team](https://github.com/aws/aws-sam-cli) will remain involved in an administrative role alongside Vendia, Brett, and the new maintainers that will join the project.
+[Brett Andrews](https://github.com/brettstack), the original creator of the Serverless Express library, will continue maintaining the repository and give it the attention and care it deserves. At the same time, we will be looking for additional contributors to participate in the development and stewardship of the Serverless Express library. AWS and the [SAM team](https://github.com/aws/aws-sam-cli) will remain involved in an administrative role alongside Vendia, Brett, and the new maintainers that will join the project.
 
 We believe this is the best course of action to ensure that customers using this library get the best possible support in the future. To learn more about this move or become a maintainer of the new Serverless Express library, reach out to us through a GitHub issue on this repository. 
 

@@ -1,9 +1,9 @@
-import { RequestListener } from "http";
-import { Handler } from "aws-lambda";
-import Logger from "./logger";
-import Framework from "./frameworks";
+import { RequestListener } from 'http';
+import { Handler } from 'aws-lambda';
+import { Logger } from './logger';
+import Framework from './frameworks';
 
-type EventSources = "AWS_SNS" | "AWS_DYNAMODB" | "AWS_EVENTBRIDGE" | "AWS_SQS" | "AWS_KINESIS_DATA_STREAM" | "AWS_S3";
+type EventSources = 'AWS_SNS' | 'AWS_DYNAMODB' | 'AWS_EVENTBRIDGE' | 'AWS_SQS' | 'AWS_KINESIS_DATA_STREAM' | 'AWS_S3';
 
 interface EventSource {
   getRequest?: any; // TODO:
@@ -43,15 +43,13 @@ interface BinarySettings {
   contentTypes?: string[];
 }
 
-interface ConfigureResult<TEvent = any, TResult = any> {
+export interface ConfigureResult<TEvent = any, TResult = any> {
   handler: Handler<TEvent, TResult>;
   log: Logger;
   proxy: (proxyParams: ProxyParams) => Promise<Object>;
 }
 
-declare function configure<TEvent = any, TResult = any>(
-  configureParams: ConfigureParams
-): Handler<TEvent, TResult> & ConfigureResult<TEvent, TResult>;
+declare function configure<TEvent = any, TResult = any>(configureParams: ConfigureParams): Handler<TEvent, TResult> & ConfigureResult<TEvent, TResult>;
 
 // declare function proxy(proxyParams: ProxyParams): Promise<any>
 
