@@ -2,7 +2,7 @@ import cors from "cors";
 import express, { Request, Response } from "express";
 import path from "path";
 import compression from "compression";
-import { getCurrentInvoke } from "@vendia/serverless-express";
+import { getCurrentInvoke } from "@codegenie/serverless-express";
 
 const ejs = require("ejs").__express;
 const app = express();
@@ -30,8 +30,8 @@ router.get("/", (req: Request, res: Response) => {
   });
 });
 
-router.get("/vendia", (req: Request, res: Response) => {
-  return res.sendFile(path.join(__dirname, "vendia-logo.png"));
+router.get("/code-genie-logo", (req: Request, res: Response) => {
+  return res.sendFile(path.join(__dirname, "code-genie-logo.png"));
 });
 
 router.get("/users", (req: Request, res: Response) => {

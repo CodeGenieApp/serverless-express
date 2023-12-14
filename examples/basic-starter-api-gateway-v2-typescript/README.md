@@ -18,7 +18,7 @@ installed.
 
 1. From your preferred project directory:
   ```sh
-    git clone https://github.com/vendia/serverless-express.git && cd serverless-express/examples/basic-starter-api-gateway-v2-typescript
+    git clone https://github.com/CodeGenieApp/serverless-express.git && cd serverless-express/examples/basic-starter-api-gateway-v2-typescript
   ```
 1. Update the `config` section of `package.json` with your `s3BucketName` and
    `region` (optionally, change the `cloudFormationStackName`). If the bucket
@@ -88,7 +88,7 @@ To migrate an existing Node server:
    example](#steps-for-running-the-example).
 1. From your existing project directory, run
   ```sh
-  npm install --save @vendia/serverless-express
+  npm install --save @codegenie/serverless-express
   ```
 1. Modify `lambda.ts` to import your own server configuration (eg. change
    `require('./app')` to `require('./server')`). You will need to ensure you
@@ -115,7 +115,7 @@ This example was written against Node.js 12
 ## Development
 
 To update this example against the latest local changes to
-@vendia/serverless-express:
+@codegenie/serverless-express:
 
 ```bash
 npm i ../..

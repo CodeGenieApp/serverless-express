@@ -28,7 +28,7 @@
     "@nestjs/core": "^7.6.12",
     "@nestjs/platform-express": "^7.6.12",
     "@nestjs/platform-fastify": "^7.6.12",
-    "@vendia/serverless-express": "^4.3.0",
+    "@codegenie/serverless-express": "^4.3.0",
     "aws-lambda": "^1.0.6",
     "aws-lambda-fastify": "^1.4.4",
     "reflect-metadata": "^0.1.13",

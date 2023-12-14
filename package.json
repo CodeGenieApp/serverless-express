@@ -1,5 +1,5 @@
 {
-  "name": "@vendia/serverless-express",
+  "name": "@codegenie/serverless-express",
   "version": "4.10.4",
   "description": "This library enables you to utilize AWS Lambda and Amazon API Gateway to respond to web and API requests using your existing Node.js application framework.",
   "keywords": [
@@ -14,9 +14,9 @@
     "node.js",
     "http"
   ],
-  "homepage": "https://github.com/vendia/serverless-express",
+  "homepage": "https://github.com/CodeGenieApp/serverless-express",
   "bugs": {
-    "url": "https://github.com/vendia/serverless-express/issues"
+    "url": "https://github.com/CodeGenieApp/serverless-express/issues"
   },
   "license": "Apache-2.0",
   "files": [
@@ -25,7 +25,7 @@
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vendia/serverless-express.git"
+    "url": "https://github.com/CodeGenieApp/serverless-express.git"
   },
   "engines": {
     "node": ">=12"
