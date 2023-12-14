@@ -1,6 +1,6 @@
 {
   "name": "@vendia/serverless-express",
-  "version": "4.10.4",
+  "version": "4.10.5",
   "description": "This library enables you to utilize AWS Lambda and Amazon API Gateway to respond to web and API requests using your existing Node.js application framework.",
   "keywords": [
     "aws",
@@ -111,5 +111,8 @@
     "commitizen": {
       "path": "./node_modules/@ryansonshine/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "@codegenie/serverless-express": "^4.10.7"
   }
 }
