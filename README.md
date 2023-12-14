@@ -26,7 +26,7 @@ Starting a new software project? Check out Code Genie - a <a href="https://codeg
   <a aria-label="NPM version" href="https://www.npmjs.com/package/@codegenie/serverless-express">
     <img alt="" src="https://img.shields.io/npm/v/@codegenie/serverless-express.svg?style=for-the-badge&labelColor=000000">
   </a>
-  <a aria-label="License" href="https://github.com/CodeGenieApp/serverless-express/blob/mainline/license.md">
+  <a aria-label="License" href="https://github.com/CodeGenieApp/serverless-express/blob/mainline/LICENSE">
     <img alt="" src="https://img.shields.io/npm/l/@codegenie/serverless-express.svg?style=for-the-badge&labelColor=000000">
   </a>
   <a aria-label="Number of Downloads" href="https://www.npmjs.com/package/@codegenie/serverless-express">
