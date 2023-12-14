@@ -7,7 +7,7 @@
 </p>
 <p width=200>
 
-Starting a new software project? Check out Code Genie - a <a href="https://codegenie.codes">Full Stack App Generator</a> that generates source code based on your project's data model. Including:
+Starting a new software project? Check out Code Genie - a <a href="https://codegenie.codes">Full Stack App Generator</a> that delivers a complete AWS Serverless project with source code, based on your data model. Including:
 
 1. A React Next.js Web App hosted on Amplify Hosting
 1. Serverless Express REST API running on API Gateway and Lambda
@@ -15,7 +15,6 @@ Starting a new software project? Check out Code Genie - a <a href="https://codeg
 1. DynamoDB Database
 1. Cloud Development Kit (CDK) for Infrastructure as Code (IAC)
 1. Continuous Integration/Delivery (CI/CD) with GitHub Actions
-1. And more!
 </p>
 
 # Serverless Express
@@ -27,7 +26,7 @@ Starting a new software project? Check out Code Genie - a <a href="https://codeg
   <a aria-label="NPM version" href="https://www.npmjs.com/package/@codegenie/serverless-express">
     <img alt="" src="https://img.shields.io/npm/v/@codegenie/serverless-express.svg?style=for-the-badge&labelColor=000000">
   </a>
-  <a aria-label="License" href="https://github.com/CodeGenieApp/serverless-express/blob/canary/license.md">
+  <a aria-label="License" href="https://github.com/CodeGenieApp/serverless-express/blob/mainline/license.md">
     <img alt="" src="https://img.shields.io/npm/l/@codegenie/serverless-express.svg?style=for-the-badge&labelColor=000000">
   </a>
   <a aria-label="Number of Downloads" href="https://www.npmjs.com/package/@codegenie/serverless-express">
