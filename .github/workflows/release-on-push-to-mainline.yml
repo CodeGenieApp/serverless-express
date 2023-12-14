@@ -8,10 +8,7 @@ on:
 jobs:
   build:
     permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
+      contents: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
