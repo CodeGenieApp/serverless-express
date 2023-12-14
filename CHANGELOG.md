@@ -1,3 +1,11 @@
+## [4.10.5](https://github.com/CodeGenieApp/serverless-express/compare/v4.10.4...v4.10.5) (2023-12-14)
+
+
+### Bug Fixes
+
+* remove npm audit; remove nodejs14.x; upgrade to nodejs20.x for examples and release ([ee71c9c](https://github.com/CodeGenieApp/serverless-express/commit/ee71c9cf25d5563fa8cc65e23716d3ca10cc59d3))
+* unescape plus in ALB query string ([#660](https://github.com/CodeGenieApp/serverless-express/issues/660)) ([ebd42d4](https://github.com/CodeGenieApp/serverless-express/commit/ebd42d4eaf9748c9b5d8d35528aa125896eb1e76))
+
 ## [4.10.4](https://github.com/CodeGenieApp/serverless-express/compare/v4.10.3...v4.10.4) (2023-05-21)
 
 
