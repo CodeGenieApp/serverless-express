@@ -1,6 +1,6 @@
 {
   "name": "@vendia/serverless-express",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "This library enables you to utilize AWS Lambda and Amazon API Gateway to respond to web and API requests using your existing Node.js application framework.",
   "keywords": [
     "aws",
@@ -136,6 +136,7 @@
     "install-example-dependencies": "cd examples && npm install --prefix basic-starter basic-starter && cd .."
   },
   "dependencies": {
+    "@codegenie/serverless-express": "^3.4.1",
     "binary-case": "^1.0.0",
     "type-is": "^1.6.16"
   },
