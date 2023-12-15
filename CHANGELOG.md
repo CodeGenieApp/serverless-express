@@ -1,3 +1,10 @@
+## [4.12.2](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.1...v4.12.2) (2023-12-15)
+
+
+### Bug Fixes
+
+* update all packages to latest version ([33fafba](https://github.com/CodeGenieApp/serverless-express/commit/33fafbacc984c23e2e2aaa9e3d96ac69719a25e9))
+
 ## [4.12.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.0...v4.12.1) (2023-12-15)
 
 
