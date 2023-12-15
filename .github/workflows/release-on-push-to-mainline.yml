@@ -9,6 +9,7 @@ jobs:
   build:
     permissions:
       contents: write
+      issues: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
