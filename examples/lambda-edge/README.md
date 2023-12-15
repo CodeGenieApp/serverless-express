@@ -6,7 +6,7 @@ In addition to a basic Lambda function and Express server, this example includes
 
 This guide assumes you have already [set up an AWS account](http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/AboutAWSAccounts.html) and have the latest version of the [AWS CLI](https://aws.amazon.com/cli/) installed.
 
-1. From your preferred project directory: `git clone https://github.com/vendia/serverless-express.git && cd serverless-express/examples/lambda-edge`.
+1. From your preferred project directory: `git clone https://github.com/CodeGenieApp/serverless-express.git && cd serverless-express/examples/lambda-edge`.
 2. Update the `config` section of `package.json` with your `s3BucketName` and `region` (optionally, change the `cloudFormationStackName`). If the bucket you specify does not yet exist, the next step will create it for you.
 3. Run `npm run setup` - this installs the node dependencies, creates an S3 bucket (if it does not already exist), packages and deploys your serverless Express application to AWS Lambda, and creates an API Gateway proxy API.
 4. After the setup command completes, open the AWS CloudFormation console https://console.aws.amazon.com/cloudformation/home and switch to the region you specified. Select the `ServerlessExpressEdge` stack (or the stack name you specified for `cloudFormationStackName`), then click the `ApiUrl` value under the __Outputs__ section - this will open a new page with your running API. The API index lists the resources available in the example Express server (`app.js`), along with example `curl` commands.
@@ -31,7 +31,7 @@ To update this example against the latest local changes to serverless-express:
 
 ```bash
 npm pack ../..
-npm install ./vendia-serverless-express-4.0.0-rc.1.tgz
+npm install ./codegenie-serverless-express-4.0.0-rc.1.tgz
 npm install
 npm run build
 npm run local

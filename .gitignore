@@ -4,7 +4,7 @@ npm-debug.log
 .env
 coverage
 sam-template.packaged.yaml
-vendia-serverless-express-*.tgz
+codegenie-serverless-express-*.tgz
 dist/
 examples/nextjs
 typescript-out

@@ -1,4 +1,4 @@
-const serverlessExpress = require('../../../src/index') // require('@vendia/serverless-express')
+const serverlessExpress = require('../../../src/index') // require('@codegenie/serverless-express')
 const app = require('./app')
 const cachedServerlessExpress = serverlessExpress({ app })
 

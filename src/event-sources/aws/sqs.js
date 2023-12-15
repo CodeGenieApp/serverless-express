@@ -1,5 +1,3 @@
-const { emptyResponseMapper } = require('../utils')
-
 const getRequestValuesFromSqs = ({ event }) => {
   const method = 'POST'
   const headers = { host: 'sqs.amazonaws.com' }
@@ -12,7 +10,9 @@ const getRequestValuesFromSqs = ({ event }) => {
   }
 }
 
+const getResponseToSqs = ({ body }) => JSON.parse(body)
+
 module.exports = {
   getRequest: getRequestValuesFromSqs,
-  getResponse: emptyResponseMapper
+  getResponse: getResponseToSqs
 }

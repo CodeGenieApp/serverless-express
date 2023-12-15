@@ -104,12 +104,12 @@ function configure ({
   }
 
   handler.handler = (...params) => {
-    console.warn('[DEPRECATION NOTICE] You\'re using the deprecated `serverlessExpress({...}).handler({...})` method. This will be removed in a future version of @vendia/serverless-express. Instead, simply return `serverlessExpress({...})` as your handler.')
+    console.warn('[DEPRECATION NOTICE] You\'re using the deprecated `serverlessExpress({...}).handler({...})` method. This will be removed in a future version of @codegenie/serverless-express. Instead, simply return `serverlessExpress({...})` as your handler.')
     return handler(...params)
   }
 
   handler.proxy = (...params) => {
-    console.warn('[DEPRECATION NOTICE] You\'re using the deprecated `serverlessExpress({...}).proxy({...})` method. This will be removed in a future version of @vendia/serverless-express. Instead, simply return `serverlessExpress({...})` as your handler.')
+    console.warn('[DEPRECATION NOTICE] You\'re using the deprecated `serverlessExpress({...}).proxy({...})` method. This will be removed in a future version of @codegenie/serverless-express. Instead, simply return `serverlessExpress({...})` as your handler.')
     return proxy(...params)
   }
 

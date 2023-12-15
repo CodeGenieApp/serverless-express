@@ -16,9 +16,9 @@ directory which allows developers to quickly deploy a running application using 
 
 This repository should contain:
 
-- The @vendia/serverless-express library.
-- Documentation on using @vendia/serverless-express
-- Examples of using the @vendia/serverless-express library.
+- The @codegenie/serverless-express library.
+- Documentation on using @codegenie/serverless-express
+- Examples of using the @codegenie/serverless-express library.
 
 This repository does not contain:
 
