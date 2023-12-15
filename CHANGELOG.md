@@ -1,3 +1,10 @@
+# [4.12.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.11.1...v4.12.0) (2023-12-15)
+
+
+### Features
+
+* return body to SQS event sources ([#628](https://github.com/CodeGenieApp/serverless-express/issues/628)) ([60fe41b](https://github.com/CodeGenieApp/serverless-express/commit/60fe41b626ec8cfc071e483e570cdb337b2a4c56))
+
 ## [4.11.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.11.0...v4.11.1) (2023-12-14)
 
 
