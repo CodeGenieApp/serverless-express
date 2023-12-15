@@ -137,13 +137,13 @@
       </form>
     </section>
     <script>
-      var form = document.querySelector('form')
-      form.addEventListener('submit', function (event) {
+        var form = document.querySelector('form')
+        form.addEventListener('submit', function (event) {
         event.preventDefault()
         var id = document.getElementById('idField').value
         var name = document.getElementById('nameField').value
-        var endpoint = id ? 'users/' + id : 'users'
-
+        var endpoint = "/<%= stage %>/" + (id ? "users/" + id : "users");
+        
         if (!window.fetch) {
           alert(
             'Your browser does not have fetch support, which this demo uses. Try again in a modern browser (https://caniuse.com/fetch) or modify the example to use an alternate approach (e.g. XMLHttpRequest or your library of choice.)'

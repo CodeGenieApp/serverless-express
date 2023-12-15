@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
     requestContext = {},
     multiValueHeaders = {}
   } = event
-  const { stage = '' } = requestContext
+  const { stage = 'Stage' } = requestContext
   const {
     Host = ['localhost:3000']
   } = multiValueHeaders
