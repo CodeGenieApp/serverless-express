@@ -10,6 +10,7 @@ jobs:
     permissions:
       contents: write
       issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
