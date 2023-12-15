@@ -1,3 +1,10 @@
+## [4.12.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.0...v4.12.1) (2023-12-15)
+
+
+### Bug Fixes
+
+* npm audit fix ([7f30ee5](https://github.com/CodeGenieApp/serverless-express/commit/7f30ee512ca5be801337c6627b9df52d19cc6053))
+
 # [4.12.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.11.1...v4.12.0) (2023-12-15)
 
 
