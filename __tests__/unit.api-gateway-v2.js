@@ -7,7 +7,7 @@ const apiGatewayEventSource = eventSources.getEventSource({
 
 test('request has correct headers', () => {
   const req = getReq()
-  // see https://github.com/vendia/serverless-express/issues/387
+  // see https://github.com/CodeGenieApp/serverless-express/issues/387
   expect(typeof req).toEqual('object')
   expect(JSON.stringify(req.headers)).toEqual(
     '{"cookie":"","host":"localhost:9000","user-agent":"curl/7.64.1","accept":"*/*","x-forwarded-proto":"http","x-forwarded-port":"9000"}'

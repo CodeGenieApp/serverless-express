@@ -1,5 +1,5 @@
 {
-  "name": "@vendia/serverless-express-koa-example",
+  "name": "@codegenie/serverless-express-koa-example",
   "version": "2.1.1",
   "description": "Example application for running a Node Express app on AWS Lambda using Amazon API Gateway.",
   "main": "lambda.js",
@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@vendia/serverless-express": "^4.3.0",
+    "@codegenie/serverless-express": "^4.3.0",
     "koa": "^2.13.1",
     "koa-router": "^7.4.0"
   },

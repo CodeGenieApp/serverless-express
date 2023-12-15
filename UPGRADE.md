@@ -17,7 +17,7 @@ exports.handler = (event, context) => { awsServerlessExpress.proxy(server, event
 
 ```javascript
 // 4.x
-const serverlessExpress = require('@vendia/serverless-express')
+const serverlessExpress = require('@codegenie/serverless-express')
 const app = require('./app')
 
 exports.handler = serverlessExpress({ app })
@@ -51,7 +51,7 @@ router.get('/', (req, res) => {
 
 ```javascript
 // 4.x
-const { getCurrentInvoke } = require('@vendia/serverless-express')
+const { getCurrentInvoke } = require('@codegenie/serverless-express')
 router.get('/', (req, res) => {
 const currentInvoke = getCurrentInvoke()
   res.json({

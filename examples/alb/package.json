@@ -1,5 +1,5 @@
 {
-  "name": "@vendia/serverless-express-alb-example",
+  "name": "@codegenie/serverless-express-alb-example",
   "version": "1.0.0",
   "description": "Example application for running Express on AWS Lambda backed by ALB",
   "main": "src/index.js",
@@ -13,7 +13,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@vendia/serverless-express": "^4.3.0",
+    "@codegenie/serverless-express": "^4.3.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
