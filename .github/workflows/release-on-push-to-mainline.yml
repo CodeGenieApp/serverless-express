@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x, 20.x]
+        node-version: [16.x, 18.x, 20.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,8 +33,8 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: TS
-        run: npm run tsc
+      - name: Verify Typescript Types
+        run: npm run verify-typescript-types
 
       - name: Lint
         run: npm run lint

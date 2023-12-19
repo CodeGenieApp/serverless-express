@@ -94,7 +94,7 @@
   },
   "scripts": {
     "test": "jest",
-    "tsc": "tsc ./src/*.ts --outDir typescript-out",
+    "verify-typescript-types": "tsc ./src/*.ts --outDir typescript-out",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "cz": "git-cz",
