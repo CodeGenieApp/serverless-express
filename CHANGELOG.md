@@ -1,3 +1,10 @@
+## [4.12.4](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.3...v4.12.4) (2023-12-19)
+
+
+### Bug Fixes
+
+* npm i from node 20 ([0cfb0ee](https://github.com/CodeGenieApp/serverless-express/commit/0cfb0ee1223bf9bd994cd8a17c97e8d81aca1f01))
+
 ## [4.12.3](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.2...v4.12.3) (2023-12-19)
 
 
