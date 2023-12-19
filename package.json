@@ -63,7 +63,7 @@
     ]
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^14.1.0",
+    "@commitlint/config-conventional": "^12.1.4",
     "@ryansonshine/commitizen": "^4.2.8",
     "@ryansonshine/cz-conventional-changelog": "^3.3.4",
     "@semantic-release/changelog": "^6.0.3",
@@ -75,7 +75,7 @@
     "@types/aws-lambda": "^8.10.130",
     "@types/jest": "^29.5.11",
     "acorn": "^8.11.2",
-    "commitlint": "^14.1.0",
+    "commitlint": "^12.1.4",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "ejs": "^3.1.9",
