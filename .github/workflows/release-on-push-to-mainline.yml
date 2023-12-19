@@ -27,7 +27,14 @@ jobs:
       # - name: Audit
       #   run: npm audit --audit-level critical
 
+      # 14.x fails with "npm ERR! Cannot read property '@commitlint/config-conventional' of undefined"
+      # when running npm ci due to the new package-lock.json format.
+      - name: Install (14.x)
+        if: matrix.node-version == '14.x'
+        run: npm i
+
       - name: Install
+        if: matrix.node-version != '14.x'
         run: npm ci
 
       - name: Test
