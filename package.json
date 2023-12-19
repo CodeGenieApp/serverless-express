@@ -28,7 +28,7 @@
     "url": "https://github.com/CodeGenieApp/serverless-express.git"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=14"
   },
   "publishConfig": {
     "access": "public"
