@@ -1,3 +1,10 @@
+## [4.12.5](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.4...v4.12.5) (2023-12-19)
+
+
+### Bug Fixes
+
+* set minimum node.js version to >= 12 ([962d537](https://github.com/CodeGenieApp/serverless-express/commit/962d53753bc4fe92afcb316449d2d25fbf45ad7d))
+
 ## [4.12.4](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.3...v4.12.4) (2023-12-19)
 
 
