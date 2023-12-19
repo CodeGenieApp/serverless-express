@@ -1,3 +1,10 @@
+## [4.12.3](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.2...v4.12.3) (2023-12-19)
+
+
+### Bug Fixes
+
+* revert package.json engine back to node.js 14+ ([8b9eb32](https://github.com/CodeGenieApp/serverless-express/commit/8b9eb3211648e814e75ba22b581d9ceeea926c85))
+
 ## [4.12.2](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.1...v4.12.2) (2023-12-15)
 
 
