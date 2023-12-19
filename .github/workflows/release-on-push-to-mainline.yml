@@ -24,11 +24,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # - name: Audit
-      #   run: npm audit --audit-level critical
-
       # 14.x fails with "npm ERR! Cannot read property '@commitlint/config-conventional' of undefined"
-      # when running npm ci due to the new package-lock.json format.
+      # when running `npm ci` due to the new package-lock.json format. Run `npm i` instead
       - name: Install (14.x)
         if: matrix.node-version == '14.x'
         run: npm i
@@ -47,6 +44,10 @@ jobs:
       - name: Lint
         if: matrix.node-version == '20.x'
         run: npm run lint
+
+      - name: Audit
+        if: matrix.node-version == '20.x'
+        run: npm audit --audit-level critical
 
       - name: Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/mainline' && matrix.node-version == '20.x'
