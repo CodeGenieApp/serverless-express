@@ -33,13 +33,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm test",
-      "commit-msg": "commitlint -e $GIT_PARAMS"
-    }
-  },
   "lint-staged": {
     "*.js": [
       "eslint --fix"
@@ -94,13 +87,13 @@
     "express": "^4.18.2",
     "husky": "^8.0.0",
     "jest": "^29.7.0",
-    "lint-staged": "^15.2.0",
+    "lint-staged": "^12.5.0",
     "node-notifier": "^10.0.1",
     "semantic-release": "^22.0.12",
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "test": "jest && npm run tsc",
+    "test": "jest",
     "tsc": "tsc ./src/*.ts --outDir typescript-out",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -109,7 +102,8 @@
     "release-local": "node -r dotenv/config node_modules/semantic-release/bin/semantic-release --no-ci --dry-run",
     "check-dependencies": "npx npm-check --skip-unused --update",
     "lint": "eslint src",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "config": {
     "commitizen": {
