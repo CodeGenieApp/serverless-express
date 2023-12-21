@@ -152,17 +152,6 @@ function getCommaDelimitedHeaders ({ headersMap, separator = ',', lowerCaseKey =
 
 const emptyResponseMapper = () => {}
 
-function emptyResponseMapperToEventSource({
-    statusCode,
-    body,
-}) {
-  if (statusCode >= 400) {
-    throw new Error(body)
-  }
-
-  return emptyResponseMapper()
-}
-
 const parseCookie = (str) =>
   str.split(';')
     .map((v) => v.split('='))
@@ -182,6 +171,5 @@ module.exports = {
   getEventBody,
   getCommaDelimitedHeaders,
   emptyResponseMapper,
-  emptyResponseMapperToEventSource,
   parseCookie
 }

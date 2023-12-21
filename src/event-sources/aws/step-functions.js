@@ -6,19 +6,15 @@ const getRequestValuesFromStepFunctions = ({ event }) => {
   return {
     method,
     headers,
-    body,
+    body
   }
 }
 
-function getResponseToStepFunctions({
+const getResponseToStepFunctions = ({
   statusCode,
   body,
-  isBase64Encoded = false,
-}) {
-  if (statusCode >= 400) {
-    throw new Error(body)
-  }
-
+  isBase64Encoded = false
+}) => {
   if (isBase64Encoded) {
     throw new Error('base64 encoding is not supported')
   }
@@ -28,5 +24,5 @@ function getResponseToStepFunctions({
 
 module.exports = {
   getRequest: getRequestValuesFromStepFunctions,
-  getResponse: getResponseToStepFunctions,
+  getResponse: getResponseToStepFunctions
 }

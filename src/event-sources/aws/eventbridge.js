@@ -1,4 +1,4 @@
-const { emptyResponseMapperToEventSource } = require('../utils')
+const { emptyResponseMapper } = require('../utils')
 
 const getRequestValuesFromEventBridge = ({ event }) => {
   const method = 'POST'
@@ -14,5 +14,5 @@ const getRequestValuesFromEventBridge = ({ event }) => {
 
 module.exports = {
   getRequest: getRequestValuesFromEventBridge,
-  getResponse: emptyResponseMapperToEventSource
+  getResponse: emptyResponseMapper
 }

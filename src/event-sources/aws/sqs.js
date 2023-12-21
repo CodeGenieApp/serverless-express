@@ -6,7 +6,7 @@ const getRequestValuesFromSqs = ({ event }) => {
   return {
     method,
     headers,
-    body,
+    body
   }
 }
 
@@ -20,5 +20,5 @@ const getResponseToSqs = ({ statusCode, body }) => {
 
 module.exports = {
   getRequest: getRequestValuesFromSqs,
-  getResponse: getResponseToSqs,
+  getResponse: getResponseToSqs
 }
