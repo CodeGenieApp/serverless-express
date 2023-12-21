@@ -1,4 +1,4 @@
-const { emptyResponseMapper } = require('../utils')
+const { emptyResponseMapperToEventSource } = require('../utils')
 
 const getRequestValuesFromDynamoDB = ({ event }) => {
   const method = 'POST'
@@ -14,5 +14,5 @@ const getRequestValuesFromDynamoDB = ({ event }) => {
 
 module.exports = {
   getRequest: getRequestValuesFromDynamoDB,
-  getResponse: emptyResponseMapper
+  getResponse: emptyResponseMapperToEventSource
 }

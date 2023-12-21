@@ -57,7 +57,7 @@ function configure ({
     }
 
     setCurrentInvoke({ event, context })
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const promise = {
         resolve,
         reject
@@ -70,7 +70,7 @@ function configure ({
       })
 
       try {
-        forwardRequestToNodeServer({
+        await forwardRequestToNodeServer({
           app,
           framework,
           event,

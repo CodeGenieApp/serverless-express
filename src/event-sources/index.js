@@ -10,6 +10,7 @@ const azureHttpFunctionV4EventSource = require('./azure/http-function-runtime-v4
 const awsEventBridgeEventSource = require('./aws/eventbridge')
 const awsKinesisEventSource = require('./aws/kinesis')
 const awsS3 = require('./aws/s3')
+const awsStepFunctionsEventSource = require('./aws/step-functions')
 
 function getEventSource ({ eventSourceName }) {
   switch (eventSourceName) {
@@ -37,6 +38,8 @@ function getEventSource ({ eventSourceName }) {
       return awsKinesisEventSource
     case 'AWS_S3':
       return awsS3
+    case 'AWS_STEP_FUNCTIONS':
+      return awsStepFunctionsEventSource
     default:
       throw new Error('Couldn\'t detect valid event source.')
   }

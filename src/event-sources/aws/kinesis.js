@@ -1,4 +1,4 @@
-const { emptyResponseMapper } = require('../utils')
+const { emptyResponseMapperToEventSource } = require('../utils')
 
 const getRequestValuesFromKinesis = ({ event }) => {
   const method = 'POST'
@@ -14,5 +14,5 @@ const getRequestValuesFromKinesis = ({ event }) => {
 
 module.exports = {
   getRequest: getRequestValuesFromKinesis,
-  getResponse: emptyResponseMapper
+  getResponse: emptyResponseMapperToEventSource
 }

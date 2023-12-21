@@ -1,4 +1,4 @@
-const { emptyResponseMapper } = require('../utils')
+const { emptyResponseMapperToEventSource } = require('../utils')
 
 const getRequestValuesFromSns = ({ event }) => {
   const method = 'POST'
@@ -14,5 +14,5 @@ const getRequestValuesFromSns = ({ event }) => {
 
 module.exports = {
   getRequest: getRequestValuesFromSns,
-  getResponse: emptyResponseMapper
+  getResponse: emptyResponseMapperToEventSource
 }
