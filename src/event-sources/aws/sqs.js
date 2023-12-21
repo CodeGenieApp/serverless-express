@@ -10,13 +10,7 @@ const getRequestValuesFromSqs = ({ event }) => {
   }
 }
 
-const getResponseToSqs = ({ statusCode, body }) => {
-  if (statusCode >= 400) {
-    throw new Error(body)
-  }
-
-  return JSON.parse(body)
-}
+const getResponseToSqs = ({ body }) => JSON.parse(body)
 
 module.exports = {
   getRequest: getRequestValuesFromSqs,

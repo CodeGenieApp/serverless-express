@@ -11,7 +11,6 @@ const getRequestValuesFromStepFunctions = ({ event }) => {
 }
 
 const getResponseToStepFunctions = ({
-  statusCode,
   body,
   isBase64Encoded = false
 }) => {
