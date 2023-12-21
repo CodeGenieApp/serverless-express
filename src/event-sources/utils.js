@@ -127,6 +127,10 @@ function getEventSourceNameBasedOnEvent ({
     return 'AWS_EVENTBRIDGE'
   }
 
+  if (event.context && event.context.Execution && event.context.State && event.context.StateMachine) {
+    return 'AWS_STEP_FUNCTIONS'
+  }
+
   throw new Error('Unable to determine event source based on event.')
 }
 
