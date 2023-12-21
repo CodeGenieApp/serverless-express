@@ -281,6 +281,8 @@ serverlessExpress({
     'AWS_SQS': '/sqs'
     'AWS_EVENTBRIDGE': '/eventbridge',
     'AWS_KINESIS_DATA_STREAM': '/kinesis',
+    'AWS_S3': '/s3',
+    'AWS_STEP_FUNCTIONS': '/step-functions',
   }
 })
 ```
