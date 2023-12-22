@@ -32,7 +32,9 @@ jobs:
 
       - name: Install
         if: matrix.node-version != '14.x'
-        run: npm ci
+        # Without --ignore-scripts we get "footer's lines must not be longer than 100 characters [footer-max-line-length]"
+        # on the release step
+        run: npm ci --ignore-scripts
 
       - name: Test
         run: npm test
