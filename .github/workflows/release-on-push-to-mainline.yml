@@ -60,11 +60,9 @@ jobs:
         with:
           node-version: 20.x
       - name: Install
-        # Without --ignore-scripts we get "footer's lines must not be longer than 100 characters [footer-max-line-length]"
-        # on the release step
-        run: npm ci --ignore-scripts
+        run: npm ci
       - name: Release
-        run: npm run release
+        run: HUSKY_SKIP_HOOKS=1 npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
