@@ -1,3 +1,10 @@
+# [4.13.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.5...v4.13.0) (2023-12-22)
+
+
+### Features
+
+* add support for Step Functions ([#668](https://github.com/CodeGenieApp/serverless-express/issues/668)) ([1151a3a](https://github.com/CodeGenieApp/serverless-express/commit/1151a3a1b0fc1f5d9fe04b9ee12ae2d011ac7c43))
+
 ## [4.12.5](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.4...v4.12.5) (2023-12-19)
 
 
