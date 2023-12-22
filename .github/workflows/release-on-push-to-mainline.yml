@@ -1,10 +1,10 @@
 name: CICD
-
 on:
   push:
     branches: [mainline]
   pull_request:
-
+env:
+  HUSKY: 0
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -62,7 +62,7 @@ jobs:
       - name: Install
         run: npm ci
       - name: Release
-        run: HUSKY_SKIP_HOOKS=1 npm run release
+        run: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
