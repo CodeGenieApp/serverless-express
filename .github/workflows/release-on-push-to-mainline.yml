@@ -6,7 +6,7 @@ on:
 env:
   HUSKY: 0
 jobs:
-  build:
+  test-lint-audit:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -46,6 +46,7 @@ jobs:
         run: npm audit --audit-level critical
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/mainline'
+    needs: test-lint-audit
     permissions:
       contents: write
       issues: write
