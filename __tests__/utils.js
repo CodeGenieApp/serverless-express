@@ -194,6 +194,21 @@ const eventbridgeScheduledEvent = {
   resources: ['arn:aws:events:us-east-2:123456789012:rule/my-schedule']
 }
 
+const eventbridgeCustomerEvent = {
+  version: '0',
+  id: 'fe8d3c65-xmpl-c5c3-2c87-81584709a377',
+  source: 'com.mycompany.myapp',
+  account: '123456789012',
+  time: '2016-01-14T01:02:03Z',
+  region: 'us-east-2',
+  resources: [
+    'resource1',
+    'resource2'
+  ],
+  'detail-type': 'myDetailType',
+  detail: {}
+}
+
 // Sample event from https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis-example.html
 const kinesisDataStreamEvent = {
   Records: [
@@ -257,6 +272,11 @@ describe('getEventSourceNameBasedOnEvent', () => {
     const result = getEventSourceNameBasedOnEvent({ event: eventbridgeScheduledEvent })
     expect(result).toEqual('AWS_EVENTBRIDGE')
   })
+
+  test('recognizes eventbridge customer event', () => {
+    const result = getEventSourceNameBasedOnEvent({ event: eventbridgeCustomerEvent })
+    expect(result).toEqual('AWS_EVENTBRIDGE')
+  })
 })
 
 module.exports = {
@@ -266,5 +286,6 @@ module.exports = {
   sqsEvent,
   eventbridgeEvent,
   eventbridgeScheduledEvent,
+  eventbridgeCustomerEvent,
   kinesisDataStreamEvent
 }
