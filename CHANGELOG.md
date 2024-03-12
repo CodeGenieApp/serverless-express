@@ -1,3 +1,10 @@
+# [4.14.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.13.0...v4.14.0) (2024-03-12)
+
+
+### Features
+
+* add support for eventbridge customer events ([#676](https://github.com/CodeGenieApp/serverless-express/issues/676)) ([9e1a52b](https://github.com/CodeGenieApp/serverless-express/commit/9e1a52b93de50730dbd6f185fecb8fc44a8f0a48))
+
 # [4.13.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.12.5...v4.13.0) (2023-12-22)
 
 
