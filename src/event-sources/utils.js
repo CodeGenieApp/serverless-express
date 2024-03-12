@@ -112,7 +112,6 @@ function getEventSourceNameBasedOnEvent ({
     event.id &&
     event['detail-type'] &&
     event.source &&
-    event.source.startsWith('aws.') && // Might need to adjust this for "Partner Sources", e.g. Auth0, Datadog, etc
     event.account &&
     event.time &&
     event.region &&

@@ -1,7 +1,7 @@
 const eventSources = require('../src/event-sources')
 const testUtils = require('./utils')
 
-const dynamodbEventSource = eventSources.getEventSource({
+const eventbridgeEventSource = eventSources.getEventSource({
   eventSourceName: 'AWS_EVENTBRIDGE'
 })
 
@@ -21,7 +21,15 @@ test('request is correct (scheduled)', () => {
   expect(req.method).toEqual('POST')
 })
 
+test('request is correct (customer event)', () => {
+  const req = getReq({ event: testUtils.eventbridgeCustomerEvent })
+  expect(typeof req).toEqual('object')
+  expect(req.headers).toEqual({ host: 'events.amazonaws.com' })
+  expect(req.body).toEqual(testUtils.eventbridgeCustomerEvent)
+  expect(req.method).toEqual('POST')
+})
+
 function getReq ({ event }) {
-  const request = dynamodbEventSource.getRequest({ event })
+  const request = eventbridgeEventSource.getRequest({ event })
   return request
 }
