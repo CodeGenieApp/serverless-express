@@ -1,0 +1,25 @@
+/* upload */
+.ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload.ant-upload-select,
+.ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload-list.ant-upload-list-picture-circle .ant-upload-list-item-container {
+  width: 38px;
+  height: 38px;
+  margin: 0;
+}
+
+.ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload-list.ant-upload-list-picture-circle .ant-upload-list-item {
+  padding: 0;
+}
+.ant-upload-wrapper .ant-upload-list .ant-upload-list-item-container > .ant-upload-list-item > .ant-upload-list-item-actions {
+  height: 100%;
+  width: auto;
+  inset-inline-start: auto;
+}
+.ant-upload-wrapper .ant-upload-list .ant-upload-list-item-container > .ant-upload-list-item > .ant-upload-list-item-actions > .ant-upload-list-item-action.ant-btn-sm {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+}
+.ant-upload-wrapper .ant-upload-list .ant-upload-list-item {
+  justify-content: center;
+}
+/* END upload */

@@ -1,0 +1,48 @@
+{
+  "name": "todo-cdk",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "cdk": "./bin/cdk.js"
+  },
+  "scripts": {
+    "deploy:dev": "dotenv -e .env.development.local -e .env.development -- cdk deploy --profile todo_development --context env=development --outputs-file ./cdk-outputs.development.json --require-approval=never",
+    "deploy:staging": "dotenv -e .env.staging.local -e .env.staging -- cdk deploy --profile todo_staging --context env=staging --outputs-file ./cdk-outputs.staging.json",
+    "deploy:prod": "dotenv -e .env.production.local -e .env.production -- cdk deploy --profile todo_production --context env=production --outputs-file ./cdk-outputs.production.json",
+    "deploy-watch": "dotenv -e .env.development.local -e .env.development -- cdk watch --profile todo_development --context env=development --context skipDeployWebApp=true",
+    "destroy:dev": "dotenv -e .env.development.local -e .env.development -- cdk destroy --profile todo_development --context env=development --context skipDeployWebApp=true",
+    "diff:dev": "dotenv -e .env.development.local -e .env.development -- cdk diff --profile todo_development --context env=development --context skipDeployWebApp=true",
+    "diff:staging": "dotenv -e .env.staging.local -e .env.staging -- cdk diff --profile todo_staging --context env=staging --context skipDeployWebApp=true",
+    "diff:prod": "dotenv -e .env.production.local -e .env.production -- cdk diff --profile todo_production --context env=production --context skipDeployWebApp=true",
+    "pull-stack-outputs:dev": "ENVIRONMENT=development tsx ./bin/pull-stack-outputs.ts",
+    "pull-stack-outputs:staging": "ENVIRONMENT=staging tsx ./bin/pull-stack-outputs.ts",
+    "pull-stack-outputs:prod": "ENVIRONMENT=production tsx ./bin/pull-stack-outputs.ts",
+    "copy-outputs-to-dotenv:dev": "ENVIRONMENT=development tsx ./bin/copy-outputs-to-dotenv.ts",
+    "copy-outputs-to-dotenv:staging": "ENVIRONMENT=staging tsx ./bin/copy-outputs-to-dotenv.ts",
+    "copy-outputs-to-dotenv:prod": "ENVIRONMENT=production tsx ./bin/copy-outputs-to-dotenv.ts",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk-bootstrap:dev": "dotenv -e .env.development.local -e .env.development -- cdk bootstrap --profile todo_development",
+    "cdk-bootstrap:staging": "dotenv -e .env.staging.local -e .env.staging -- cdk bootstrap --profile todo_staging",
+    "cdk-bootstrap:prod": "dotenv -e .env.production.local -e .env.production -- cdk bootstrap --profile todo_production"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-cloudformation": "^3.385.0",
+    "@smithy/types": "^2.9.1",
+    "@types/jest": "^29.5.1",
+    "@types/node": "20.11.1",
+    "aws-cdk": "2.137.0",
+    "esbuild": "^0.18.17",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "~5.0.4"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-amplify-alpha": "2.137.0-alpha.0",
+    "aws-cdk-lib": "2.137.0",
+    "constructs": "^10.0.0",
+    "dotenv": "^16.3.1",
+    "dotenv-cli": "^7.3.0"
+  }
+}

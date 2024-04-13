@@ -1,0 +1,11 @@
+node_modules
+dist
+.DS_Store
+stats.json
+
+.env.local
+.env.*.local
+
+.cache
+coverage
+.webpack

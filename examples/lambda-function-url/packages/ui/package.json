@@ -1,0 +1,51 @@
+{
+  "name": "todo-ui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start-ui:dev": "ENVIRONMENT=development npm run copy-dotenv-dev && next dev -p 3001",
+    "start-ui:staging": "ENVIRONMENT=staging npm run copy-dotenv-dev && next dev -p 3001",
+    "start-ui:prod": "ENVIRONMENT=production npm run copy-dotenv-dev && next dev -p 3001",
+    "copy-dotenv-dev": "cp ./.env/.env.$ENVIRONMENT ./.env.development ; cp ./.env/.env.$ENVIRONMENT.local ./.env.development.local ; :",
+    "copy-dotenv-build": "cp ./.env/.env.$ENVIRONMENT ./.env.development ; cp ./.env/.env.$ENVIRONMENT.local ./.env.development.local ; :",
+    "start-ui-local-api:dev": "NEXT_PUBLIC_ApiEndpoint=http://localhost:4911 npm run start-ui:dev",
+    "start-ui-local-api:staging": "NEXT_PUBLIC_ApiEndpoint=http://localhost:4911 npm run start-ui:staging",
+    "start-ui-local-api:prod": "NEXT_PUBLIC_ApiEndpoint=http://localhost:4911 npm run start-ui:prod",
+    "build-only:dev": "ENVIRONMENT=development npm run copy-dotenv-build && next build",
+    "build-only:staging": "ENVIRONMENT=staging npm run copy-dotenv-build && next build",
+    "build-only:prod": "ENVIRONMENT=production npm run copy-dotenv-build && next build",
+    "build:development": "ENVIRONMENT=development npm run copy-dotenv-build && next build && next export",
+    "build:staging": "ENVIRONMENT=staging npm run copy-dotenv-build && next build && next export",
+    "build:production": "ENVIRONMENT=production npm run copy-dotenv-build && next build && next export",
+    "start": "next start",
+    "format": "prettier-eslint --write $PWD/'**/*.[jt]s?(x)' --ignore '**/.next/**' && eslint --fix .",
+    "lint": "eslint . --ext=.ts,.tsx",
+    "test": "jest",
+    "open-ui:dev": "dotenv -e .env/.env.development npm run open-ui-subcommand",
+    "open-ui:staging": "dotenv -e .env/.env.staging npm run open-ui-subcommand",
+    "open-ui:prod": "dotenv -e .env/.env.production npm run open-ui-subcommand",
+    "open-ui-subcommand": "open $AMPLIFY_URL/getting-started"
+  },
+  "dependencies": {
+    "@ant-design/cssinjs": "^1.5.6",
+    "@ant-design/icons": "^5.1.4",
+    "@tanstack/react-query": "^4.29.19",
+    "antd": "^5.9.0",
+    "aws-amplify": "^6.0.13",
+    "aws-amplify-react": "^4.1.22",
+    "dayjs": "^1.11.7",
+    "dotenv": "^16.3.1",
+    "lodash.debounce": "^4.0.8",
+    "next": "^13.1.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-jsx": "^5.1.2"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.0.0",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "dotenv-cli": "^7.3.0",
+    "jest": "^29.4.3"
+  }
+}
