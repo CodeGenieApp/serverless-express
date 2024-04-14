@@ -12,9 +12,7 @@ const nodeEnv = ENVIRONMENT === 'development' ? 'development' : 'production'
 const outputs = await import(`../cdk-outputs.${ENVIRONMENT}.json`)
 
 if (!outputs) {
-  const envShort = ENVIRONMENT === 'development' ? 'dev'
-    : ENVIRONMENT === 'production' ? 'prod'
-      : ENVIRONMENT
+  const envShort = ENVIRONMENT === 'development' ? 'dev' : ENVIRONMENT === 'production' ? 'prod' : ENVIRONMENT
   throw new Error(`No cdk-outputs.${ENVIRONMENT}.json. Try running \`npm run pull-stack-outputs:${envShort}\``)
 }
 
@@ -26,11 +24,16 @@ const apiDotEnv = `${SECRET_WARNING}
 NODE_ENV=${nodeEnv}
 TODO_LIST_TABLE="${stackOutputs.TodoListTable}"
 TODO_ITEM_TABLE="${stackOutputs.TodoItemTable}"
-USER_TABLE="${stackOutputs.UserTable}"`
+USER_TABLE="${stackOutputs.UserTable}"
+COGNITO_USER_POOL_ID="${stackOutputs.UserPoolId}"
+COGNITO_USER_POOL_CLIENT_ID="${stackOutputs.UserPoolClientId}"`
 
 writeFileSync(path.resolve(import.meta.dirname, `../../api/.env.${ENVIRONMENT}`), apiDotEnv)
 
-let uiDotEnv = `NEXT_PUBLIC_ApiEndpoint="${stackOutputs.ApiEndpoint}"
+let uiDotEnv = `NEXT_PUBLIC_ApiGatewayUrl="${stackOutputs.ApiEndpoint}"
+NEXT_PUBLIC_LambdaFunctionUrl="${stackOutputs.ExpressApiFunctionUrl}"
+NEXT_PUBLIC_CloudFrontDistributionUrl="${stackOutputs.CloudFrontDistributionUrl}"
+NEXT_PUBLIC_ApiEndpoint="${stackOutputs.CloudFrontDistributionUrl}"
 NEXT_PUBLIC_CognitoUserPoolId="${stackOutputs.UserPoolId}"
 NEXT_PUBLIC_CognitoUserPoolClientId="${stackOutputs.UserPoolClientId}"
 NEXT_PUBLIC_Region="${stackOutputs.Region}"

@@ -18,7 +18,7 @@
         "monitoring": {
           "isDashboardEnabled": true,
           "isAlarmsEnabled": false,
-          "alarmNotificationEmail": "undefined"
+          "alarmNotificationEmail": ""
         }
       },
       "staging": {
@@ -28,8 +28,7 @@
           "autoVerifyUsers": false
         },
         "logRetentionInDays": 3,
-        "email": {
-        },
+        "email": {},
         "api": {
           "domainName": ""
         },
@@ -39,7 +38,7 @@
         "monitoring": {
           "isDashboardEnabled": true,
           "isAlarmsEnabled": true,
-          "alarmNotificationEmail": "undefined"
+          "alarmNotificationEmail": ""
         }
       },
       "production": {
@@ -49,18 +48,17 @@
           "autoVerifyUsers": false
         },
         "logRetentionInDays": 14,
-        "email": {
-        },
+        "email": {},
         "api": {
-          "domainName": "undefined"
+          "domainName": ""
         },
         "ui": {
-          "domainName": "undefined"
+          "domainName": ""
         },
         "monitoring": {
           "isDashboardEnabled": true,
           "isAlarmsEnabled": true,
-          "alarmNotificationEmail": "undefined"
+          "alarmNotificationEmail": ""
         }
       }
     }

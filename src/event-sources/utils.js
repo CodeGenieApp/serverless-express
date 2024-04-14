@@ -91,6 +91,7 @@ function getEventSourceNameBasedOnEvent ({
     return 'AWS_LAMBDA_EDGE'
   }
   if (event.requestContext) {
+    // NOTE: Lambda Function URL follows the same format as AWS_API_GATEWAY_V2
     return event.version === '2.0' ? 'AWS_API_GATEWAY_V2' : 'AWS_API_GATEWAY_V1'
   }
   if (event.traceContext) {

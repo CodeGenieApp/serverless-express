@@ -6,6 +6,9 @@
   "main": "handler.ts",
   "type": "module",
   "scripts": {
+    "loadtest": "tsx ./scripts/loadtest.ts",
+    "loadtest:autocannon": "tsx ./scripts/loadtest-autocannon.ts",
+    "loadtest:artillery": "artillery run ./scripts/artillery.yml",
     "start-ui:dev": "cd packages/ui && npm run start-ui:dev",
     "start-ui:staging": "cd packages/ui && npm run start-ui:staging",
     "start-ui:prod": "cd packages/ui && npm run start-ui:prod",
@@ -70,6 +73,8 @@
     "@types/jest": "^29.5.5",
     "@types/node": "^20.11.1",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "artillery": "^2.0.9",
+    "autocannon": "^7.15.0",
     "aws-lambda-mock-context": "^3.2.1",
     "eslint": "^8.34.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -79,6 +84,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
+    "loadtest": "^8.0.9",
     "semantic-release": "^20.1.0",
     "styled-jsx": "^5.1.2",
     "ts-jest": "^29.1.1",
@@ -90,6 +96,7 @@
   },
   "dependencies": {
     "@aws-sdk/credential-providers": "^3.405.0",
+    "@types/autocannon": "^7.12.5",
     "axios": "^1.6.7"
   }
 }

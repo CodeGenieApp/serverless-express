@@ -91,6 +91,9 @@ export default class WebApp extends Construct {
     const uiDotEnvPath = path.join(uiPackagePath, `.env/.env.${envName}`)
     configDotenv({ path: uiDotEnvPath })
     const REQUIRED_ENV_VARS = [
+      'NEXT_PUBLIC_ApiGatewayUrl',
+      'NEXT_PUBLIC_LambdaFunctionUrl',
+      'NEXT_PUBLIC_CloudFrontDistributionUrl',
       'NEXT_PUBLIC_ApiEndpoint',
       'NEXT_PUBLIC_CognitoUserPoolId',
       'NEXT_PUBLIC_CognitoUserPoolClientId',
@@ -100,7 +103,9 @@ export default class WebApp extends Construct {
 
     if (missingEnvVars.length) {
       console.info(getMissingEnvVarsMessage(missingEnvVars))
-      console.info(`Skipping web app deploy due to missing environment variables. If you're missing the packages/ui/.env/.env.${envName} file, try running \`npm run copy-outputs-to-dotenv:dev\` to copy values from cdk-outputs.${envName} to the .env file. If the cdk-outputs file also doesn't exist, first run \`npm run pull-stack-outputs:${envName}\`. Then, run \`npm run deploy:${envName}\` again to deploy the web app.`)
+      console.info(
+        `Skipping web app deploy due to missing environment variables. If you're missing the packages/ui/.env/.env.${envName} file, try running \`npm run copy-outputs-to-dotenv:dev\` to copy values from cdk-outputs.${envName} to the .env file. If the cdk-outputs file also doesn't exist, first run \`npm run pull-stack-outputs:${envName}\`. Then, run \`npm run deploy:${envName}\` again to deploy the web app.`
+      )
       return
     }
     execSync(`npm run build:${envName}`, {

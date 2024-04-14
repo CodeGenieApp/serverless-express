@@ -1,0 +1,14 @@
+{
+  "Todo-production": {
+    "TodoListTable": "Todo-production-TodoListTableC18CC639-8NZFXDHMQ26D",
+    "UserPoolClientId": "5d5ahohds4882ua15nqn3vscr8",
+    "UserPoolId": "us-west-2_6bXjvA4Qc",
+    "TodoItemTable": "Todo-production-TodoItemTable4E6EC07F-JUUVV10GTD05",
+    "ExpressApiFunctionUrl": "https://dbnmtkykig3vobqu6f73dbgiam0qxeot.lambda-url.us-west-2.on.aws/",
+    "CloudFrontDistributionUrl": "https://d17bj8zz01o4vw.cloudfront.net",
+    "UserTable": "Todo-production-UserTableD3CD785F-1HOYFTY8MJYPS",
+    "Region": "us-west-2",
+    "ApiEndpoint": "https://1cql2qj0ki.execute-api.us-west-2.amazonaws.com",
+    "AmplifyUrl": "https://production.d12hnvnhgcslhr.amplifyapp.com"
+  }
+}

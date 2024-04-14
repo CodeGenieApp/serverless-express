@@ -52,7 +52,7 @@ module.exports = {
     'no-console': [
       'warn',
       {
-        allow: ['info', 'warn', 'error'],
+        allow: ['info', 'warn', 'error', 'time', 'timeEnd'],
       },
     ],
     'react/no-unknown-property': [

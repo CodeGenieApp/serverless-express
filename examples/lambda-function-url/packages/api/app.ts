@@ -7,49 +7,52 @@ import todoItemRouter from './routes/todo-item'
 import userRouter from './routes/user'
 import meRouter from './routes/me'
 
-import {
-  NotFoundError,
-  UnauthenticatedError,
-  UserInputError,
-  BadRequestError,
-} from './errors'
+import { NotFoundError, UnauthenticatedError, UserInputError, BadRequestError } from './errors'
 import { log } from './utils/logger'
 import { IS_PRODUCTION } from './config'
+import { idTokenVerifier } from './utils/cognito'
 
 const app = express()
-const router = Router()
-router.use(cors())
-router.use(json())
-
-router.use((req, res, next) => {
+app.use(
+  cors({
+    maxAge: 86400,
+  })
+)
+app.use(json())
+app.use(async (req, res, next) => {
   const { event = {} } = getCurrentInvoke()
 
-  // Handle Cognito auth for local development
-  if (process.env.IS_LOCAL === '1' && !event?.requestContext?.authorizer) {
-    if (!event.requestContext) event.requestContext = {}
-    const parseJwt = (token) => JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
-    event.requestContext.authorizer = {
-      jwt: {
-        claims: parseJwt(req.headers.authorization),
-      },
+  // NOTE: APIGW sets event.requestContext.authorizer when using an Authorizer
+  // If one isn't set, this function is either being invoked locally or through Lambda Function URL
+  let jwtClaims = event.requestContext?.authorizer?.claims
+  if (!jwtClaims) {
+    console.time('time_to_validate_jwt')
+    if (!req.headers.authorization) {
+      console.error('Missing Authorization header')
+      throw new UnauthenticatedError()
     }
+    try {
+      jwtClaims = await idTokenVerifier.verify(req.headers.authorization)
+    } catch (error) {
+      console.error('error while validating token', error)
+      throw new UnauthenticatedError()
+    }
+    console.timeEnd('time_to_validate_jwt')
   }
 
-  const { claims } = event.requestContext.authorizer.jwt
-
-  if (!claims || !claims.email || !claims.userId) {
+  if (!jwtClaims || !jwtClaims.email || !jwtClaims.userId) {
     throw new UnauthenticatedError()
   }
 
-  const { userId, email } = claims
-  const groups = claims['cognito:groups']
+  const { userId, email } = jwtClaims
+  const groups = jwtClaims['cognito:groups']
   req.cognitoUser = {
     userId,
     email,
     groups,
   }
   next()
-  
+
   // NOTE: An alternative to using pre-token-generation and adding orgId to claimsToAddOrOverride
   // is to instead query for the current user here and grab the orgId. The problem with the pre-token-generation
   // approach is that after a user accepts an org invite, the token still reflects the previous orgId.
@@ -59,14 +62,13 @@ router.use((req, res, next) => {
   // const currentUser = await getCurrentUser(req)
 })
 
-app.use('/', router)
-app.use('/', meRouter)
+app.use(meRouter)
 app.use(todoListRouter)
 app.use(todoItemRouter)
 app.use(userRouter)
 
 app.use((req, res, next) => {
-  const error: Error & {statusCode?} = new Error('Route not found')
+  const error: Error & { statusCode? } = new Error('Route not found')
   error.statusCode = 404
   next(error)
 })
@@ -74,7 +76,7 @@ app.use((req, res, next) => {
 // eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {
   const { statusCode = 500 } = error
-  const response: {message, trace?} = {
+  const response: { message; trace? } = {
     message: error.message,
   }
 
@@ -91,9 +93,7 @@ app.use((error, req, res, next) => {
   } else if (error instanceof NotFoundError) {
     res.status(StatusCodes.NOT_FOUND).json({ message: error.message })
   } else {
-    res
-      .status(statusCode)
-      .json(response)
+    res.status(statusCode).json(response)
   }
 
   log.error(`An error occurred while processing ${req.method}: ${req.originalUrl} API`)

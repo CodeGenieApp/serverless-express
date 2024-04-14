@@ -31,9 +31,7 @@ todoListRouter.get('/todo-lists/:listId', async (req, res) => {
   })
 
   if (!todoList) {
-    return res
-      .status(404)
-      .json({})
+    return res.status(404).json({})
   }
 
   return res.json(todoList)
@@ -66,9 +64,7 @@ todoListRouter.delete('/todo-lists/:listId', async (req, res) => {
   })
 
   if (!result) {
-    return res
-      .status(404)
-      .json({})
+    return res.status(404).json({})
   }
 
   return res.json({})

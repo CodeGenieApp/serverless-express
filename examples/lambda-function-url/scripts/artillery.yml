@@ -1,0 +1,38 @@
+config:
+  http:
+    defaults:
+      headers:
+        authorization: 'eyJraWQiOiI5Vm45RkZITHJJckdKUUZYalNlY2dcL1B5XC9zVTBQa2E4cTQwWXVibjF5OVU9IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI3OGUxZDM2MC0wMGMxLTcwOTYtZDE0MC0yOThmNjViNDI1NmMiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtd2VzdC0yLmFtYXpvbmF3cy5jb21cL3VzLXdlc3QtMl82YlhqdkE0UWMiLCJjb2duaXRvOnVzZXJuYW1lIjoiNzhlMWQzNjAtMDBjMS03MDk2LWQxNDAtMjk4ZjY1YjQyNTZjIiwidXNlcklkIjoiNzhlMWQzNjAtMDBjMS03MDk2LWQxNDAtMjk4ZjY1YjQyNTZjIiwib3JpZ2luX2p0aSI6IjA3NzE2YjA3LTM3YjMtNDgyMi05ZjlhLTEwNWU5MDgwZDZkMCIsImF1ZCI6IjVkNWFob2hkczQ4ODJ1YTE1bnFuM3ZzY3I4IiwiZXZlbnRfaWQiOiIwZDU1YWYzNC1hZDkwLTQ5ZjgtODcxZi1lODg0ZjMyYTI3ZGQiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcxMzAyMDIwMiwibmFtZSI6IkJyZXR0IiwiZXhwIjoxNzEzMTMzNjM1LCJpYXQiOjE3MTMwNDcyMzYsImp0aSI6ImRhM2ZiNWEyLTQ1ZGYtNDBmNS04M2Y0LWY2YWU4OWNkMjg4ZSIsImVtYWlsIjoiYnJldHQuai5hbmRyZXdzQGdtYWlsLmNvbSJ9.FUXsYC2Q-yaeak8cFfuocFSTWTrxEwRZsLlgvF8W5AC8mjUeauRbu_WP31VPPLoZ7oav7VFA5CscQbuokzma01p9VyR2am3QO4vNimhWxoWb9QohlMkljYFDphwl5svc4zC8XzLOh4Pyd_-IwgrzS7l2pR2_BJ9tSD9pWwV3R6ixmu4Z3yQzfOaVmZXGJuI-LFl0fDMNzk08gtVatxFJJ0nOW3n8vAsAE2Fo9Uh9_Ug1fae_n5rKBXH135FmLo_npYFkt9fRoEQ8k5xpBuxGB-UJae2CRMmbNRJ5PYabQ-DZH1AYb4rRbSGeOYV1iiY-lWw1-qLOBj0fX7TS3evEzQ'
+  target: https://example.com
+  phases:
+    - duration: 5
+      arrivalRate: 1
+      rampTo: 5
+      name: Warm up phase
+      # Results in 15 vusers
+      # vusers * loop.length * count
+      # 15 * 3 * 100 = 4500 requests
+    # - duration: 10
+    #   arrivalRate: 5
+    #   rampTo: 10
+    #   name: Ramp up load
+    # - duration: 10
+    #   arrivalRate: 10
+    #   rampTo: 20
+    #   name: Spike phase
+  plugins:
+    metrics-by-endpoint:
+      useOnlyRequestNames: true
+scenarios:
+  - flow:
+      - loop:
+          - get:
+              name: Lambda Function URL
+              url: 'https://dbnmtkykig3vobqu6f73dbgiam0qxeot.lambda-url.us-west-2.on.aws/todo-lists'
+          - get:
+              name: Lambda Function URL + CloudFront
+              url: 'https://d17bj8zz01o4vw.cloudfront.net/todo-lists'
+          - get:
+              name: API Gateway HTTP API + Cognito Authorizer
+              url: 'https://1cql2qj0ki.execute-api.us-west-2.amazonaws.com/todo-lists'
+        count: 100
