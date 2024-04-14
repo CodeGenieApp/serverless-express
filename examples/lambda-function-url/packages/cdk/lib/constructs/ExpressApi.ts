@@ -164,35 +164,17 @@ export default class ExpressApi extends Construct {
       })
     }
 
-    const api = new HttpApi(this, 'HttpApi', {
-      apiName: `Todo-${getEnvironmentName(this.node)}`,
-      // corsPreflight: {
-      //   allowHeaders: [
-      //     // Must explicitly specify Authorization, othwerise maxAge isn't respected and preflight
-      //     // will be sent on all requests https://twitter.com/annevk/status/1422959365846351875
-      //     // Unfortunately, there appears to be a bug in API Gateway where it doesn't return the
-      //     // correct preflight response headers when 'authorization' is defined.
-      //     'authorization',
-      //     // '*',
-      //   ],
-      //   allowMethods: [CorsHttpMethod.ANY],
-      //   allowOrigins: Cors.ALL_ORIGINS,
-      //   maxAge: Duration.hours(24), // Firefox caps at 24 hours; Chromium caps at 2 hours
-      // },
-      defaultDomainMapping: domainResource
-        ? {
-            domainName: domainResource,
-          }
-        : undefined,
-    })
+    const api = new HttpApi(this, 'HttpApi')
     api.addRoutes({
       path: '/{proxy+}',
       integration,
       authorizer,
-      // Must exclude OPTIONS so that CORS Preflight requests don't get sent through to Lambda,
-      // and instead are fulfilled by API Gateway
-      // methods: [HttpMethod.HEAD, HttpMethod.GET, HttpMethod.POST, HttpMethod.PATCH, HttpMethod.PUT, HttpMethod.DELETE],
       methods: [HttpMethod.ANY],
+    })
+    api.addRoutes({
+      path: '/{proxy+}',
+      integration,
+      methods: [HttpMethod.OPTIONS],
     })
 
     // this.enableApiAccessLogs({ api })
