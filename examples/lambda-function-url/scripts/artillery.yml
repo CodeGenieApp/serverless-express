@@ -35,4 +35,4 @@ scenarios:
           - get:
               name: API Gateway HTTP API + Cognito Authorizer
               url: 'https://1cql2qj0ki.execute-api.us-west-2.amazonaws.com/todo-lists'
-        count: 100
+        count: 10

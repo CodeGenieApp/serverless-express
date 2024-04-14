@@ -11,8 +11,9 @@ import { NotFoundError, UnauthenticatedError, UserInputError, BadRequestError } 
 import { log } from './utils/logger'
 import { IS_PRODUCTION } from './config'
 import { idTokenVerifier } from './utils/cognito'
+import asyncify from 'express-asyncify'
 
-const app = express()
+const app = asyncify(express())
 app.use(
   cors({
     maxAge: 86400,
@@ -21,7 +22,6 @@ app.use(
 app.use(json())
 app.use(async (req, res, next) => {
   const { event = {} } = getCurrentInvoke()
-
   // NOTE: APIGW sets event.requestContext.authorizer when using an Authorizer
   // If one isn't set, this function is either being invoked locally or through Lambda Function URL
   let jwtClaims = event.requestContext?.authorizer?.claims
@@ -29,12 +29,14 @@ app.use(async (req, res, next) => {
     console.time('time_to_validate_jwt')
     if (!req.headers.authorization) {
       console.error('Missing Authorization header')
+      console.timeEnd('time_to_validate_jwt')
       throw new UnauthenticatedError()
     }
     try {
       jwtClaims = await idTokenVerifier.verify(req.headers.authorization)
     } catch (error) {
       console.error('error while validating token', error)
+      console.timeEnd('time_to_validate_jwt')
       throw new UnauthenticatedError()
     }
     console.timeEnd('time_to_validate_jwt')

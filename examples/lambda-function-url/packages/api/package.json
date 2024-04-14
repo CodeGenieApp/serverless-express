@@ -6,9 +6,9 @@
   "type": "module",
   "exports": "./app.ts",
   "scripts": {
-    "start-api:dev": "ENVIRONMENT=development IS_LOCAL=1 dotenv -e .env.development.local -e .env.development -- tsx -r tsconfig-paths/register ./app.local",
-    "start-api:staging": "ENVIRONMENT=staging IS_LOCAL=1 dotenv -e .env.staging.local -e .env.staging -- tsx -r tsconfig-paths/register ./app.local",
-    "start-api:prod": "ENVIRONMENT=production IS_LOCAL=1 dotenv -e .env.production.local -e .env.production -- tsx -r tsconfig-paths/register ./app.local",
+    "start-api:dev": "ENVIRONMENT=development IS_LOCAL=1 dotenv -e .env.development.local -e .env.development -- tsx watch -r tsconfig-paths/register ./app.local",
+    "start-api:staging": "ENVIRONMENT=staging IS_LOCAL=1 dotenv -e .env.staging.local -e .env.staging -- tsx watch -r tsconfig-paths/register ./app.local",
+    "start-api:prod": "ENVIRONMENT=production IS_LOCAL=1 dotenv -e .env.production.local -e .env.production -- tsx watch -r tsconfig-paths/register ./app.local",
     "test": "jest",
     "test:watch": "npm run test -- --watch"
   },
