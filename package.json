@@ -47,7 +47,8 @@
     ],
     "testPathIgnorePatterns": [
       "examples/nestjs",
-      "examples/basic-starter-api-gateway-v2-typescript"
+      "examples/basic-starter-api-gateway-v2-typescript",
+      "examples/lambda-function-url"
     ]
   },
   "devDependencies": {
