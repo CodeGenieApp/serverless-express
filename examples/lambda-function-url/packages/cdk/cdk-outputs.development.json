@@ -1,14 +1,14 @@
 {
   "Todo-development": {
-    "TodoListTable": "Todo-development-TodoListTableC18CC639-SNMMJOK8224I",
-    "UserPoolClientId": "7covdgpck9g0qlj93fm93n0pnj",
-    "UserPoolId": "us-west-2_MIQhmcA5v",
-    "TodoItemTable": "Todo-development-TodoItemTable4E6EC07F-F61W4KN831OH",
-    "ExpressApiFunctionUrl": "https://d4nnw44cddanflk7kv3r3xbbke0uvnis.lambda-url.us-west-2.on.aws/",
-    "CloudFrontDistributionUrl": "https://dthdcw7dsiu7v.cloudfront.net",
-    "UserTable": "Todo-development-UserTableD3CD785F-1CWH8SF13WCOS",
+    "TodoListTable": "Todo-development-TodoListTableC18CC639-16GBSXSZ8FUJG",
+    "UserPoolClientId": "7hdsj1dcn6esir5gua9r7tihf",
+    "UserPoolId": "us-west-2_5SWtxqJvA",
+    "TodoItemTable": "Todo-development-TodoItemTable4E6EC07F-133FJL20I2IFM",
+    "ExpressApiFunctionUrl": "https://2sczp4fme2sm3v7m2yo5mtcoky0vtvbl.lambda-url.us-west-2.on.aws/",
+    "CloudFrontDistributionUrl": "https://d3azwsvxpl4x8e.cloudfront.net",
+    "UserTable": "Todo-development-UserTableD3CD785F-XOWGEFCKBOZ3",
     "Region": "us-west-2",
-    "ApiEndpoint": "https://0c8qrs3t4l.execute-api.us-west-2.amazonaws.com",
-    "AmplifyUrl": "https://development.d12ag1linf6gxb.amplifyapp.com"
+    "ApiEndpoint": "https://obuoc4bs0c.execute-api.us-west-2.amazonaws.com",
+    "AmplifyUrl": "https://development.d1afcsnpzo7fev.amplifyapp.com"
   }
 }

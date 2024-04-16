@@ -67,18 +67,33 @@ export default class ExpressApi extends Construct {
         }),
       },
     })
-    const cloudFrontOriginAccessControl = new CfnOriginAccessControl(this, 'CloudFrontOriginAccessControl', {
-      originAccessControlConfig: {
-        name: `ExpressApi_${this.node.addr}`,
-        originAccessControlOriginType: 'lambda',
-        signingBehavior: 'no-override', // 'always' | 'never'
-        signingProtocol: 'sigv4',
-      },
-    })
 
-    // NOTE: CDK doesn't natively support adding OAC yet https://github.com/aws/aws-cdk/issues/21771
-    const cfnDistribution = cloudFrontDistribution.node.defaultChild as CfnDistribution
-    cfnDistribution.addPropertyOverride('DistributionConfig.Origins.0.OriginAccessControlId', cloudFrontOriginAccessControl.getAtt('Id'))
+    // NOTE: OAC currently isn't viable for APIs for two reasons:
+    // 1. It doesn't sign PUT/POST payloads
+    // 2. It overrides the Authorization header. You *may* be able to get around this with a CloudFront or Lambda@Edge Viewer Request Function that maps the
+    //    Authorization header to something else (e.g. x-client-authorization) and update the Express app to check that header instead (untested whether the original
+    //    Authorization header is available at that point). Alternatively, you could simply use a different on the client, but this is moving the problem to the client.
+    // If you want to try OAC anyway, uncomment the below lines and change the Lambda Function URL authType from FunctionUrlAuthType.NONE to FunctionUrlAuthType.AWS_IAM
+    // const cloudFrontDistributionArn = `arn:aws:cloudfront::${Stack.of(this).account}:distribution/${cloudFrontDistribution.distributionId}`
+
+    // this.lambdaFunction.addPermission('AllowCloudFrontPrincipalInvoke', {
+    //   principal: new ServicePrincipal('cloudfront.amazonaws.com'),
+    //   action: 'lambda:InvokeFunctionUrl',
+    //   sourceArn: cloudFrontDistributionArn,
+    // })
+
+    // const cloudFrontOriginAccessControl = new CfnOriginAccessControl(this, 'CloudFrontOriginAccessControl', {
+    //   originAccessControlConfig: {
+    //     name: `ExpressApi_${this.node.addr}`,
+    //     originAccessControlOriginType: 'lambda',
+    //     signingBehavior: 'always', // 'always' | 'never'
+    //     signingProtocol: 'sigv4',
+    //   },
+    // })
+
+    // // NOTE: CDK doesn't natively support adding OAC yet https://github.com/aws/aws-cdk/issues/21771
+    // const cfnDistribution = cloudFrontDistribution.node.defaultChild as CfnDistribution
+    // cfnDistribution.addPropertyOverride('DistributionConfig.Origins.0.OriginAccessControlId', cloudFrontOriginAccessControl.getAtt('Id'))
 
     new CfnOutput(this, 'CloudFrontDistributionUrl', {
       key: 'CloudFrontDistributionUrl',
