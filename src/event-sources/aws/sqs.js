@@ -10,7 +10,11 @@ const getRequestValuesFromSqs = ({ event }) => {
   }
 }
 
-const getResponseToSqs = ({ body }) => JSON.parse(body)
+const getResponseToSqs = ({ body }) => {
+  try {
+    return JSON.parse(body)
+  } catch (error) {}
+}
 
 module.exports = {
   getRequest: getRequestValuesFromSqs,
