@@ -1,3 +1,10 @@
+## [4.14.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.14.0...v4.14.1) (2024-04-29)
+
+
+### Bug Fixes
+
+* handle non-json SQS response bodies ([157fbc2](https://github.com/CodeGenieApp/serverless-express/commit/157fbc2d689a82d72984421921fe8992ba01bf8d)), closes [#679](https://github.com/CodeGenieApp/serverless-express/issues/679)
+
 # [4.14.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.13.0...v4.14.0) (2024-03-12)
 
 
