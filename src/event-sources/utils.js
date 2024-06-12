@@ -33,7 +33,9 @@ function getRequestValuesFromEvent ({
   if (event.multiValueHeaders) {
     headers = getCommaDelimitedHeaders({ headersMap: event.multiValueHeaders, lowerCaseKey: true })
   } else if (event.headers) {
-    headers = event.headers
+    Object.entries(event.headers).forEach(([headerKey, headerValue]) => {
+      headers[headerKey.toLowerCase()] = headerValue
+    })
   }
 
   let body
