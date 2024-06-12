@@ -1,5 +1,22 @@
 const { getEventSourceNameBasedOnEvent } = require('../src/event-sources/utils')
 
+const apiGatewayV1Event = {
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  },
+  resource: '/',
+  queryStringParameters: null,
+  multiValueQueryStringParameters: null,
+  body: '{"test":"1","value":2}',
+  path: '/',
+  pathParameters: {
+    path: '/'
+  },
+  httpMethod: 'GET',
+  requestContext: {}
+}
+
 /**
 This is an event delivered by `sam local start-api`,
 using Type:HttpApi, with SAM CLI version 1.18.0.
@@ -238,6 +255,11 @@ describe('getEventSourceNameBasedOnEvent', () => {
     )
   })
 
+  test('recognizes API Gateway V1 event', () => {
+    const result = getEventSourceNameBasedOnEvent({ event: apiGatewayV1Event })
+    expect(result).toEqual('AWS_API_GATEWAY_V1')
+  })
+
   test('recognizes sam local HttpApi event', () => {
     const result = getEventSourceNameBasedOnEvent({ event: samHttpApiEvent })
     expect(result).toEqual('AWS_API_GATEWAY_V2')
@@ -280,6 +302,7 @@ describe('getEventSourceNameBasedOnEvent', () => {
 })
 
 module.exports = {
+  apiGatewayV1Event,
   samHttpApiEvent,
   dynamoDbEvent,
   snsEvent,
