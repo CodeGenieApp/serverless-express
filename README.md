@@ -37,7 +37,7 @@ Starting a new software project? Check out Code Genie - a <a href="https://codeg
   </a>
 </p>
 
-Run REST APIs and other web applications using your existing [Node.js](https://nodejs.org/) application framework (Express, Koa, Hapi, Sails, etc.), on top of [AWS Lambda](https://aws.amazon.com/lambda/) and [Amazon API Gateway](https://aws.amazon.com/api-gateway/) or [Azure Function](https://docs.microsoft.com/en-us/azure/azure-functions/).
+Run REST APIs and other web applications using your existing [Node.js](https://nodejs.org/) application framework (Express, Koa, Hapi, Sails, etc.), on top of [AWS Lambda](https://aws.amazon.com/lambda/), [Amazon API Gateway](https://aws.amazon.com/api-gateway/), [Azure Function](https://docs.microsoft.com/en-us/azure/azure-functions/) or [Genezio Cloud](https://genezio.com/) 
 
 ```bash
 npm install @codegenie/serverless-express
