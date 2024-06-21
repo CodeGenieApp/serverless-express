@@ -101,6 +101,40 @@ function handler (event, context) {
 exports.handler = handler
 ```
 
+## Genezio
+Genezio is a serverless cloud compatible with Lambda functions but faster and cheaper.
+
+### Minimal handler app
+
+The only AWS Lambda-compatible code you need to write is a simple handler like the one below. You can write all other code as you would normally do.
+
+```js
+// index.mjs
+import express from 'express';
+import serverlessExpress from '@codegenie/serverless-express';
+
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Hello World from Express serverless!xx');
+});
+
+// You don't need to listen to the port when using serverless functions in production
+if (process.env.NODE_ENV === 'dev') {
+  app.listen(8080, () => {
+    console.log(
+      'Server is running on port 8080. Check the app on http://localhost:8080'
+    );
+  });
+}
+
+export const handler = serverlessExpress({ app });
+```
+
+Try out a ready-to-use demo:
+
+[![Deploy to Genezio](https://raw.githubusercontent.com/Genez-io/graphics/main/svg/deploy-button.svg)](https://app.genez.io/start/deploy?repository=https://github.com/Genez-io/codegenie-serverless-express)
+
 ## Azure
 
 ### Async Azure Function v3/v4 handler wrapper
