@@ -1,3 +1,10 @@
+# [4.15.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.14.2...v4.15.0) (2024-08-07)
+
+
+### Features
+
+* add aws self-managed kafka event source ([#686](https://github.com/CodeGenieApp/serverless-express/issues/686)) ([6e3a7f2](https://github.com/CodeGenieApp/serverless-express/commit/6e3a7f20d037da50e03060855525d3132c079b6e))
+
 ## [4.14.2](https://github.com/CodeGenieApp/serverless-express/compare/v4.14.1...v4.14.2) (2024-08-07)
 
 
