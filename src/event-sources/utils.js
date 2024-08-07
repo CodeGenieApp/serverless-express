@@ -71,6 +71,7 @@ function getEventSourceNameBasedOnEvent ({
   event
 }) {
   if (event.requestContext && event.requestContext.elb) return 'AWS_ALB'
+  if (event.eventSource === 'SelfManagedKafka') return 'AWS_SELF_MANAGED_KAFKA'
   if (event.Records) {
     const eventSource = event.Records[0] ? event.Records[0].EventSource || event.Records[0].eventSource : undefined
     if (eventSource === 'aws:sns') {

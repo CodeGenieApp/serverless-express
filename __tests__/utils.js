@@ -231,6 +231,42 @@ const kinesisDataStreamEvent = {
   ]
 }
 
+// Sample event from https://docs.aws.amazon.com/lambda/latest/dg/with-kafka.html
+const selfManagedKafkaEvent = {
+  eventSource: 'SelfManagedKafka',
+  bootstrapServers: 'b-2.demo-cluster-1.a1bcde.c1.kafka.us-east-1.amazonaws.com:9092,b-1.demo-cluster-1.a1bcde.c1.kafka.us-east-1.amazonaws.com:9092',
+  records: {
+    'mytopic-0': [
+      {
+        topic: 'mytopic',
+        partition: 0,
+        offset: 15,
+        timestamp: 1545084650987,
+        timestampType: 'CREATE_TIME',
+        key: 'abcDEFghiJKLmnoPQRstuVWXyz1234==',
+        value: 'SGVsbG8sIHRoaXMgaXMgYSB0ZXN0Lg==',
+        headers: [
+          {
+            headerKey: [
+              104,
+              101,
+              97,
+              100,
+              101,
+              114,
+              86,
+              97,
+              108,
+              117,
+              101
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
 describe('getEventSourceNameBasedOnEvent', () => {
   test('throws error on empty event', () => {
     expect(() => getEventSourceNameBasedOnEvent({ event: {} })).toThrow(
@@ -263,6 +299,11 @@ describe('getEventSourceNameBasedOnEvent', () => {
     expect(result).toEqual('AWS_KINESIS_DATA_STREAM')
   })
 
+  test('recognises self managed kafka event', () => {
+    const result = getEventSourceNameBasedOnEvent({ event: selfManagedKafkaEvent })
+    expect(result).toEqual('AWS_SELF_MANAGED_KAFKA')
+  })
+
   test('recognizes eventbridge event', () => {
     const result = getEventSourceNameBasedOnEvent({ event: eventbridgeEvent })
     expect(result).toEqual('AWS_EVENTBRIDGE')
@@ -287,5 +328,6 @@ module.exports = {
   eventbridgeEvent,
   eventbridgeScheduledEvent,
   eventbridgeCustomerEvent,
-  kinesisDataStreamEvent
+  kinesisDataStreamEvent,
+  selfManagedKafkaEvent
 }

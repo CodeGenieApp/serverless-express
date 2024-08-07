@@ -283,6 +283,7 @@ serverlessExpress({
     'AWS_KINESIS_DATA_STREAM': '/kinesis',
     'AWS_S3': '/s3',
     'AWS_STEP_FUNCTIONS': '/step-functions',
+    'AWS_SELF_MANAGED_KAFKA': '/self-managed-kafka',
   }
 })
 ```
