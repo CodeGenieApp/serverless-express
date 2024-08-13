@@ -21,7 +21,7 @@ function getContentType ({ headers }) {
 function isContentTypeBinary ({ headers, binaryContentTypes }) {
   if (!binaryContentTypes || !Array.isArray(binaryContentTypes)) return false
 
-  const binaryContentTypesRegexes = binaryContentTypes.map(binaryContentType => new RegExp(`^${binaryContentType.replace(/\*/g, '.*')}$`))
+  const binaryContentTypesRegexes = binaryContentTypes.map(binaryContentType => new RegExp(`^${binaryContentType.replace(/\*|\.\*/g, '.*')}$`))
   const contentType = getContentType({ headers })
 
   if (!contentType) return false
