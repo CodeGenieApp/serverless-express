@@ -11,6 +11,7 @@ const awsEventBridgeEventSource = require('./aws/eventbridge')
 const awsKinesisEventSource = require('./aws/kinesis')
 const awsS3 = require('./aws/s3')
 const awsStepFunctionsEventSource = require('./aws/step-functions')
+const awsSelfManagedKafkaEventSource = require('./aws/self-managed-kafka')
 
 function getEventSource ({ eventSourceName }) {
   switch (eventSourceName) {
@@ -40,6 +41,8 @@ function getEventSource ({ eventSourceName }) {
       return awsS3
     case 'AWS_STEP_FUNCTIONS':
       return awsStepFunctionsEventSource
+    case 'AWS_SELF_MANAGED_KAFKA':
+      return awsSelfManagedKafkaEventSource
     default:
       throw new Error('Couldn\'t detect valid event source.')
   }

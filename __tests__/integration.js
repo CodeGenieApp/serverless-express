@@ -103,6 +103,40 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     expect(response).toEqual(expectedResponse)
   })
 
+  test('headers get lowercased', async () => {
+    app = express()
+    router = express.Router()
+    app.use('/', router)
+    serverlessExpressInstance = serverlessExpress({ app })
+    router.get('/foo', (req, res) => {
+      const xHeaders = Object.fromEntries(
+        Object.entries(req.headers).filter(([name]) => name.startsWith('x-header-'))
+      )
+      res.json({ xHeaders })
+    })
+    const event = makeEvent({
+      eventSourceName: 'apiGatewayV1',
+      path: '/foo',
+      httpMethod: 'GET',
+      multiValueHeaders: undefined,
+      headers: {
+        'X-Header-One': 'Value1',
+        'x-header-two': 'Value2'
+      }
+    })
+    const response = await serverlessExpressInstance(event)
+    const expectedResponse = makeResponse({
+      eventSourceName: 'apiGatewayV1',
+      body: JSON.stringify({
+        xHeaders: {
+          'x-header-one': 'Value1',
+          'x-header-two': 'Value2'
+        }
+      })
+    })
+    expect(response).toMatchObject(expectedResponse)
+  })
+
   test('resolutionMode = CALLBACK', (done) => {
     const jsonResponse = { data: { name: 'Brett' } }
     router.get('/users', (req, res) => {
@@ -287,7 +321,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     const response = await serverlessExpressInstance(event)
     const expectedResponse = makeResponse({
       eventSourceName,
-      body: JSON.stringify({ data: { name: name } }),
+      body: JSON.stringify({ data: { name } }),
       multiValueHeaders: {
         'content-length': ['29'],
         etag: ['W/"1d-9ERga12t1e/5eBdg3k9zfIvAfWo"']

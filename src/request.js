@@ -15,6 +15,16 @@ module.exports = class ServerlessRequest extends http.IncomingMessage {
       destroy: Function.prototype
     })
 
+    // IncomingMessage has a lot of logic for when to lowercase or alias well-known header names,
+    // so we delegate to that logic here
+    const headerEntries = Object.entries(headers)
+    const rawHeaders = new Array(headerEntries.length * 2)
+    for (let i = 0; i < headerEntries.length; i++) {
+      rawHeaders[i * 2] = headerEntries[i][0]
+      rawHeaders[i * 2 + 1] = headerEntries[i][1]
+    }
+    this._addHeaderLines(rawHeaders, rawHeaders.length)
+
     Object.assign(this, {
       ip: remoteAddress,
       complete: true,
@@ -22,7 +32,6 @@ module.exports = class ServerlessRequest extends http.IncomingMessage {
       httpVersionMajor: '1',
       httpVersionMinor: '1',
       method,
-      headers,
       body,
       url
     })
