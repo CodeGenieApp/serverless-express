@@ -11,3 +11,4 @@ examples/nextjs
 typescript-out
 .build
 .serverless
+.idea

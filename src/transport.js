@@ -103,6 +103,11 @@ async function getRequestResponse ({
   return { request, response }
 }
 
+function markHttpRequestAsCompleted (request) {
+  request.complete = true
+  request.readable = false
+}
+
 function waitForStreamComplete (stream) {
   if (stream.complete || stream.writableEnded) {
     return stream
@@ -155,6 +160,7 @@ async function forwardRequestToNodeServer ({
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:REQUEST_VALUES', { requestValues })
   const { request, response } = await getRequestResponse(requestValues)
   await framework.sendRequest({ app, request, response })
+  markHttpRequestAsCompleted(request)
   await waitForStreamComplete(response)
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:RESPONSE', { response })
   forwardResponse({

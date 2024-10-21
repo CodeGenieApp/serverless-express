@@ -8,7 +8,7 @@ module.exports = class ServerlessRequest extends http.IncomingMessage {
   constructor ({ method, url, headers, body, remoteAddress }) {
     super({
       encrypted: true,
-      readable: false,
+      readable: true,
       remoteAddress,
       address: () => ({ port: HTTPS_PORT }),
       end: Function.prototype,
