@@ -1,3 +1,10 @@
+# [4.16.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.15.0...v4.16.0) (2024-10-24)
+
+
+### Features
+
+* add support for Express v5 ([#691](https://github.com/CodeGenieApp/serverless-express/issues/691)) ([#692](https://github.com/CodeGenieApp/serverless-express/issues/692)) ([d20e3f0](https://github.com/CodeGenieApp/serverless-express/commit/d20e3f03f76a8db6de1d83790bc6c2fa4329e873))
+
 # [4.15.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.14.2...v4.15.0) (2024-08-07)
 
 
