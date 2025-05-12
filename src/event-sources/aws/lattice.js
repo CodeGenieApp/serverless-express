@@ -38,6 +38,8 @@ const getRequestValuesFromLatticeEvent = ({ event }) => {
     event,
     path: getPathWithQueryStringUseUnescapeParams({ event })
   })
+
+  console.log('getRequestValuesFromLatticeEvent', values);
   return values
 }
 
