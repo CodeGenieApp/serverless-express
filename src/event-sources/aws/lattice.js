@@ -36,6 +36,7 @@ function decodeUrlencoded (val) {
 const getRequestValuesFromLatticeEvent = ({ event }) => {
   const values = getRequestValuesFromEvent({
     event,
+    method: event.method,
     path: getPathWithQueryStringUseUnescapeParams({ event })
   })
 
