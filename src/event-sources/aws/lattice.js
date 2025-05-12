@@ -20,6 +20,12 @@ function getRequestValuesFromLatticeEvent({ event }) {
     parsedHeaders['content-length'] = Buffer.byteLength(parsedBody, isBase64Encoded ? 'base64' : 'utf8');
   }
 
+  console.log('HTTP Method:', httpMethod);
+  console.log('Path:', path);
+  console.log('Formatted Path:', formattedPath);
+  console.log('Headers:', parsedHeaders);
+  console.log('Body:', parsedBody);
+
   return {
     method: httpMethod,
     headers: parsedHeaders,
