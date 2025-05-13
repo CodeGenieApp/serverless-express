@@ -47,20 +47,17 @@ const getRequestValuesFromLatticeEvent = ({ event }) => {
 }
 
 const getResponseToLattice = ({
-  event,
   statusCode,
   body,
   headers: responseHeaders,
   isBase64Encoded
 }) => {
-  const multiValueHeaders = !event.headers ? getMultiValueHeaders({ headers: responseHeaders }) : undefined
-  const headers = event.headers
+  const headers = getCommaDelimitedHeaders({ headersMap: responseHeaders });
 
   return {
     statusCode,
     body,
     headers,
-    multiValueHeaders,
     isBase64Encoded
   }
 }
