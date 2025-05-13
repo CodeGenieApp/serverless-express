@@ -1,5 +1,5 @@
 const url = require('url');
-const { getRequestValuesFromEvent, getMultiValueHeaders } = require('../utils');
+const { getRequestValuesFromEvent, getMultiValueHeaders, getCommaDelimitedHeaders } = require('../utils');
 
 function getPathWithQueryStringUseUnescapeParams ({
   event,
@@ -34,13 +34,14 @@ function decodeUrlencoded (val) {
 }
 
 const getRequestValuesFromLatticeEvent = ({ event }) => {
-  console.log('Lattice Event:', event);
-
   const values = getRequestValuesFromEvent({
     event,
     method: event.method,
     path: getPathWithQueryStringUseUnescapeParams({ event })
   })
+
+  // NOTE: Lattice always sends the headers as array that needs to be converted to a comma delimited string
+  values.headers = getCommaDelimitedHeaders({ headersMap: event.headers, lowerCaseKey: true })
 
   return values
 }
@@ -54,11 +55,6 @@ const getResponseToLattice = ({
 }) => {
   const multiValueHeaders = !event.headers ? getMultiValueHeaders({ headers: responseHeaders }) : undefined
   const headers = event.headers
-    ? Object.entries(responseHeaders).reduce((acc, [k, v]) => {
-      acc[k] = Array.isArray(v) ? v[0] : v
-      return acc
-    }, {})
-    : undefined
 
   return {
     statusCode,
