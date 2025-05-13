@@ -20,6 +20,10 @@ function getEventBody ({
   body = event.body,
   isBase64Encoded = event.isBase64Encoded
 }) {
+  if (!isBase64Encoded) {
+    return body;
+  }
+
   return Buffer.from(body, isBase64Encoded ? 'base64' : 'utf8')
 }
 

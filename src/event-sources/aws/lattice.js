@@ -34,6 +34,8 @@ function decodeUrlencoded (val) {
 }
 
 const getRequestValuesFromLatticeEvent = ({ event }) => {
+  console.log('Lattice Event:', event);
+
   const values = getRequestValuesFromEvent({
     event,
     method: event.method,
