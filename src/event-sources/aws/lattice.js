@@ -52,7 +52,7 @@ const getResponseToLattice = ({
   headers: responseHeaders,
   isBase64Encoded
 }) => {
-  const headers = getCommaDelimitedHeaders({ headersMap: responseHeaders });
+  const headers = getMultiValueHeaders({ headers: responseHeaders });
 
   return {
     statusCode,
