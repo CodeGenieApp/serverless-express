@@ -1,5 +1,5 @@
-const url = require('url');
-const { getRequestValuesFromEvent, getMultiValueHeaders, getCommaDelimitedHeaders } = require('../utils');
+const url = require('url')
+const { getRequestValuesFromEvent, getCommaDelimitedHeaders } = require('../utils')
 
 function getPathWithQueryStringUseUnescapeParams ({
   event,
@@ -10,16 +10,9 @@ function getPathWithQueryStringUseUnescapeParams ({
 }) {
   const query = {}
   // decode everything back into utf-8 text.
-  if (event.multiValueQueryStringParameters) {
-    for (const key in event.multiValueQueryStringParameters) {
-      const formattedKey = decodeUrlencoded(key)
-      query[formattedKey] = event.multiValueQueryStringParameters[key].map(value => decodeUrlencoded(value))
-    }
-  } else {
-    for (const key in event.queryStringParameters) {
-      const formattedKey = decodeUrlencoded(key)
-      query[formattedKey] = decodeUrlencoded(event.queryStringParameters[key])
-    }
+  for (const key in event.queryStringParameters) {
+    const formattedKey = decodeUrlencoded(key)
+    query[formattedKey] = event.queryStringParameters[key].map(value => decodeUrlencoded(value))
   }
 
   return url.format({
@@ -52,7 +45,7 @@ const getResponseToLattice = ({
   headers: responseHeaders,
   isBase64Encoded
 }) => {
-  const headers = getMultiValueHeaders({ headers: responseHeaders });
+  const headers = getCommaDelimitedHeaders({ headersMap: responseHeaders })
 
   return {
     statusCode,
@@ -64,5 +57,5 @@ const getResponseToLattice = ({
 
 module.exports = {
   getRequest: getRequestValuesFromLatticeEvent,
-  getResponse: getResponseToLattice,
-};
+  getResponse: getResponseToLattice
+}

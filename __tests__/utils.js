@@ -267,6 +267,23 @@ const selfManagedKafkaEvent = {
   }
 }
 
+const latticeEvent = {
+  version: '2.0',
+  method: 'GET',
+  path: '/test-path',
+  queryStringParameters: { key: ['value'] },
+  headers: { 'x-custom-header': ['test-header'] },
+  body: JSON.stringify({ key: 'value' }),
+  requestContext: {
+    serviceNetworkArn: 'arn:aws:vpc-lattice:eu-central-1:123456789:servicenetwork/sn-123',
+    serviceArn: 'arn:aws:vpc-lattice:eu-central-1:014538609594:service/svc-123',
+    targetGroupArn: 'arn:aws:vpc-lattice:eu-central-1:014538609594:targetgroup/tg-123',
+    identity: {
+      sourceVpcArn: 'arn:aws:ec2:eu-central-1:123456789:vpc/vpc-123'
+    }
+  }
+}
+
 describe('getEventSourceNameBasedOnEvent', () => {
   test('throws error on empty event', () => {
     expect(() => getEventSourceNameBasedOnEvent({ event: {} })).toThrow(
@@ -318,6 +335,11 @@ describe('getEventSourceNameBasedOnEvent', () => {
     const result = getEventSourceNameBasedOnEvent({ event: eventbridgeCustomerEvent })
     expect(result).toEqual('AWS_EVENTBRIDGE')
   })
+
+  test('recognizes lattice event', () => {
+    const result = getEventSourceNameBasedOnEvent({ event: latticeEvent })
+    expect(result).toEqual('AWS_VPC_LATTICE')
+  })
 })
 
 module.exports = {
@@ -329,5 +351,6 @@ module.exports = {
   eventbridgeScheduledEvent,
   eventbridgeCustomerEvent,
   kinesisDataStreamEvent,
-  selfManagedKafkaEvent
+  selfManagedKafkaEvent,
+  latticeEvent
 }
