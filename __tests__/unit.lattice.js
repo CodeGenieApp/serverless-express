@@ -2,7 +2,7 @@ const eventSources = require('../src/event-sources')
 const testUtils = require('./utils')
 
 const latticeEventSource = eventSources.getEventSource({
-  eventSourceName: 'AWS_VPC_LATTICE'
+  eventSourceName: 'AWS_VPC_LATTICE_V2'
 })
 
 test('request is correct', () => {

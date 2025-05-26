@@ -44,7 +44,7 @@ function getEventSource ({ eventSourceName }) {
       return awsStepFunctionsEventSource
     case 'AWS_SELF_MANAGED_KAFKA':
       return awsSelfManagedKafkaEventSource
-    case 'AWS_VPC_LATTICE':
+    case 'AWS_VPC_LATTICE_V2':
       return awsLatticeEventSource
     default:
       throw new Error('Couldn\'t detect valid event source.')

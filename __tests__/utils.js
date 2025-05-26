@@ -338,7 +338,7 @@ describe('getEventSourceNameBasedOnEvent', () => {
 
   test('recognizes lattice event', () => {
     const result = getEventSourceNameBasedOnEvent({ event: latticeEvent })
-    expect(result).toEqual('AWS_VPC_LATTICE')
+    expect(result).toEqual('AWS_VPC_LATTICE_V2')
   })
 })
 

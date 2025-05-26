@@ -71,7 +71,10 @@ function getEventSourceNameBasedOnEvent ({
   event
 }) {
   if (event.requestContext && event.requestContext.elb) return 'AWS_ALB'
-  if (event.requestContext && event.requestContext.serviceNetworkArn && event.requestContext.serviceArn) return 'AWS_VPC_LATTICE'
+  if (event.headers['x-amzn-lattice-network']) {
+    console.warn('Lattice event v1 is not supported. Please use Lattice event v2.')
+  }
+  if (event.requestContext && event.requestContext.serviceNetworkArn && event.requestContext.serviceArn) return 'AWS_VPC_LATTICE_V2'
   if (event.eventSource === 'SelfManagedKafka') return 'AWS_SELF_MANAGED_KAFKA'
   if (event.Records) {
     const eventSource = event.Records[0] ? event.Records[0].EventSource || event.Records[0].eventSource : undefined
