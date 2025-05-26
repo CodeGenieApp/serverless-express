@@ -201,7 +201,7 @@ Set this to true to have serverless-express include the error stack trace in the
 
 ### eventSource
 
-serverless-express natively supports API Gateway, ALB, Lambda@Edge and VPC Lattice. If you want to use Express with other AWS Services integrated with Lambda you can provide your own custom request/response mappings via `eventSource`. See the [custom-mapper-dynamodb example](examples/custom-mapper-dynamodb).
+serverless-express natively supports API Gateway, ALB, Lambda@Edge and VPC Lattice (only V2 events - event source `AWS_VPC_LATTICE_V2`). If you want to use Express with other AWS Services integrated with Lambda you can provide your own custom request/response mappings via `eventSource`. See the [custom-mapper-dynamodb example](examples/custom-mapper-dynamodb).
 
 ```js
 function requestMapper ({ event }) {
