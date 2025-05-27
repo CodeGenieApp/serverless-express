@@ -9,7 +9,7 @@ test('request is correct', () => {
   const req = getReq()
   expect(typeof req).toEqual('object')
   expect(req.method).toEqual('GET')
-  expect(req.path).toEqual('/test-path%3Fkey=value')
+  expect(req.path).toEqual('/test-path?key=value')
   expect(req.headers).toEqual({
     'x-custom-header': 'test-header',
     'content-length': 15
