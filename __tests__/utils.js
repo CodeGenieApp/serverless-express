@@ -270,7 +270,7 @@ const selfManagedKafkaEvent = {
 const latticeEvent = {
   version: '2.0',
   method: 'GET',
-  path: '/test-path',
+  path: '/test-path?key=value',
   queryStringParameters: { key: ['value'] },
   headers: { 'x-custom-header': ['test-header'] },
   body: JSON.stringify({ key: 'value' }),
