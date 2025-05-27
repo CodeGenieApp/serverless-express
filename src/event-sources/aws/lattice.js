@@ -16,8 +16,8 @@ function getPathWithQueryStringUseUnescapeParams ({
   }
 
   return url.format({
-    pathname: path.replace(replaceRegex, ''),
-    query
+    pathname: path.replace(replaceRegex, '')
+    // query
   })
 }
 
