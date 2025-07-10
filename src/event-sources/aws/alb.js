@@ -52,7 +52,7 @@ const getResponseToAlb = ({
   const multiValueHeaders = !event.headers ? getMultiValueHeaders({ headers: responseHeaders }) : undefined
   const headers = event.headers
     ? Object.entries(responseHeaders).reduce((acc, [k, v]) => {
-      acc[k] = Array.isArray(v) ? v[0] : v
+      acc[k] = Array.isArray(v) ? String(v[0]) : String(v)
       return acc
     }, {})
     : undefined
