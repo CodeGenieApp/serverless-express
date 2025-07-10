@@ -1,3 +1,10 @@
+# [4.17.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.16.1...v4.17.0) (2025-07-10)
+
+
+### Features
+
+* add VPC Lattice support ([#696](https://github.com/CodeGenieApp/serverless-express/issues/696)) ([cbee760](https://github.com/CodeGenieApp/serverless-express/commit/cbee7607e812cd1c7f13bb88296b7e8c5296f8c0))
+
 ## [4.16.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.16.0...v4.16.1) (2025-07-10)
 
 
