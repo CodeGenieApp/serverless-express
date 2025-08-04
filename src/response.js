@@ -125,6 +125,11 @@ module.exports = class ServerlessResponse extends http.ServerResponse {
         if (typeof cb === 'function') {
           cb()
         }
+
+        // must return bool to indicate if the data was flushed to the
+        // kernel and if not then indicate that the sender must wait
+        // for drain event; which we never do so always return true.
+        return true;
       }
     })
   }
