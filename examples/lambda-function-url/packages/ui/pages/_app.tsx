@@ -27,7 +27,7 @@ Amplify.configure({
 
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_ApiEndpoint
 
-// Set Authorization header on all requests if user is signed in; othwerise, redirect to login page
+// Set Authorization header on all requests if user is signed in; otherwise, redirect to login page
 axios.interceptors.request.use(async (config) => {
   try {
     const authSession = await fetchAuthSession()
