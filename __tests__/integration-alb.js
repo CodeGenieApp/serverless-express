@@ -6,7 +6,7 @@ const {
 } = require('../jest-helpers')
 
 describe('alb:express integration tests', () => {
-  test('reasponse headers are of type string', async () => {
+  test('response headers are of type string', async () => {
     const app = express()
     const router = express.Router()
     app.use('/', router)
@@ -15,14 +15,14 @@ describe('alb:express integration tests', () => {
       res.send('123')
     })
     const event = makeEvent({
-      eventSourceName: 'alb',
+      eventSourceName: 'AWS_ALB',
       path: '/foo',
       httpMethod: 'GET',
       headers: {}
     })
     const response = await serverlessExpressInstance(event)
     const expectedResponse = makeResponse({
-      eventSourceName: 'alb',
+      eventSourceName: 'AWS_ALB',
       body: '123',
       headers: {
         'content-length': '3',

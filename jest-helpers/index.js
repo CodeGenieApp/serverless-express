@@ -6,12 +6,12 @@ const { makeAzureHttpFunctionV3Event, makeAzureHttpFunctionV3Response } = requir
 const { makeAzureHttpFunctionV4Event, makeAzureHttpFunctionV4Response } = require('./azure-http-function-v4-event')
 
 const EVENT_SOURCE_NAMES = [
-  'alb',
-  'apiGatewayV1',
-  'apiGatewayV2',
-  'lambdaEdge',
-  'azureHttpFunctionV3',
-  'azureHttpFunctionV4'
+  'AWS_ALB',
+  'AWS_API_GATEWAY_V1',
+  'AWS_API_GATEWAY_V2',
+  'AWS_LAMBDA_EDGE',
+  'AZURE_HTTP_FUNCTION_V3',
+  'AZURE_HTTP_FUNCTION_V4'
 ]
 
 const FRAMEWORK_NAMES = [
@@ -49,17 +49,17 @@ class MockContext {
 
 function makeEvent ({ eventSourceName, ...rest }) {
   switch (eventSourceName) {
-    case 'alb':
+    case 'AWS_ALB':
       return makeAlbEvent(rest)
-    case 'apiGatewayV1':
+    case 'AWS_API_GATEWAY_V1':
       return makeApiGatewayV1Event(rest)
-    case 'apiGatewayV2':
+    case 'AWS_API_GATEWAY_V2':
       return makeApiGatewayV2Event(rest)
-    case 'lambdaEdge':
+    case 'AWS_LAMBDA_EDGE':
       return makeLambdaEdgeEvent(rest)
-    case 'azureHttpFunctionV3':
+    case 'AZURE_HTTP_FUNCTION_V3':
       return makeAzureHttpFunctionV3Event(rest)
-    case 'azureHttpFunctionV4':
+    case 'AZURE_HTTP_FUNCTION_V4':
       return makeAzureHttpFunctionV4Event(rest)
     default:
       throw new Error(`Unknown eventSourceName ${eventSourceName}`)
@@ -68,17 +68,17 @@ function makeEvent ({ eventSourceName, ...rest }) {
 
 function makeResponse ({ eventSourceName, ...rest }, { shouldConvertContentLengthToInt = false } = {}) {
   switch (eventSourceName) {
-    case 'alb':
+    case 'AWS_ALB':
       return makeAlbResponse(rest)
-    case 'apiGatewayV1':
+    case 'AWS_API_GATEWAY_V1':
       return makeApiGatewayV1Response(rest)
-    case 'apiGatewayV2':
+    case 'AWS_API_GATEWAY_V2':
       return makeApiGatewayV2Response(rest, { shouldConvertContentLengthToInt })
-    case 'lambdaEdge':
+    case 'AWS_LAMBDA_EDGE':
       return makeLambdaEdgeResponse(rest)
-    case 'azureHttpFunctionV3':
+    case 'AZURE_HTTP_FUNCTION_V3':
       return makeAzureHttpFunctionV3Response(rest, { shouldConvertContentLengthToInt })
-    case 'azureHttpFunctionV4':
+    case 'AZURE_HTTP_FUNCTION_V4':
       return makeAzureHttpFunctionV4Response(rest, { shouldConvertContentLengthToInt })
     default:
       throw new Error(`Unknown eventSourceName ${eventSourceName}`)

@@ -55,7 +55,8 @@ function respondToEventSourceWithError ({
   log,
   respondWithErrors,
   eventSourceName,
-  eventSource
+  eventSource,
+  event
 }) {
   log.error('SERVERLESS_EXPRESS:RESPOND_TO_EVENT_SOURCE_WITH_ERROR', error)
 
@@ -73,6 +74,7 @@ function respondToEventSourceWithError ({
 
   const body = respondWithErrors ? error.stack : ''
   const errorResponse = eventSource.getResponse({
+    event,
     statusCode: 500,
     body,
     headers: {},

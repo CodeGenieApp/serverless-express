@@ -10,6 +10,7 @@ const {
   makeResponse,
   EACH_MATRIX
 } = require('../jest-helpers')
+const { getEventSource } = require('../src/event-sources')
 const jestHelpersPath = path.join(__dirname, '..', 'jest-helpers')
 
 let app, router, serverlessExpressInstance
@@ -115,7 +116,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
       res.json({ xHeaders })
     })
     const event = makeEvent({
-      eventSourceName: 'apiGatewayV1',
+      eventSourceName: 'AWS_API_GATEWAY_V1',
       path: '/foo',
       httpMethod: 'GET',
       multiValueHeaders: undefined,
@@ -126,7 +127,7 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     })
     const response = await serverlessExpressInstance(event)
     const expectedResponse = makeResponse({
-      eventSourceName: 'apiGatewayV1',
+      eventSourceName: 'AWS_API_GATEWAY_V1',
       body: JSON.stringify({
         xHeaders: {
           'x-header-one': 'Value1',
@@ -265,8 +266,8 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     const etagRegex = /^W\/.*$/
     const lastModifiedRegex = /^.* GMT$/
     switch (eventSourceName) {
-      case 'alb':
-      case 'apiGatewayV1':
+      case 'AWS_ALB':
+      case 'AWS_API_GATEWAY_V1':
         expect(response.multiValueHeaders.etag.length).toEqual(1)
         expect(response.multiValueHeaders.etag[0]).toMatch(etagRegex)
         expect(response.multiValueHeaders['last-modified'].length).toEqual(1)
@@ -274,8 +275,8 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
         delete response.multiValueHeaders.etag
         delete response.multiValueHeaders['last-modified']
         break
-      case 'azureHttpFunctionV4':
-      case 'azureHttpFunctionV3':
+      case 'AZURE_HTTP_FUNCTION_V4':
+      case 'AZURE_HTTP_FUNCTION_V3':
         expectedResponse.body = Buffer.from(samLogoBase64, 'base64')
         expectedResponse.isBase64Encoded = false
         expect(response.headers.etag).toMatch(etagRegex)
@@ -283,13 +284,13 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
         delete response.headers.etag
         delete response.headers['last-modified']
         break
-      case 'apiGatewayV2':
+      case 'AWS_API_GATEWAY_V2':
         expect(response.headers.etag).toMatch(etagRegex)
         expect(response.headers['last-modified']).toMatch(lastModifiedRegex)
         delete response.headers.etag
         delete response.headers['last-modified']
         break
-      case 'lambdaEdge':
+      case 'AWS_LAMBDA_EDGE':
         expect(response.headers.etag.length).toEqual(1)
         expect(response.headers.etag[0].key).toMatch('etag')
         expect(response.headers.etag[0].value).toMatch(etagRegex)
@@ -420,12 +421,56 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     expect(response).toEqual(expectedResponse)
   })
 
-  test.skip('respondToEventSourceWithError', async () => {
-    const response = await serverlessExpressInstance(null)
-    expect(response).toEqual({
-      statusCode: 500,
-      body: '',
-      multiValueHeaders: {}
+  describe('respondToEventSourceWithError', () => {
+    let event
+    let eventSource
+    let getRequestSpy
+
+    beforeEach(() => {
+      event = makeEvent({
+        eventSourceName,
+        path: '/users',
+        httpMethod: 'GET'
+      })
+      eventSource = getEventSource({ eventSourceName })
+      getRequestSpy = jest.spyOn(eventSource, 'getRequest').mockImplementation(() => {
+        throw new URIError('URI malformed')
+      })
+    })
+
+    afterEach(() => {
+      getRequestSpy.mockRestore()
+    })
+
+    test('respondWithErrors: true', async () => {
+      serverlessExpressInstance = serverlessExpress({
+        app,
+        eventSource,
+        respondWithErrors: true
+      })
+
+      const response = await serverlessExpressInstance(event)
+      const statusCode = response.statusCode || response.status
+
+      expect(statusCode).toBe(500)
+      expect(response.body).toContain('URIError')
+      expect(response.body).toContain('URI malformed')
+      expect(getRequestSpy).toHaveBeenCalledWith(expect.objectContaining({ event }))
+    })
+
+    test('respondWithErrors: false', async () => {
+      serverlessExpressInstance = serverlessExpress({
+        app,
+        eventSource,
+        respondWithErrors: false
+      })
+
+      const response = await serverlessExpressInstance(event)
+      const statusCode = response.statusCode || response.status
+
+      expect(statusCode).toBe(500)
+      expect(response.body).toEqual('')
+      expect(getRequestSpy).toHaveBeenCalledWith(expect.objectContaining({ event }))
     })
   })
 
@@ -471,8 +516,8 @@ describe.each(EACH_MATRIX)('%s:%s: integration tests', (eventSourceName, framewo
     jest.useRealTimers()
 
     switch (eventSourceName) {
-      case 'azureHttpFunctionV4':
-      case 'azureHttpFunctionV3':
+      case 'AZURE_HTTP_FUNCTION_V4':
+      case 'AZURE_HTTP_FUNCTION_V3':
         expectedResponse.cookies = [
           {
             domain: 'mafoo.com',
