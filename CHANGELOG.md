@@ -1,3 +1,17 @@
+# [4.17.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.16.1...v4.17.0) (2025-07-10)
+
+
+### Features
+
+* add VPC Lattice support ([#696](https://github.com/CodeGenieApp/serverless-express/issues/696)) ([cbee760](https://github.com/CodeGenieApp/serverless-express/commit/cbee7607e812cd1c7f13bb88296b7e8c5296f8c0))
+
+## [4.16.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.16.0...v4.16.1) (2025-07-10)
+
+
+### Bug Fixes
+
+* ensure alb response header values are strings ([#699](https://github.com/CodeGenieApp/serverless-express/issues/699)) ([24c580f](https://github.com/CodeGenieApp/serverless-express/commit/24c580fcebb2aa424ee3927787ff27705e6390c2))
+
 # [4.16.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.15.0...v4.16.0) (2024-10-24)
 
 

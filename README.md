@@ -144,7 +144,7 @@ The _out-binding_ parameter `"name": "$return"` is important for Serverless Expr
 
 1. Improved API - Simpler for end-user to use and configure.
 1. Promise resolution mode by default. Can specify `resolutionMode` to use `"CONTEXT"` or `"CALLBACK"`
-1. Additional event sources - API Gateway V1 (REST API), API Gateway V2 (HTTP API), ALB, Lambda@Edge
+1. Additional event sources - API Gateway V1 (REST API), API Gateway V2 (HTTP API), ALB, Lambda@Edge, VPC Lattice
 1. Custom event source - If you have another event source you'd like to use that we don't natively support, check out the [DynamoDB Example](examples/custom-mapper-dynamodb)
 1. Implementation uses mock Request/Response objects instead of running a server listening on a local socket. Thanks to @dougmoscrop from https://github.com/dougmoscrop/serverless-http
 1. Automatic `isBase64Encoded` without specifying `binaryMimeTypes`. Use `binarySettings` to customize. Thanks to @dougmoscrop from https://github.com/dougmoscrop/serverless-http
@@ -201,7 +201,7 @@ Set this to true to have serverless-express include the error stack trace in the
 
 ### eventSource
 
-serverless-express natively supports API Gateway, ALB, and Lambda@Edge. If you want to use Express with other AWS Services integrated with Lambda you can provide your own custom request/response mappings via `eventSource`. See the [custom-mapper-dynamodb example](examples/custom-mapper-dynamodb).
+serverless-express natively supports API Gateway, ALB, Lambda@Edge and VPC Lattice (only V2 events - event source `AWS_VPC_LATTICE_V2`). If you want to use Express with other AWS Services integrated with Lambda you can provide your own custom request/response mappings via `eventSource`. See the [custom-mapper-dynamodb example](examples/custom-mapper-dynamodb).
 
 ```js
 function requestMapper ({ event }) {
