@@ -1,3 +1,10 @@
+## [4.17.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.17.0...v4.17.1) (2025-12-07)
+
+
+### Bug Fixes
+
+* fixing issue with async error handling within the SERVERLESS_EXPRESS:PROXY ([#708](https://github.com/CodeGenieApp/serverless-express/issues/708)) ([edd24f3](https://github.com/CodeGenieApp/serverless-express/commit/edd24f32131c723b741b2188ff1cb23bd762d558))
+
 # [4.17.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.16.1...v4.17.0) (2025-07-10)
 
 
