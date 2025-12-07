@@ -68,6 +68,17 @@ function configure ({
         promise,
         resolutionMode
       })
+      const handleError = (error) => {
+        respondToEventSourceWithError({
+          error,
+          resolver,
+          log,
+          respondWithErrors,
+          eventSourceName,
+          eventSource,
+          event
+        })
+      }
 
       try {
         forwardRequestToNodeServer({
@@ -81,16 +92,9 @@ function configure ({
           eventSource,
           eventSourceRoutes,
           log
-        })
+        }).catch(handleError)
       } catch (error) {
-        respondToEventSourceWithError({
-          error,
-          resolver,
-          log,
-          respondWithErrors,
-          eventSourceName,
-          eventSource
-        })
+        handleError(error)
       }
     })
   }
