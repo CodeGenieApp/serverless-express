@@ -289,7 +289,7 @@ describe.skip('forwardResponse: content-type encoding', () => {
       }
     ).then(successResponse => expect(successResponse).toEqual({
       statusCode: 200,
-      body: body,
+      body,
       multiValueHeaders,
       isBase64Encoded: false
     }))
@@ -345,44 +345,14 @@ describe.skip('forwardResponse: content-type encoding', () => {
 })
 
 describe('makeResolver', () => {
-  test('CONTEXT (specified)', () => {
-    return new Promise(
-      (resolve, reject) => {
-        const context = new MockContext(resolve, reject)
-        const contextResolver = makeResolver({
-          context,
-          resolutionMode: 'CONTEXT'
-        })
-
-        return contextResolver.succeed({
-          response: 'success'
-        })
-      }).then(successResponse => expect(successResponse).toEqual('success'))
-  })
-
-  test('CALLBACK', () => {
-    const callback = (e, response) => response
-    const callbackResolver = makeResolver({
-      callback,
-      resolutionMode: 'CALLBACK',
-      context: {}
-    })
-    const successResponse = callbackResolver.succeed({
-      response: 'success'
-    })
-
-    expect(successResponse).toEqual('success')
-  })
-
-  test('PROMISE', () => {
+  test('succeed resolves promise', () => {
     return new Promise((resolve, reject) => {
       const promise = {
         resolve,
         reject
       }
       const promiseResolver = makeResolver({
-        promise,
-        resolutionMode: 'PROMISE'
+        promise
       })
 
       return promiseResolver.succeed({
@@ -390,6 +360,24 @@ describe('makeResolver', () => {
       })
     }).then(successResponse => {
       expect(successResponse).toEqual('success')
+    })
+  })
+
+  test('fail rejects promise', () => {
+    return new Promise((resolve, reject) => {
+      const promise = {
+        resolve: reject,
+        reject: resolve
+      }
+      const promiseResolver = makeResolver({
+        promise
+      })
+
+      return promiseResolver.fail({
+        error: new Error('test error')
+      })
+    }).then(error => {
+      expect(error.message).toEqual('test error')
     })
   })
 })

@@ -8,9 +8,9 @@ const makeResolver = require('./make-resolver')
 const { forwardRequestToNodeServer, respondToEventSourceWithError } = require('./transport')
 const { DEFAULT_BINARY_ENCODINGS, DEFAULT_BINARY_CONTENT_TYPES } = require('./constants')
 
-function getDefaultBinarySettings (deprecatedBinaryMimeTypes) {
+function getDefaultBinarySettings () {
   return {
-    contentTypes: deprecatedBinaryMimeTypes || DEFAULT_BINARY_CONTENT_TYPES,
+    contentTypes: DEFAULT_BINARY_CONTENT_TYPES,
     contentEncodings: DEFAULT_BINARY_ENCODINGS
   }
 }
@@ -20,9 +20,7 @@ function configure ({
   logSettings,
   log: configureLog = logger(logSettings),
   framework: configureFramework = getFramework({ app: configureApp, log: configureLog }),
-  binaryMimeTypes: configureBinaryMimeTypes,
   binarySettings: configureBinarySettings,
-  resolutionMode: configureResolutionMode = 'PROMISE',
   eventSourceName: configureEventSourceName,
   eventSource: configureEventFns,
   eventSourceRoutes: configureEventSourceRoutes,
@@ -33,11 +31,8 @@ function configure ({
     framework = configureFramework,
     event = {},
     context = {},
-    callback = null,
-    resolutionMode = configureResolutionMode,
     eventSourceName = configureEventSourceName || getEventSourceNameBasedOnEvent({ event }),
-    binaryMimeTypes = configureBinaryMimeTypes,
-    binarySettings = configureBinarySettings || getDefaultBinarySettings(binaryMimeTypes),
+    binarySettings = configureBinarySettings || getDefaultBinarySettings(),
     eventSource = configureEventFns || getEventSource({ eventSourceName }),
     eventSourceRoutes = configureEventSourceRoutes || {},
     log = configureLog,
@@ -46,15 +41,10 @@ function configure ({
     log.debug('SERVERLESS_EXPRESS:PROXY', () => ({
       event: util.inspect(event, { depth: null }),
       context: util.inspect(context, { depth: null }),
-      resolutionMode,
       eventSourceName,
       binarySettings,
       respondWithErrors
     }))
-
-    if (binaryMimeTypes) {
-      console.warn('[DEPRECATION NOTICE] { binaryMimeTypes: [] } is deprecated. base64 encoding is now automatically determined based on response content-type and content-encoding. If you need to manually set binary content types, instead, use { binarySettings: { contentTypes: [] } }')
-    }
 
     setCurrentInvoke({ event, context })
     return new Promise((resolve, reject) => {
@@ -63,10 +53,7 @@ function configure ({
         reject
       }
       const resolver = makeResolver({
-        context,
-        callback,
-        promise,
-        resolutionMode
+        promise
       })
       const handleError = (error) => {
         respondToEventSourceWithError({
@@ -99,22 +86,11 @@ function configure ({
     })
   }
 
-  function handler (event, context, callback) {
+  async function handler (event, context) {
     return proxy({
       event,
-      context,
-      callback
+      context
     })
-  }
-
-  handler.handler = (...params) => {
-    console.warn('[DEPRECATION NOTICE] You\'re using the deprecated `serverlessExpress({...}).handler({...})` method. This will be removed in a future version of @codegenie/serverless-express. Instead, simply return `serverlessExpress({...})` as your handler.')
-    return handler(...params)
-  }
-
-  handler.proxy = (...params) => {
-    console.warn('[DEPRECATION NOTICE] You\'re using the deprecated `serverlessExpress({...}).proxy({...})` method. This will be removed in a future version of @codegenie/serverless-express. Instead, simply return `serverlessExpress({...})` as your handler.')
-    return proxy(...params)
   }
 
   handler.log = configureLog

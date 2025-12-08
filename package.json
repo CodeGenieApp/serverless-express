@@ -1,6 +1,6 @@
 {
   "name": "@codegenie/serverless-express",
-  "version": "4.17.1",
+  "version": "5.0.0",
   "description": "This library enables you to utilize AWS Lambda and Amazon API Gateway to respond to web and API requests using your existing Node.js application framework.",
   "keywords": [
     "aws",
@@ -28,7 +28,7 @@
     "url": "https://github.com/CodeGenieApp/serverless-express.git"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=24"
   },
   "publishConfig": {
     "access": "public"
