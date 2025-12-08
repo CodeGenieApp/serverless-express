@@ -1,3 +1,60 @@
+## From 4.x to 5.x
+
+### Minimum Node.js Version
+
+v5.x officially supports Node.js 24 and later, though it will likely work for earlier versions.
+
+### Handler Changes
+
+The handler no longer accepts a `callback` parameter. It must be used with async/Promise patterns only.
+
+```javascript
+// 4.x (still works but callback-based patterns no longer supported)
+exports.handler = serverlessExpress({ app })
+
+// 5.x (same, but MUST be async/Promise-based)
+export default serverlessExpress({ app })
+```
+
+### Removed Options
+
+The following configuration options have been removed:
+
+- `resolutionMode` - Only Promise-based resolution is supported now
+- `binaryMimeTypes` - Use `binarySettings` instead
+
+```javascript
+// 4.x (deprecated)
+serverlessExpress({
+  app,
+  resolutionMode: 'CALLBACK',  // ❌ Removed
+  binaryMimeTypes: ['image/*'] // ❌ Removed
+})
+
+// 5.x
+serverlessExpress({
+  app,
+  binarySettings: {
+    contentTypes: ['image/*']
+  }
+})
+```
+
+### Removed Methods
+
+The following deprecated methods have been removed:
+
+- `serverlessExpress.createServer()` - Use `serverlessExpress({ app })` instead
+- `serverlessExpress.proxy()` - Use `serverlessExpress({ app })` instead
+- `handler.handler()` - Use `handler()` directly
+- `handler.proxy()` - Use `handler()` directly
+
+### Proxy Path Fix
+
+v5.x includes a fix for nested routes and custom domains. If you use API Gateway with a custom domain and base path mapping, routes should now work correctly.
+
+---
+
 ## From 3.x to 4.x
 
 ### Lambda Handler
