@@ -1,3 +1,11 @@
+## [4.17.2-beta.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.17.1...v4.17.2-beta.1) (2025-12-08)
+
+
+### Bug Fixes
+
+* response.write() to return a bool (resolves [#683](https://github.com/CodeGenieApp/serverless-express/issues/683)) ([#702](https://github.com/CodeGenieApp/serverless-express/issues/702)) ([d9be538](https://github.com/CodeGenieApp/serverless-express/commit/d9be5382fe17c6778c952d162681ad95f17faa34))
+* support nested routes and custom domains ([#555](https://github.com/CodeGenieApp/serverless-express/issues/555)) ([422bac1](https://github.com/CodeGenieApp/serverless-express/commit/422bac1c7a81c3f29da9cfbfdc0c48faeeb1a827))
+
 ## [4.17.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.17.0...v4.17.1) (2025-12-07)
 
 
