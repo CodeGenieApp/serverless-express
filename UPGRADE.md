@@ -53,8 +53,6 @@ The following deprecated methods have been removed:
 
 v5.x includes a fix for nested routes and custom domains. If you use API Gateway with a custom domain and base path mapping, routes should now work correctly.
 
----
-
 ## From 3.x to 4.x
 
 ### Lambda Handler
