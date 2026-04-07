@@ -81,6 +81,16 @@ test('getPathWithQueryStringParams: pathParameters.proxy', () => {
   expect(pathWithQueryStringParams).toEqual('/123')
 })
 
+test('getPathWithQueryStringParams: static resource without custom domain', () => {
+  const event = {
+    resource: '/service/endpoint',
+    path: '/service/endpoint',
+    pathParameters: null
+  }
+  const pathWithQueryStringParams = serverlessExpressEventSourcesUtils.getPathWithQueryStringParams({ event })
+  expect(pathWithQueryStringParams).toEqual('/service/endpoint')
+})
+
 test('getPathWithQueryStringParams: customDomain and no path parameters', () => {
   const event = {
     resource: '/foo',

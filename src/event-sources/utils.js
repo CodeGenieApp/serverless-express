@@ -2,8 +2,9 @@ const url = require('url')
 
 function getDefaultStripBasePath (event) {
   const basePathMatched = event?.requestContext?.customDomain?.basePathMatched || ''
+  if (!basePathMatched) return ''
   const resource = event?.pathParameters?.proxy ? '' : event.resource
-  return basePathMatched ? `/${basePathMatched}${resource}` : resource
+  return `/${basePathMatched}${resource}`
 }
 
 function getPathWithQueryStringParams ({
