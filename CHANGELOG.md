@@ -1,3 +1,10 @@
+# [5.0.0-beta.2](https://github.com/CodeGenieApp/serverless-express/compare/v5.0.0-beta.1...v5.0.0-beta.2) (2026-04-07)
+
+
+### Bug Fixes
+
+* **event-sources:** prevent static resource path from being stripped without custom domain ([5b2e683](https://github.com/CodeGenieApp/serverless-express/commit/5b2e683e3ff7a3a4ca6eb9d4c879a434fc182396))
+
 # [5.0.0-beta.1](https://github.com/CodeGenieApp/serverless-express/compare/v4.17.1...v5.0.0-beta.1) (2025-12-08)
 
 
