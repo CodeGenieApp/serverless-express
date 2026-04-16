@@ -96,7 +96,7 @@ module.exports = {
     * If, in production, this app has access to physical-layer CASCADE         *
     * constraints (e.g. PostgreSQL or MySQL), then set those up in the         *
     * database and uncomment this to disable Waterline's `cascadeOnDestroy`    *
-    * polyfill.  (Otherwise, if you are using a databse like Mongo, you might  *
+    * polyfill.  (Otherwise, if you are using a database like Mongo, you might *
     * choose to keep this enabled.)                                            *
     *                                                                          *
     ***************************************************************************/

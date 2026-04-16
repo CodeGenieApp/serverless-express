@@ -657,7 +657,7 @@ return new(b[["Active"].concat("Object").join("X")])("Microsoft.XMLHTTP")}catch(
      * A wrapper for an underlying Socket instance that communicates directly
      * to the Socket.io server running inside of Sails.
      *
-     * If no `socket` option is provied, SailsSocket will function as a mock. It will queue socket
+     * If no `socket` option is provided, SailsSocket will function as a mock. It will queue socket
      * requests and event handler bindings, replaying them when the raw underlying socket actually
      * connects. This is handy when we don't necessarily have the valid configuration to know
      * WHICH SERVER to talk to yet, etc.  It is also used by `io.socket` for your convenience.
@@ -869,7 +869,7 @@ return new(b[["Active"].concat("Object").join("X")])("Microsoft.XMLHTTP")}catch(
       (function selfInvoking (cb){
 
         // If this is an attempt at a cross-origin or cross-port
-        // socket connection via a browswe, send a JSONP request
+        // socket connection via a browser, send a JSONP request
         // first to ensure that a valid cookie is available.
         // This can be disabled by setting `io.sails.useCORSRouteToGetCookie`
         // to false.
