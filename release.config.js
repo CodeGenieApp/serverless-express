@@ -1,6 +1,7 @@
 module.exports = {
   branches: [
     'mainline',
+    { name: '4.x', range: '4.x', channel: '4.x' },
     { name: 'beta', prerelease: true }
   ],
   plugins: [
