@@ -1,9 +1,5 @@
 
-> **v5.0.0 Beta Released!** Version 5.0.0 is now available in beta with Node.js 24 support, removal of deprecated APIs, and a fix for nested routes and custom domains. Install with: `npm install @codegenie/serverless-express@beta`
->
-> Upgrading should be seamless unless you relied on deprecated APIs. See [UPGRADE.md](UPGRADE.md#from-4x-to-5x) for details.
->
-> **Note:** Version 4.x is now in maintenance mode and will only receive critical bug fixes.
+> **This is the 4.x maintenance branch.** Only critical bug fixes. For new features, use v5: `npm install @codegenie/serverless-express`
 
 <h2 align="center">Serverless Express by</h1>
 <p align="center">

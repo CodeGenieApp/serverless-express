@@ -1,7 +1,7 @@
 name: CICD
 on:
   push:
-    branches: [mainline]
+    branches: [4.x]
   pull_request:
 env:
   HUSKY: 0
@@ -38,7 +38,7 @@ jobs:
         if: matrix.node-version == '20.x'
         run: npm audit --audit-level critical
   release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/mainline'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
     needs: test-lint-audit
     permissions:
       contents: write
