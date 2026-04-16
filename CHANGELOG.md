@@ -1,3 +1,27 @@
+# [5.0.0](https://github.com/CodeGenieApp/serverless-express/compare/v4.17.1...v5.0.0) (2026-04-16)
+
+
+### Bug Fixes
+
+* **event-sources:** prevent static resource path from being stripped without custom domain ([5b2e683](https://github.com/CodeGenieApp/serverless-express/commit/5b2e683e3ff7a3a4ca6eb9d4c879a434fc182396))
+* response.write() to return a bool (resolves [#683](https://github.com/CodeGenieApp/serverless-express/issues/683)) ([#702](https://github.com/CodeGenieApp/serverless-express/issues/702)) ([d9be538](https://github.com/CodeGenieApp/serverless-express/commit/d9be5382fe17c6778c952d162681ad95f17faa34))
+* support nested routes and custom domains ([#555](https://github.com/CodeGenieApp/serverless-express/issues/555)) ([422bac1](https://github.com/CodeGenieApp/serverless-express/commit/422bac1c7a81c3f29da9cfbfdc0c48faeeb1a827))
+
+
+### Features
+
+* v5.0.0 - Node.js 24 support and removal of deprecated APIs ([a6263a3](https://github.com/CodeGenieApp/serverless-express/commit/a6263a3fc29d1ee504fb921680ec1375a0184133))
+
+
+### BREAKING CHANGES
+
+* Minimum Node.js version is now 24 (though earlier versions may work)
+* Handler no longer accepts callback parameter - async/Promise only
+* Removed resolutionMode option (CALLBACK/CONTEXT modes removed)
+* Removed binaryMimeTypes option (use binarySettings instead)
+* Removed deprecated createServer() and proxy() exports
+* Removed deprecated handler.handler() and handler.proxy() methods
+
 # [5.0.0-beta.2](https://github.com/CodeGenieApp/serverless-express/compare/v5.0.0-beta.1...v5.0.0-beta.2) (2026-04-07)
 
 
