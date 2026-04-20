@@ -162,8 +162,8 @@ async function forwardRequestToNodeServer ({
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:REQUEST_VALUES', { requestValues })
   const { request, response } = await getRequestResponse(requestValues)
   await framework.sendRequest({ app, request, response })
-  markHttpRequestAsCompleted(request)
   await waitForStreamComplete(response)
+  markHttpRequestAsCompleted(request)
   log.debug('SERVERLESS_EXPRESS:FORWARD_REQUEST_TO_NODE_SERVER:RESPONSE', { response })
   forwardResponse({
     binarySettings,
