@@ -168,6 +168,14 @@ test('getRequestResponse: without headers', async () => {
   })
 })
 
+test('ServerlessRequest socket exposes EventEmitter methods', async () => {
+  const { request } = await getReqRes()
+  expect(typeof request.socket.on).toBe('function')
+  expect(typeof request.socket.once).toBe('function')
+  expect(typeof request.socket.emit).toBe('function')
+  expect(typeof request.socket.removeListener).toBe('function')
+})
+
 describe('respondToEventSourceWithError', () => {
   test('responds with 500 status', () => {
     return new Promise(
