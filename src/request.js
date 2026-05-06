@@ -1,19 +1,19 @@
 // ATTRIBUTION: https://github.com/dougmoscrop/serverless-http
 
 const http = require('http')
+const { PassThrough } = require('stream')
 
 const HTTPS_PORT = 443
 
 module.exports = class ServerlessRequest extends http.IncomingMessage {
   constructor ({ method, url, headers, body, remoteAddress }) {
-    super({
-      encrypted: true,
-      readable: true,
-      remoteAddress,
-      address: () => ({ port: HTTPS_PORT }),
-      end: Function.prototype,
-      destroy: Function.prototype
-    })
+    const socket = new PassThrough()
+    socket.encrypted = true
+    socket.readable = true
+    socket.remoteAddress = remoteAddress
+    socket.address = () => ({ port: HTTPS_PORT })
+
+    super(socket)
 
     // IncomingMessage has a lot of logic for when to lowercase or alias well-known header names,
     // so we delegate to that logic here
